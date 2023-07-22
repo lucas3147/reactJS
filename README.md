@@ -1,2 +1,2 @@
 # reactJS
-Meus estudos sobre reactJS e projetos implementados
+Usando react via CDN
