@@ -26,3 +26,45 @@ INICIANDO UM PROJETO COM VITE
         cd react_com_vite
         npm install
         npm run dev
+
+EXPORTANDO E IMPORTANDO COMPONENTES
+
+    EXPORTAÇÃO
+
+    Existem dois tipos de exports
+
+        Default
+
+            export default Square;
+
+            -- significa que o arquivo será representado apenas por um único componente, no exemplo será o Square
+            -- Podemos chamar componentes dentro do componente Square, chamar funções o que seja
+            -- mas o arquivo serpa representado por essa função, não é possível utilizar outro componente no momento da importação a não ser Square.
+            -- Componentes auxiliares, que não são páginas, não exportamos de forma default
+
+        Normal
+
+            export function Square() {
+                ... Código ...
+            }
+            -- Utilizado para componentes auxiliares
+
+    Os tipos se diferem apenas no modo de importação que eu estou chamando eles.
+
+    IMPORTAÇÃO
+
+        Default
+
+        import Square from "@/components/Square";
+
+        -- O '@' é um atalho que dá referência ao caminho do src
+        -- Ele é fornecido pelo NextJS
+        -- Pode ser qualquer nome
+
+        Normal
+
+        import {Square, Circle} from "@/components/Square";
+
+        Normal e default
+
+        import  Square, { Circle } from '@/components/Geo';
