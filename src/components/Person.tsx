@@ -1,16 +1,21 @@
-export function Person () {
+type Props = {
+    name: string;
+    avatar: string;
+    roles: string[];
+}
+
+export function Person ({name , avatar, roles}: Props) {
     return (
         <>
-            <h1>Elon Musk</h1>
+            <h1>{name}</h1>
             <img 
-                src="https://media.vanityfair.com/photos/609d51288fee0e2d204a86ea/master/w_2560%2Cc_limit/Elon5.13.jpg" 
-                alt="Elon Musk"
+                src={avatar} 
+                alt={name}
                 className="w-40"
             />
             <ul>
-                <li>CEO da Tesla</li>
-                <li>CEO da SpaceX</li>
-                <li>CEO da ...</li>
+                <li>{roles[0]}</li>
+                <li>{roles[1]}</li>
             </ul>
         </>
     )

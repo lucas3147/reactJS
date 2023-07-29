@@ -89,4 +89,11 @@ REGRAS GERAIS DO JSX
         Para chamar qualquer propriedade do JSX devemos usar o camelCase
 
 
+PASSANDO PROPS PARA UM COMPONENTE
 
+    Apenas crie um type para funcionar como objeto, para a props, ele pode ter qualquer nome
+
+    Isso também implica em dizer que todas as propriedades desse objeto deve ter necessariamente
+    as mesmas propriedades que informamos no JSX ao chamar o componente...
+
+    Siga o código...
