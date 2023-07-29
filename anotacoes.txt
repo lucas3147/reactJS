@@ -97,3 +97,14 @@ PASSANDO PROPS PARA UM COMPONENTE
     as mesmas propriedades que informamos no JSX ao chamar o componente...
 
     Siga o código...
+
+OPERADOR LÓGICO &&
+
+    Usamos assim:
+
+        {variavel && ...lógica...}
+
+        // Se a variável não for undefined iremos executar a parte da lógica
+        // Se for undefined não executaremos a lógica
+
+    Só podemos retornar um único elemento depois do duplo 'e' comercial
