@@ -68,3 +68,25 @@ EXPORTANDO E IMPORTANDO COMPONENTES
         Normal e default
 
         import  Square, { Circle } from '@/components/Geo';
+
+REGRAS GERAIS DO JSX
+
+    São três regras
+
+    1ª:
+
+        É necessário sempre retornar um elemento padrão (elemento root) de um componente;
+
+        // Podemos colocar os elementos dentro de uma div ou usar um fragment
+        // fragment: <>Olá Mundo!</>
+    
+    2ª:
+
+        Sempre fechar todas as tags
+
+    3ª:
+
+        Para chamar qualquer propriedade do JSX devemos usar o camelCase
+
+
+
