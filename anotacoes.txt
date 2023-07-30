@@ -98,6 +98,37 @@ PASSANDO PROPS PARA UM COMPONENTE
 
     Siga o código...
 
+CHILDREN DO COMPONENTE
+
+    Abra a tag do componente coloque as tags JSX e feche novamente a tag JSX
+
+        <Person>
+
+            <div>
+
+                <h1> Olá Mundo! </h1>
+
+            </div>
+
+        </Person>
+
+    No componente:
+
+        import {ReactNode} from 'react';
+
+        type Props = {
+            children: ReactNode;
+        }
+
+        export const Card = ({children}: Props) => {
+            <div className="border-2 border-red-600 p-3 text-3xl text-center italic">
+                {children}
+            </div>
+        }
+    
+    Como estamos recebendo um elemento JSX, o type deve ser ReactNode, se fosse uma string poderia ser o type string
+    E assim por diante.
+
 OPERADOR LÓGICO &&
 
     Usamos assim:
@@ -118,3 +149,4 @@ RENDERIZANDO LISTAS
         )}
         </ul>
     }
+
