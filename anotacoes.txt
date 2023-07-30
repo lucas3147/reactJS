@@ -108,3 +108,13 @@ OPERADOR LÓGICO &&
         // Se for undefined não executaremos a lógica
 
     Só podemos retornar um único elemento depois do duplo 'e' comercial
+
+RENDERIZANDO LISTAS
+
+    {peopleList.length > 0 && 
+        <ul>
+        {peopleList.map(person => 
+          <li key={person.id}>{person.name} - {person.profession}</li>
+        )}
+        </ul>
+    }
