@@ -1,18 +1,21 @@
 "use client"
 
-import { CustomButton } from "@/components/CustomButton";
+import { FormEvent } from "react";
 
 const Page = () => {
 
-  const handleButton1 = () => alert('clicou no botão 1');
-  const handleButton2 = () => alert('clicou no botão 2');
-  const handleButton3 = () => alert('clicou no botão 3');
+  const handleFormSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    alert("Opa, mandando...");
+  }
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <CustomButton label="Clique  aqui 1" onClick={handleButton1} />
-      <CustomButton label="Clique  aqui 2" onClick={handleButton2} />
-      <CustomButton label="Clique  aqui 3" onClick={handleButton3} />
+    <div className="w-screen h-screen flex flex-col justify-center items-center">
+      <h1 className="text-5xl mb-3">Form de Login</h1>
+      <form onSubmit={handleFormSubmit}>
+        <input type="text" />
+        <input type="submit" value="Enviar" />
+      </form>
     </div>
   );
 }

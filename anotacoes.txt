@@ -195,3 +195,33 @@ ADICIONANDO EVENTO DE CLIQUE
     }
 
     export default Page;
+
+USANDO O PREVENTDEFAULT
+
+    Para usarmos funções nativas, como o preventDefault do javascript de um Formulário por exemplo;
+
+    Temos apenas que especificar para o TypeScript o tipo desse evento que estamos USANDO
+
+    Exemplo:
+
+    import { FormEvent } from "react";
+
+    const Page = () => {
+
+    const handleFormSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        alert("Opa, mandando...");
+    }
+
+    return (
+        <div className="w-screen h-screen flex flex-col justify-center items-center">
+        <h1 className="text-5xl mb-3">Form de Login</h1>
+        <form onSubmit={handleFormSubmit}>
+            <input type="text" />
+            <input type="submit" value="Enviar" />
+        </form>
+        </div>
+    );
+    }
+
+    export default Page;
