@@ -225,3 +225,19 @@ USANDO O PREVENTDEFAULT
     }
 
     export default Page;
+
+O QUE É UM STATE?
+
+    Quando uma variável que está sendo chamada em uma tag jsx de um componente é atualizada,
+    vamos perceber que na tela do navegador o seu valor não é alterado. Por que?
+
+    Quando damos o return() do componente, toda aquela estrutura jsx já foi transformado em html para
+    o navegador, por isso que independente de mudarmos a variável, o seu conteúdo na tela não mudou
+
+    Mas como fazemos isso então?
+
+    Pelo State. Quando definirmos uma variável como State, o react vai comparar a memória virtual (DOM Virtual), com 
+    o conteúdo que é apresentado na tela do navegador.
+
+    E para cada mudança de Estado, será renderizado as tags de compõem aquela variável no JSX.
+
