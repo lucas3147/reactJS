@@ -149,4 +149,49 @@ RENDERIZANDO LISTAS
         )}
         </ul>
     }
+    
+-- ESTADOS E EVENTOS
 
+ADICIONANDO EVENTO DE CLIQUE
+
+    É possível utilizar o evento de Clique da seguinte forma:
+
+    function handleClick() {
+        alert('Funcionou!');
+    }
+
+    return (
+      <div className="w-screen h-screen flex justify-center items-center">
+        <button onClick={handleClick} className="p-3 bg-blue-700 text-white rounded-md">
+          Clique aqui
+        </button>
+      </div>
+    );
+
+    Também poderíamos criar arros function, ou jogar essa função no próprio onClick
+
+    De toda forma, se executarmos dessa maneira, seria lançado um erro na tela.
+
+    Iremos estudar o assunto de Server Component ainda, no entanto, para que os nossos eventos
+    funcionem, precisamos definir o nosso componente como cliente. Fazemos isso da seguinte maneira:
+
+    escreva: "use client" na primeira linha do arquivo que se encontra o seu componente. E pronto!
+
+    "use client"
+
+    const Page = () => {
+
+    function handleClick() {
+        alert('Funcionou!');
+    }
+
+    return (
+        <div className="w-screen h-screen flex justify-center items-center">
+        <button onClick={handleClick} className="p-3 bg-blue-700 text-white rounded-md">
+            Clique aqui
+        </button>
+        </div>
+    );
+    }
+
+    export default Page;
