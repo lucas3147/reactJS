@@ -1,10 +1,12 @@
 "use client"
 
+import { useState } from "react";
+
 const Page = () => {
-  let count = 0;
+  const [count, setCount] = useState<number>(0);
 
   const handleClickButton = () => {
-    count++;
+    setCount(count + 1);
   }
 
   return (

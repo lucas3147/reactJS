@@ -241,3 +241,36 @@ O QUE É UM STATE?
 
     E para cada mudança de Estado, será renderizado as tags de compõem aquela variável no JSX.
 
+TRABALHANDO COM STATES
+
+    Aqui vamos nos atentar com mais uma funcionalidade. Os HOOKS (Ganchos):
+
+    Utilizando os HOOKS do State para criar variáveis:
+
+        // Temos que criar um array que utiliza um recurso do javascript chamado "Array Desconstruction"
+        // Isso significa pegar um array e desconstruir ele em propriedades específicas
+
+        import { useState } from "react";
+
+        const [count, setCount] = useState<number>(0);
+
+        // Dentro do array:
+        // O primeiro item do array é o nome do seu State
+        // O segundo item do array é uma função que define um novo valor para o seu State
+            /// Definimos o seu nome assim: set[nome do State] . Sempre com camelCase.
+        
+        // Sempre vamos utilizar o nome da função que definimos no array para alterar o valor do array.
+        // No parâmetro do useState, indicamos o valor inicial que o state vai ter (no caso é zero).
+        // Podemos também definir o tipo do state (no caso é number.)
+
+    Alterando o valor do Hook
+
+        Quando alteramos o valor do Hook do State, ele vai criar uma variável nova, com o mesmo nome
+        e vai alterar o aquele valor internamente.
+        
+        Alterando:
+
+            setCount(50);
+
+        Só isso é necessário para atualizar o valor na tela.
+
