@@ -274,3 +274,72 @@ TRABALHANDO COM STATES
 
         Só isso é necessário para atualizar o valor na tela.
 
+STATES MUDANDO NO TEMPO
+
+    Comportamento dos States:
+
+        O React por padrão, espera toda a transpilação dos componentes renderizar
+        transformando o jsx em código executável para o navegador.
+
+        Após essa renderização, os States que foram temporariamente armazenados na memória
+        alteram a variável e faz a comparação com o que aparece na tela.
+
+        const handleBtnClick = () => {
+            setCount(count + 2);
+            console.log('O número novo é: ', count);
+            setCount(count + 2);
+            console.log('O número novo é: ', count);
+            setCount(count + 2);
+            console.log('O número novo é: ', count);
+
+            // Para cada valor no parâmetro da função que muda o state, esse valor é acrescentado numa lista
+
+            Exemplo:
+
+                lista = [
+                    2,
+                    2,
+                    2
+                ]
+        }
+
+        return {
+            <p>{count}</p>
+        }
+
+        CONSOLE:
+
+            O número novo é: 0
+            O número novo é: 0
+            O número novo é: 0
+
+            Isso se dá por que o react só vai alterar o state Count, quando todo código TypeScript
+            ser escrito por javascript e compilado. Assim o valor do count permanece sendo 0.
+
+        TELA:
+
+            Count: 2
+
+            O valor do count não é somado para o resultado na tela ser 6. Mas o que acontece é que se o valor de count é zero na compilação da função,
+            a atribuição na função tem esse resultado:
+
+            setCount(0 + 2);
+            setCount(0 + 2);
+            setCount(0 + 2);
+
+            //O react verifica a primeira atribuição do State (que é 2), e nas próximas atribuições ele verifica se o valor do parâmetro é igual 
+            //ao que foi acrescentado anteriormente na lista (ou seja, se o novo valor for 2 nesse exemplo) e ignora se esses valores forem iguais.
+            
+ARRAYS EM STATES
+
+    É importante entender o comportamento dos arrays em states.
+
+    Para alterarmos o valor dos arrays em states, não podemos usar qualquer função de alteração de arrays.
+
+    Isso se dá porque, os states só aceitam métodos que devolvem um novo array, como o filter(), slice()
+
+    Porém métodos como o push(), sort() não cria um novo array na memória, mas apenas adiciona um item no array existente.
+
+    Para usarmos essas funções push() e sort(), temos que criar um novo array, alteramos o tivermos que alterar, e passa esse array alterado para o novo array.
+
+    
