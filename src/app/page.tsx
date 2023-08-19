@@ -8,27 +8,32 @@ const Page = () => {
   const [itemInput, setitemInput] = useState('');
 
   const [List, setList] = useState<TodoItem[]>([
-    {label: 'Estudar react', checked: true},
-    {label: 'Estudar violino', checked: false},
-    {label: 'Estudar para concursos', checked: false}
+    {id: 1, label: 'Estudar react', checked: true},
+    {id: 2,label: 'Estudar violino', checked: false},
+    {id: 3,label: 'Estudar para concursos', checked: false}
   ]);
 
   const handleAddButton = () => {
     if (itemInput.trim() === '') return;
 
-    setList([...List, {label: itemInput, checked: false}]);
+    setList([...List, {id: List.length + 1, label: itemInput, checked: false}]);
     setitemInput('');
   }
 
-  const deleteItem = (index: number) => {
+  const deleteItem = (id: number) => {
     setList(
-      List.filter((item, key) => key !== index)
+      List.filter((item) => item.id !== id)
     )
   }
 
-  const toggleItem = (index: number) => {
+  const toggleItem = (id: number) => {
     let newList = [...List];
-    newList[index].checked = !newList[index].checked
+
+    for (let i in newList) {
+      if (newList[i].id === id) {
+        newList[i].checked = !newList[i].checked;
+      }
+    }
 
     setList(newList);
   }
@@ -51,10 +56,10 @@ const Page = () => {
       <p className="my-4">{List.length} items na lista</p>
 
       <ul className="w-full max-w-lg list-disc pl-5">
-      {List && List.map((item, index) => 
-          <li key={index}>
-            <input onClick={() => toggleItem(index)} type="checkbox" checked={item.checked} className="w-6 h-6 mr-3" />
-            {item.label} - <button className="hover:underline"  onClick={() => deleteItem(index)}>[deletar]</button></li>
+      {List && List.map((item) => 
+          <li key={item.id}>
+            <input onClick={() => toggleItem(item.id)} type="checkbox" checked={item.checked} className="w-6 h-6 mr-3" />
+            {item.label} - <button className="hover:underline"  onClick={() => deleteItem(item.id)}>[deletar]</button></li>
         )
       }
       </ul>
