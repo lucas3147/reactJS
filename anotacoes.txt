@@ -461,3 +461,9 @@ EFFECTS, REDUCERS E CONTEXT
 
         -- Veja no código que implementei, que utilizo o Context e o state juntos para dar um pulo do gato. E fazer a alteração dos valores 
         -- do contexto em qualquer componente filho do Context...
+
+REMOVER ÚLTIMO COMMIT
+
+	Muito cuidado, que o git irá apagar as alterações dos seus arquivos
+
+	git reset --hard HEAD
