@@ -342,4 +342,87 @@ ARRAYS EM STATES
 
     Para usarmos essas funções push() e sort(), temos que criar um novo array, alteramos o tivermos que alterar, e passa esse array alterado para o novo array.
 
-    
+
+EFFECTS, REDUCERS E CONTEXT
+
+    Simplificando o funcionamento dessas ferramentas
+
+    EFFECTS:
+
+        Eles esperam alguma ação disparar para que seu funcionamento possa ocorrer. Como um gatilho após a renderização de uma páginas
+
+        Exemplo:
+
+            useEffect(() => {
+                const originalStyle = window.getComputedStyle(document.body).overflow;
+                document.body.style.overflow = 'hidden';
+                return () => (document.body.style.overflow = originalStyle);
+            }, []);
+
+        -- No momento em que esse effect é disparado, ele bloqueia a rolagem do scroll da página 
+        -- O segundo parâmetro indica qual ganchos ele escutará
+        -- o return significa o Clean Up
+        -- Clean Up é um retorno dos effects que será disparado apenas quando o componente onde faz a chamada do effect for removido do DOM.
+
+    REDUCERS
+
+        Ele nos permite arquitetar as ações que um Estado pode fazer, organizando mais ainda os nossos códigos
+
+        REDUCERS:
+
+        import { Item } from "@/types/Item";
+
+        type AddAction = {
+            type: 'add';
+            payload: {
+                text: string;
+            };
+        }
+
+        type RemoveAction = {
+            type: 'remove';
+            payload: {
+                id: number;
+            }
+        }
+
+        -- type é o tipo da nossa ação
+        -- payload significa carga: é todos os parâmetros necessários para executar a ação
+
+        type ListActions = AddAction | RemoveAction;
+
+        export const listReducer = (list: Item[], action: ListActions) => {
+            switch (action.type) {
+                case 'add':
+                    return [...list, {
+                        id: list.length,
+                        text: action.payload.text,
+                        done: false
+                    }]
+                default:
+                    return list;
+            }
+        }
+
+        -- Importamos o type da nossa lista
+        -- Criamos os tipos das ações que serão executados no Hook
+        -- Criamos outro tipo que serve como um conjunto de todas as ações que é possível executar
+        -- Finalmente criamos a função que recebe o hook, e a ação que queremos executar
+        -- Na função, ela terá o papel de filtrar ação que iremos fazer, de acordo com o objeto que eu estou passando
+        -- Chamando o reducer:
+
+            import { listReducer } from "@/reducers/listReducer";
+
+            const [list, dispatch] = useReducer(listReducer, []);
+
+            -- O segundo parâmetro é o estado inicial do reducer
+
+        -- Executando ação:
+
+            dispatch({
+                type: 'add',
+                payload: { text }
+            });
+
+        -- dispatch é uma função nativa do javascript, ela nos ajuda a alterar valores do reducer
+
