@@ -426,3 +426,38 @@ EFFECTS, REDUCERS E CONTEXT
 
         -- dispatch é uma função nativa do javascript, ela nos ajuda a alterar valores do reducer
 
+
+    CONTEXT
+
+        É um recurso que permite facilitar a transferência de dados entre componentes. Sem que tenhamos que usar Props 
+        passando de componente para componente
+
+        CONTEXT:
+
+            -- Forma simplificada
+
+            -- Arquivo Context
+
+            import { ReactNode, createContext, useState } from "react";
+
+            export const DataInitialContext = 0
+            export const CountContext = createContext(DataInitialContext);
+
+            -- Page
+
+            import { CountContext, DataInitialContext } from "react";
+
+            <CountContext.Provider value={DataInitialContext}>
+                <Header/>
+            </CountContext.Provider>
+
+            -- Header
+
+            const countCtx = useContext(CountContext);
+
+            return (
+                <p>Usuários Online: {countCtx?.onlineCount}</p>
+            )
+
+        -- Veja no código que implementei, que utilizo o Context e o state juntos para dar um pulo do gato. E fazer a alteração dos valores 
+        -- do contexto em qualquer componente filho do Context...
