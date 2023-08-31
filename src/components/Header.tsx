@@ -1,11 +1,11 @@
-import { PostsContext } from "@/Contexts/postContext";
-import { useContext, useState } from "react";
+import { usePost } from "@/Contexts/postContext";
+import { useState } from "react";
 
 export const Header = () => {
 
     const [titleField, setTitleField] = useState("");
     const [descriptionField, setDescriptionField] = useState("");
-    const PostContext = useContext(PostsContext);
+    const PostContext = usePost();
 
     const handleAddPost = () => {
 
