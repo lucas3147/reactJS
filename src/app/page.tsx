@@ -1,28 +1,31 @@
 "use client"
 
-import { ThemeProvider } from "@/Context/ThemeContext";
-import { Button } from "@/components/Button";
-import { Container } from "@/components/Container";
-import { ThemeSwitch } from "@/components/themeSwitch";
+import { User } from "@/Types/User";
+import { useEffect, useState } from "react";
 
 const Page = () => {
+
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then((res) => res.json())
+    .then(json => {
+      setUsers(json);
+    });
+  }, []);
+
   return (
-    <ThemeProvider>
-      <Container>
-        <ThemeSwitch/>
-        <header className="py-5">
-          <h1 className="text-3xl">Título da página</h1>
-        </header>
-        <section>
-          <p className="my-5">Conteúdo da página</p>
-          <Button 
-            label="Clique aqui" 
-            onClick={() => {}}
-          />
-        </section>
-      </Container>
-    </ThemeProvider>
-  )
+    <div className="container mx-auto">
+      <h1 className="text-3xl">Lista de Usuários:</h1>
+
+      <ul>
+        {users.map(user => 
+          <li key={user.id}>{user.name} ({user.email})</li>
+        )}
+      </ul>
+    </div>
+  );
 }
 
 export default Page;
