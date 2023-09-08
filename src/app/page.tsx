@@ -12,7 +12,9 @@ const Page = () => {
     .then((res) => res.json())
     .then(json => {
       setUsers(json);
-    });
+    })
+    .catch(() => console.log('DEU ALGUM ERRO'))
+    .finally(() => console.log('TERMINOU TODA A REQUISIÇÃO'));
   }, []);
 
   return (

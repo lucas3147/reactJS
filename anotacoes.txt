@@ -485,4 +485,18 @@ DARK THEME VIA CONTEXT E TAILWIND
     // E podemos adicionar qualquer elemento nessa classe. E assim usar nos componentes para alterar a 
     // estilização
 
-    
+ENTENDENDO O THEN/CATCH/FINALLY
+
+    THEN 
+
+        o .then() recebe um parâmetro em forma de callback para ser executado depois que recebe uma resposta
+        da nossa promessa. 
+        é um método assíncrono que podemos usar para receber as respostas da execução da nossa api
+
+    CATCH
+
+        O catch() é uma função que executamos quando ocorre algum erro na requisição que estamos fazendo para uma api
+
+    FINALLY
+
+        O finally() é uma função que sempre será executada. Independente se deu tudo certo ou não.
