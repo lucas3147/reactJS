@@ -16,6 +16,12 @@ export const ThemeProvider = ({children} : {children: ReactNode;}) => {
     const [theme, setTheme] = useState(themeStorage || 'light');
 
     useEffect(() => {
+        if (theme === 'dark'){
+            document.documentElement.classList.add(theme);
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
         localStorage.setItem(STORAGE_KEY, theme);
     }, [theme])
 

@@ -467,3 +467,22 @@ REMOVER ÚLTIMO COMMIT
 	Muito cuidado, que o git irá apagar as alterações dos seus arquivos
 
 	git reset --hard HEAD
+
+DARK THEME VIA CONTEXT E TAILWIND
+
+    É possível unir o context com o TAILWIND
+    para facilitar à execução dos fluxos que possuem essa estrutura
+
+    Isso tudo fazemos a partir das configurações do TAILWIND
+
+    Que conseguimos fazer a partir do arquivo tailwind.config.js
+
+    
+    darkMode: 'class'
+
+    // Nessa configuração podemos colocar uma propriedade que vai ficar observando a classe do html
+
+    // E podemos adicionar qualquer elemento nessa classe. E assim usar nos componentes para alterar a 
+    // estilização
+
+    
