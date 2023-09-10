@@ -8,19 +8,23 @@ const Page = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-    .then((res) => res.json())
-    .then(json => {
+  const getUsers = async () => {
+    try{
+      setLoading(true);
+      const res = await fetch('https://jsonplaceholder.typicode.com/users');
+      const json = await res.json();
       setUsers(json);
-    })
-    .catch(() => {
-      console.log('DEU ALGUM ERRO')
-    })
-    .finally(() => {
+    }
+    catch(err){
+      console.log(err);
+    }
+    finally{
       setLoading(false);
-      console.log('TERMINOU TODA A REQUISIÇÃO')
-    });
+    }
+  }
+
+  useEffect(() => {
+    getUsers();
   }, []);
 
   return (
