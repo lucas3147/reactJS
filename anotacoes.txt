@@ -500,3 +500,22 @@ ENTENDENDO O THEN/CATCH/FINALLY
     FINALLY
 
         O finally() é uma função que sempre será executada. Independente se deu tudo certo ou não.
+
+INTRODUÇÃO AO AXIOS
+
+    Instalando a biblioteca
+
+        npm i axios
+
+        // é uma biblioteca que já vem com o suporte do typescript integrado. Então não precisamos instalar mais nada;
+
+        Entendendo:
+
+            Uma das grandes vantagens dela, está na padronização do que fazemos quando consumimos uma Api
+
+            Imagine que você está criando um site gigantesco com diversas páginas, em que elas estão fazendo diversas requisições
+            Com o axios, conseguimos meio que criar um arquivo de configuração para colocar as diversas instruções de como consumir aquela Api.
+
+            Assim, em todos os locais que iremos fazer uma requisição, apenas vamos adicionar o que é específico daquela requisição.
+
+            
