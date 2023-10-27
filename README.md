@@ -25,3 +25,21 @@ Mas por que eu preciso de um intermediário entre eles para fazer a requisição
     - npm i @tanstack/react-query
     - Se você estiver com react puro como o Vite. Devemos colocar ele no primeiro compontente iniciado. Geramente é o MyApp.
     - No Next colocamos ele no layout.tsx
+
+## TanStack DevTools
+
+    - É uma biblioteca opcional, que vai adicionar um detalhe na nossa aplicação, para que quando estivermos desenvolvendo nós termos mais dados do que está acontecendo por de baixo dos panos no nosso TanStackQuery.
+
+    - É importante também que você coloque ele como foi feito no DevTools, no ponto mais alto da aplicação, ou então, até dentro do próprio provider.tsx
+
+    - Ele simplesmente é um debugador do TanStack Query
+
+### Instalação TanStack DevTools
+
+    - npm i @tanstack/react-query-devtools
+
+### Atributos
+
+    - InitialIsOpen: Significa que ao ser inicializada, ela não vai inicializar aberta, com as configurações maximizadas
+    - position: Define a posição do botão (valores: "top-left")
+    - panelPosition: Define a posição do painel (valores: "right")
