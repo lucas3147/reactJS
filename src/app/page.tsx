@@ -2,8 +2,8 @@
 
 export default function Home() {
   return (
-    <div>
-      Olá Mundo!
+    <div className="container mx-auto">
+      <h1 className="text-white text-3xl">Opa, tudo bem?</h1>
     </div>
   )
 }

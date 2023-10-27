@@ -19,3 +19,9 @@ Mas por que eu preciso de um intermediário entre eles para fazer a requisição
     - Caso os dados estejam desatualizados, o TanStack irá perceber e requisitar a Api para atualizar os dados.
 
     - Podemos usar ele também para manipularmos os dados recebidos sempre que requistarmos
+
+## Instalando e configurando o provider
+
+    - npm i @tanstack/react-query
+    - Se você estiver com react puro como o Vite. Devemos colocar ele no primeiro compontente iniciado. Geramente é o MyApp.
+    - No Next colocamos ele no layout.tsx
