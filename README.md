@@ -2,7 +2,7 @@
 
   Minha biblioteca sobre o reactJS
 
-## INICIANDO UM PROJETO COM NEXT
+## Iniciando um projeto com next
 
     Next é um framework que tem várias funcionalidades integradas para usar com o reactJS
 
@@ -17,7 +17,7 @@
 
     Dessa forma, ele atualiza o next para a sua versão mais nova, e instala ele globalmente
 
-## INICIANDO UM PROJETO COM VITE
+## Iniciando um projeto com vite
 
     É possível iniciar o reactJS sem nenhum framework integrado, e fazemos isso com o VITE
 
