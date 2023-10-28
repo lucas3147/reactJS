@@ -15,3 +15,11 @@ FAZENDO UMA QUERY
         queryKey: define a chave de acesso para executar a função
 
         queryFn: define uma função onde fica a requisição da nossa Api. Essa função deve retornar os dados da chamada
+
+MONTANDO UMA API PRA USAR
+
+    Para que o nosso código fique bagunçado. Vamos colocar as requisições do axios em um só lugar
+
+    Para isso. Vamos fazer a nossa própria Api, que vai ser basicamente uma função que agrupa as requisições que vamos fazer.
+
+    Foi criado um arquivo api.ts onde agrupa todas as nossas requisições. Dê uma olhada lá.
