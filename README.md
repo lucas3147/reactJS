@@ -43,3 +43,21 @@ Mas por que eu preciso de um intermediário entre eles para fazer a requisição
     - InitialIsOpen: Significa que ao ser inicializada, ela não vai inicializar aberta, com as configurações maximizadas
     - position: Define a posição do botão (valores: "top-left")
     - panelPosition: Define a posição do painel (valores: "right")
+
+## FAZENDO UMA QUERY
+
+    Para realizar uma requisição devemos definir o hook (gancho) do TanStack
+
+    const query = useQuery({
+        queryKey: ['posts'],
+        queryFn: async (): Promise<Post[]> =>{
+        const result = await axios.get('https://jsonplaceholder.typicode.com/posts');
+        return result.data;
+        }
+    });
+
+    - Ele possui algumas configurações:
+
+    queryKey: define a chave de acesso para executar a função
+
+    queryFn: define uma função onde fica a requisição da nossa Api. Essa função deve retornar os dados da chamada
