@@ -30,3 +30,25 @@
     cd react_com_vite
     npm install
     npm run dev
+    
+## Roteamento entre páginas
+
+  O Roteamento entre as páginas pode ser feito entre o Link:
+
+  import Link from "next/link";
+
+  return (
+        <ul>
+            {users.map(user => 
+                <Link key={user.id} href={`/users`}>
+                    <li>nome: {user.nome} - Idade: {user.idade}</li>
+                </Link>
+            )}
+        </ul>
+    )
+
+  As páginas no react são criadas em pastas.
+
+  Para tornar as pastas públicas para o navegador devemos colocar o arquivo page.tsx retornando o front da  página.
+
+  Essas páginas podem ter diferentes layouts. Basta criar o arquivo layout.tsx na pasta da sua página. Eles precisam receber o children por parâmetro.
