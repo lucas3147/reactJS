@@ -80,3 +80,38 @@
 
         pattern:
             Define a expressão regular daquele campo
+
+## Lidando com erro de validação
+
+    Podemos capturar todos os erros do formulário por campo:
+
+        const {formState: { errors }} = useForm<Inputs>();
+
+    Em errors terá todos os campos que estão com erros na validação
+
+    Aplicando no formulário:
+
+        {errors.name && 
+            <p className="text-red-500">Este item precisa ser preenchido corretamente...</p>
+        }
+
+    Podemos separar os tipos de erros assim:
+
+        {errors.name?.type === 'required' && 
+            <p className="text-red-500">Item obrigatório</p> 
+        }
+        {errors.name?.type === 'maxLength' && 
+          <p className="text-red-500">O nome precisa ter no máximo 10 caracteres</p>
+        }
+
+        // na propriedade vem o type que informa qual o tipo de erro, customizamos como quisermos
+
+    Podemos colocar a mensagem de erro no próprio required:
+
+        {...register('age', { required: 'Campo idade obrigatório', min: 18, max: 120 })}
+
+        e apresentamos a informação assim:
+
+        {errors.age && 
+            <p className="text-red-500">{errors.age.message}</p>
+        }
