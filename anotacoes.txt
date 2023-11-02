@@ -34,4 +34,29 @@ FAZENDO UM FORM BÁSICO
     );
 
         // Perceba que definimos o tipo da função handleFormSubmit como SubmitHandler<Inputs>, e ela se encarrega de passar os parâmetros para a nossa função
+
+APLICANDO VALIDAÇÃO
         
+    Definir um campo obrigatório:
+
+        No segundo parâmetro da função register passamos um objeto. Esse objeto tem várias propriedades, uma delas é o required.
+
+    Propriedades básicas no objeto do register()
+
+        min:
+            Define o valor mínimo do campo
+        
+        max: 
+            Define o valor máximo do campo
+
+        required:
+            Define o preenchimento obrigatório
+
+        minLength:
+            Define a quantidade mínima de caracteres
+
+        maxLength:
+            Define a quantidade máxima de caracteres
+
+        pattern:
+            Define a expressão regular daquele campo

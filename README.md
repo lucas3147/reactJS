@@ -55,3 +55,28 @@
         // O primeiro é executado quando os inputs passam na validação
         // O segundo é executado quando os inputs não passam na validação
 
+## Aplicando Validação
+
+    Definir um campo obrigatório:
+
+      No segundo parâmetro da função register passamos um objeto. Esse objeto tem várias propriedades, uma delas é o required.
+
+    Propriedades básicas no objeto do register()
+
+        min:
+            Define o valor mínimo do campo
+        
+        max: 
+            Define o valor máximo do campo
+
+        required:
+            Define o preenchimento obrigatório
+
+        minLength:
+            Define a quantidade mínima de caracteres
+
+        maxLength:
+            Define a quantidade máxima de caracteres
+
+        pattern:
+            Define a expressão regular daquele campo
