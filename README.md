@@ -10,11 +10,11 @@
 
     Observação: O hook no nome se dá pelo fato de haver vários hooks (ganchos) nessa biblioteca para trabalharmos
 
-## Instalando
+## Instalando o React Hook Form
 
     npm i react-hook-form
 
-## Utilizando
+## Utilizando o React Hook Form
 
     Chamada do hook:
 
@@ -55,7 +55,7 @@
         // O primeiro é executado quando os inputs passam na validação
         // O segundo é executado quando os inputs não passam na validação
 
-## Aplicando Validação
+## Aplicando Validação no React Hook Form
 
     Definir um campo obrigatório:
 
@@ -81,7 +81,7 @@
         pattern:
             Define a expressão regular daquele campo
 
-## Lidando com erro de validação
+## Lidando com erro de validação no React Hook Form
 
     Podemos capturar todos os erros do formulário por campo:
 
