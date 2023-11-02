@@ -1,18 +1,15 @@
 "use client"
 
+import { Input } from '@/components/input';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
-type Inputs = {
-  name: string;
-  lastName: string;
-  age: number;
-}
 
 export default function Home() {
 
-  const {handleSubmit, register, formState: { errors }} = useForm<Inputs>();
+  const {
+    control,
+    handleSubmit } = useForm<SignUpForm>();
 
-  const handleFormSubmit: SubmitHandler<Inputs> = (data) => {
+  const handleFormSubmit: SubmitHandler<SignUpForm> = (data) => {
     console.log(data);
   }
 
@@ -20,31 +17,22 @@ export default function Home() {
     <div className="container mx-auto">
       <form onSubmit={handleSubmit(handleFormSubmit)}>
 
-        <input 
-          {...register('name', { required: true, maxLength: 10 })} 
-          placeholder="Digite seu nome"
-          className="border mt-4 border-white p-3 text-black"/>
-          {errors.name?.type === 'required' && 
-            <p className="text-red-500">Campo obrigatório</p> 
-          }
-          {errors.name?.type === 'maxLength' && 
-            <p className="text-red-500">O nome precisa ter no máximo 10 caracteres</p>
-          }
+        <Input
+          control={control}
+          name='name'
+          rules={{required: true,  minLength: 2, maxLength: 20}}
+        />
 
-        <input 
-          {...register('lastName')} 
-          placeholder="Digite seu sobrenome"
-          className="block border mt-4 border-white p-3 text-black"/>
-          
-          
-        <input 
-          {...register('age', { required: 'Campo idade obrigatório', min: 18, max: 120 })} 
-          placeholder="Digite sua idade"
-          type='number'
-          className="block border mt-4 border-white p-3 text-black"/>
-          {errors.age && 
-            <p className="text-red-500">{errors.age.message}</p>
-          }
+        <Input
+          control={control}
+          name='lastName'
+        />  
+
+        <Input
+          control={control}
+          name='age'
+          rules={{ required: 'Campo idade obrigatório', min: 18, max: 120 }}
+        /> 
 
         <input className="mt-4" type="submit" value="Enviar" />
         

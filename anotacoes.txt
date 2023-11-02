@@ -95,3 +95,75 @@ LIDANDO COM ERRO DE VALIDAÇÃO
         {errors.age && 
             <p className="text-red-500">{errors.age.message}</p>
         }
+
+CRIANDO INPUTS CONTROLADOS VIA HOOK
+
+    Conforme vamos acrescentando inputs no nosso formulário, mais poluído vai ficando o nosso código.
+
+    Por isso vamos criar components de inputs para separar mais as responsabilidades do nosso código.
+
+    Embora dividir não seja um problema, teremos grande dificuldade em usar as funções do hook form com componentes separados.
+
+    Mas o react hook form já preveu essa situação, e ofereceu para nós o conceito de controlador. Através dele podemos manipularmos os diversos operadores dessa biblioteca
+    em apenas um objeto.
+
+    Controller do hook form:
+
+        const { field, fieldState } = useController(props)
+
+        // field são as informações do campo
+        // fieldState são as informações do estado do campo (Ex: se está inválido, ou desabilitado, ou se tem erro)
+        // props é um objeto que tem o tipo de UseControllerProps<T>, do próprio react hook form, onde T pode ser o type dos nossos inputs
+
+    Código:
+
+        import { UseControllerProps, useController } from "react-hook-form"
+
+        export const Input = (props: UseControllerProps<SignUpForm>) => {
+
+            const { field, fieldState } = useController(props)
+
+            return (
+                <div>
+                    <input
+                        {...field}
+                    />
+                </div>
+            )
+        }
+
+        // O nome desse campo já vai vir na props, pela props.name, esse por sua vez cria o field que já tem todas as informações do campo.
+
+
+    Chamada do componente:
+
+        import { Input } from '@/components/input';
+        import { SubmitHandler, useForm } from 'react-hook-form';
+
+        export default function Home() {
+
+        const {
+            control,
+            handleSubmit } = useForm<SignUpForm>();
+
+        const handleFormSubmit: SubmitHandler<SignUpForm> = (data) => {
+            console.log(data);
+        }
+
+        return (
+            <div className="container mx-auto">
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
+
+                <Input
+                control={control}
+                name='name'
+                rules={{required: true,  minLength: 2, maxLength: 20}}
+                />
+                
+                <input className="mt-4" type="submit" value="Enviar" />
+                
+            </form>
+            </div>
+        )
+        }
+
