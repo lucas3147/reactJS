@@ -167,3 +167,20 @@ CRIANDO INPUTS CONTROLADOS VIA HOOK
         )
         }
 
+DEFININDO VALOR DINAMICAMENTE
+
+    Para preencher os campos dinamicamente faça:
+
+        Importe o setValue:
+
+            const {
+                control,
+                handleSubmit,
+                setValue
+            } = useForm<SignUpForm>();
+
+        Use o setValue:
+
+            setValue('name', 'Lucas')
+
+        pronto!

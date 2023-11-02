@@ -1,13 +1,15 @@
 "use client"
 
-import { Input } from '@/components/input';
+import { Input } from '@/components/Input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 export default function Home() {
 
   const {
     control,
-    handleSubmit } = useForm<SignUpForm>();
+    handleSubmit,
+    setValue
+  } = useForm<SignUpForm>();
 
   const handleFormSubmit: SubmitHandler<SignUpForm> = (data) => {
     console.log(data);
@@ -37,6 +39,8 @@ export default function Home() {
         <input className="mt-4" type="submit" value="Enviar" />
         
       </form>
+
+      <button className="mt-4" onClick={() => setValue('name', 'Lucas')}>Definir meu nome</button>
     </div>
   )
 }

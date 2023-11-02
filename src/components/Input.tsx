@@ -8,7 +8,6 @@ export const Input = (props: UseControllerProps<SignUpForm>) => {
         <div className="my-3">
             <input
                 {...field}
-                value={''}
                 placeholder={props.name}
                 className={`border ${fieldState.invalid ? 'border-red-700' : 'border-white'} p-3 text-black`}
             />
