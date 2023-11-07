@@ -184,3 +184,47 @@ DEFININDO VALOR DINAMICAMENTE
             setValue('name', 'Lucas')
 
         pronto!
+
+INTEGRANDO COM BIBLIOTECAS UI
+
+    Vamos aprender a usar o recurso do controller puro. Sem a necessidade de usar um hook
+
+    Isso é importante quando estamos usando bibliotecas de terceiros que possuem componentes externos, e precisamos passar
+    um controlador para esse input.
+
+    Vamos usar uma biblioteca do material UI para exemplificarmos esse caso. Visite o site:
+
+    https://mui.com/material-ui/getting-started/installation/
+
+        INSTALAÇÃO:
+
+            npm install @mui/material @emotion/react @emotion/styled
+
+    A partir desse cara eu vou colocar os novos inputs, siga o código para entender...
+
+    Continuando...
+
+    Para usarmos qualquer biblioteca externa, ou qualquer componente que a gente queira, e controlar eles 
+    sem a necessidade de hooks.
+
+    Existe um componente interno do react hook form chamado "Controller". Ele tem 4 propriedades principais.
+
+    PROPRIEDADES:
+
+        1° - control
+
+            O control controla o campo. Quando colocamos ele por exemplo, automaticamente se estivermos tipando os dados
+            Ele irá alertar quais valores a propriedade name aceita
+
+        2° - name
+
+            Define o nome do campo.
+
+        3° - render
+
+            É uma função que retorna um componente, no parâmetro da função podemos usar um objeto que tem a propriedade chamada "field" - que contém as informações 
+            do campo por exemplo - e a propridade fieldState, que possui as informações de estado do input.
+
+        4° - rules
+
+            Define as regras do componente.

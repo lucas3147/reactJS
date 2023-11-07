@@ -1,14 +1,13 @@
 "use client"
 
-import { Input } from '@/components/Input';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Input } from '@mui/material';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 export default function Home() {
 
   const {
     control,
-    handleSubmit,
-    setValue
+    handleSubmit
   } = useForm<SignUpForm>();
 
   const handleFormSubmit: SubmitHandler<SignUpForm> = (data) => {
@@ -19,28 +18,44 @@ export default function Home() {
     <div className="container mx-auto">
       <form onSubmit={handleSubmit(handleFormSubmit)}>
 
-        <Input
+        <Controller 
           control={control}
-          name='name'
-          rules={{required: true,  minLength: 2, maxLength: 20}}
+          name="name"
+          rules={{required: true, minLength: 2, maxLength: 20}}
+          render={({field, fieldState}) => 
+            <Input 
+              {...field} 
+              error={fieldState.invalid}
+              style={{backgroundColor: 'white'}}
+            />
+          }
         />
 
-        <Input
+        <Controller 
           control={control}
-          name='lastName'
-        />  
+          name="lastName"
+          render={({field}) => 
+            <Input 
+              {...field} 
+              style={{backgroundColor: 'white'}} 
+            />}
+        />
 
-        <Input
+        <Controller 
           control={control}
-          name='age'
-          rules={{ required: 'Campo idade obrigatório', min: 18, max: 120 }}
-        /> 
-
+          name="age"
+          rules={{required: true, min: 18}}
+          render={({field, fieldState}) => 
+            <Input 
+              {...field} 
+              error={fieldState.invalid}
+              style={{backgroundColor: 'white'}} 
+            />}
+        />
+        
         <input className="mt-4" type="submit" value="Enviar" />
         
       </form>
-
-      <button className="mt-4" onClick={() => setValue('name', 'Lucas')}>Definir meu nome</button>
     </div>
   )
 }
