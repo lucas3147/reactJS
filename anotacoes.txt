@@ -228,3 +228,24 @@ INTEGRANDO COM BIBLIOTECAS UI
         4° - rules
 
             Define as regras do componente.
+
+ENVIANDO DADOS PARA UMA API
+
+    O react hook form possui um componente chamado Form. Que nos ajuda a fazer o envio dos dados do formulário para o envio à uma api.
+
+      <Form 
+        control={control}
+        encType="application/json"
+        action={'https://jsonplaceholder.typicode.com/posts'}
+        method="post"
+        onSuccess={handleSuccess}
+        onError={handleError}
+        >
+        <input {...register('title', {required: true})} className="mr-3 rounded-md border border-black p-3 text-black"/>
+        <input {...register('body', {required: true})} className="mr-3 rounded-md border border-black p-3 text-black"/>
+        <input {...register('userId', {required: true})} className="mr-3 rounded-md border border-black p-3 text-black"/>
+
+        <button>Enviar</button>
+      </Form>
+
+    // O legal de usar esse componente está também no onSuccess e onError, que recebem no parâmetro o response da requisição. no onError podemos pegar o error além da resposta.

@@ -1,61 +1,36 @@
 "use client"
 
-import { Input } from '@mui/material';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Form, useForm } from "react-hook-form"
 
 export default function Home() {
+  const { register, control } = useForm();
 
-  const {
-    control,
-    handleSubmit
-  } = useForm<SignUpForm>();
+  const handleSuccess = () => {
+    alert('Deu tudo certo!');
+  }
 
-  const handleFormSubmit: SubmitHandler<SignUpForm> = (data) => {
-    console.log(data);
+  const handleError = () => {
+    alert('Deu erro!');
   }
 
   return (
     <div className="container mx-auto">
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      
+      <Form 
+        control={control}
+        encType="application/json"
+        action={'https://jsonplaceholder.typicode.com/posts'}
+        method="post"
+        onSuccess={handleSuccess}
+        onError={handleError}
+        >
+        <input {...register('title', {required: true})} className="mr-3 rounded-md border border-black p-3 text-black"/>
+        <input {...register('body', {required: true})} className="mr-3 rounded-md border border-black p-3 text-black"/>
+        <input {...register('userId', {required: true})} className="mr-3 rounded-md border border-black p-3 text-black"/>
 
-        <Controller 
-          control={control}
-          name="name"
-          rules={{required: true, minLength: 2, maxLength: 20}}
-          render={({field, fieldState}) => 
-            <Input 
-              {...field} 
-              error={fieldState.invalid}
-              style={{backgroundColor: 'white'}}
-            />
-          }
-        />
+        <button>Enviar</button>
+      </Form>
 
-        <Controller 
-          control={control}
-          name="lastName"
-          render={({field}) => 
-            <Input 
-              {...field} 
-              style={{backgroundColor: 'white'}} 
-            />}
-        />
-
-        <Controller 
-          control={control}
-          name="age"
-          rules={{required: true, min: 18}}
-          render={({field, fieldState}) => 
-            <Input 
-              {...field} 
-              error={fieldState.invalid}
-              style={{backgroundColor: 'white'}} 
-            />}
-        />
-        
-        <input className="mt-4" type="submit" value="Enviar" />
-        
-      </form>
     </div>
   )
 }
