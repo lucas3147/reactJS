@@ -132,3 +132,11 @@
     Importante:
     
       Ela não guarda as rotas anteriores no cache do navegador
+
+## Sites para Expressões em Regex
+
+    1. RegExr
+    regexr.com
+
+    2. Regex 101 (preferido)
+    regex101.com
