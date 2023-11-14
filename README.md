@@ -213,7 +213,7 @@
   Todos eles são dinâmicos, as páginas mudam conforme a url também muda
   Podemos pegar todos eles em uma pasta apenas da seguinte forma. Nomeando a pasta que receberá os dados dinâmicos com abre e fecha colchetes porém três pontos antes do nome da pasta:
 
-   /shop/[...roupas]/page.tsx
+    /shop/[...roupas]/page.tsx
 
   Pegando os dados:
 
