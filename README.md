@@ -61,7 +61,7 @@
   
   ### Segunda forma
 
-    Usando useRouter
+  Usando useRouter
 
     Código:
 
@@ -94,7 +94,7 @@
 
   ### Terceira forma
 
-    Usando redirect
+  Usando redirect
 
     Código:
 
@@ -139,7 +139,7 @@
 
 ## Agrupando rotas
 
-    Imagine que você precisa de um layout para duas páginas distintas. Você poderia criar a seguinte estrutura de pastas:
+  Imagine que você precisa de um layout para duas páginas distintas. Você poderia criar a seguinte estrutura de pastas:
 
       Auth
 
@@ -167,7 +167,7 @@
 
 ## Pastas privadas
 
-    Para criarmos pastas privadas no nosso projeto. Podemos usar o underline antes do nome da pasta:
+  Para criarmos pastas privadas no nosso projeto. Podemos usar o underline antes do nome da pasta:
 
       _helpers
 
