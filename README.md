@@ -15,6 +15,10 @@
 
       npm install -g create-next-app
 
+    Caso já tenha o next instalado, apenas atualize o create-next-app
+
+      npm update -g create-next-app
+
     Dessa forma, ele atualiza o next para a sua versão mais nova, e instala ele globalmente
 
 ## Iniciando um projeto com vite
