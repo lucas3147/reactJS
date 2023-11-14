@@ -180,3 +180,57 @@
     [name]
 
     Utilizadas rotas onde as informações das páginas irão mudar conforme os dados da url.
+
+  O nome da pasta vai conforme as requisições do usuário. Conseguimos pegar isso no código da seguinte forma:
+
+    type Props = {
+      params : {
+        name: string
+      }
+    }
+
+    // a propriedade 'name' do params precisa ter o mesmo nome da pasta [name] sem os colchetes
+
+    const Page = ({params}: Props) => {
+      return (
+        <div>
+          Página do {params.name}
+        </div>
+      )
+    }
+
+    export default Page;
+
+  Em outro caso... E se no nosso site tivermos uma grande quantidade de rotas dinâmicas, e você queira uma pasta apenas que sirva de base para todas, assim, como poderíamos pegar essas informações da rota que estamos criando? 
+
+  Esse caso é mais difícil de acontecer, mas é possível. Temos a seguinte estrutura de rotas:
+
+    /shop/roupas
+    /shop/roupas/shorts
+    /shop/roupas/shorts/branco
+    /shop/roupas/shorts/preto
+
+  Todos eles são dinâmicos, as páginas mudam conforme a url também muda
+  Podemos pegar todos eles em uma pasta apenas da seguinte forma. Nomeando a pasta que receberá os dados dinâmicos com abre e fecha colchetes porém três pontos antes do nome da pasta:
+
+   /shop/[...roupas]/page.tsx
+
+  Pegando os dados:
+
+    type Props = {
+      params : {
+        roupas: string[]
+      }
+    }
+
+    const Page = ({params}: Props) => {
+      return (
+        <div>
+          Página do {params.roupas.join(', ')}
+        </div>
+      )
+    }
+
+    // O join transforma o array em uma string, separando os valores por uma vírgula...
+
+    export default Page;
