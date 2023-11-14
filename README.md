@@ -137,6 +137,34 @@
     
       Ela não guarda as rotas anteriores no cache do navegador
 
+## Agrupando rotas
+
+    Imagine que você precisa de um layout para duas páginas distintas. Você poderia criar a seguinte estrutura de pastas:
+
+      Auth
+
+        SignIn
+
+        SigUp
+
+        Layout.tsx
+
+    Para acessar essa rota ficaria assim: domainname.com/auth/signin ou domainname.com/auth/signup
+
+    Funciona, mas e se quisermos tirar o caminho auth/ da rota, poderíamos? Sim. Basta agrupar as rotas.
+
+    Para agrupar rotas apenas nomeie a pasta que você quer agrupar com o mesmo nome porém abrindo e fechando parênteses:
+
+        (Auth)
+
+          SignIn
+  
+          SigUp
+  
+          Layout.tsx
+
+    Rota: domainname.com/signin ou domainname.com/signup
+
 ## Sites para Expressões em Regex
 
     1. RegExr
