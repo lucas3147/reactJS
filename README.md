@@ -172,3 +172,11 @@
       _helpers
 
       Geralmente essas pastas são usadas para códigos auxiliares na nossa aplicação.
+
+## Rotas dinâmicas
+
+  Também podemos criar pastas que irão formar rotas dinâmicas para a nossa aplicação. Para isso crie a pasta com o nome entre colchetes:
+
+    [name]
+
+    Utilizadas rotas onde as informações das páginas irão mudar conforme os dados da url.
