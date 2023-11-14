@@ -165,6 +165,14 @@
 
     Rota: domainname.com/signin ou domainname.com/signup
 
+## Pastas privadas
+
+    Para criarmos pastas privadas no nosso projeto. Podemos usar o underline antes do nome da pasta:
+
+      _helpers
+
+      Geralmente essas pastas são usadas para códigos auxiliares na nossa aplicação.
+
 ## Sites para Expressões em Regex
 
     1. RegExr
