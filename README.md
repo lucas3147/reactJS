@@ -172,11 +172,3 @@
       _helpers
 
       Geralmente essas pastas são usadas para códigos auxiliares na nossa aplicação.
-
-## Sites para Expressões em Regex
-
-    1. RegExr
-    regexr.com
-
-    2. Regex 101 (preferido)
-    regex101.com
