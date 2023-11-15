@@ -2,6 +2,10 @@
 
   Minha biblioteca sobre o reactJS
 
+  - Cada branch(ramo) pode ser um estudo sobre uma funcionalidade ou um projeto desenvolvido
+  - Os commits descrevem qual foi o estudo abordado
+  - Em cada um dos ramos existe um arquivo txt chamado "anotacoes.txt". Que é o resumo de cada estudo
+
 ## Iniciando um projeto com next
 
     Next é um framework que tem várias funcionalidades integradas para usar com o reactJS
