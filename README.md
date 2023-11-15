@@ -238,3 +238,56 @@
     // O join transforma o array em uma string, separando os valores por uma vírgula...
 
     export default Page;
+
+## Rotas dinamicamente estáticas
+
+  O reactJS tem dois ambientes finais. O ambiente de desenvolvimento e o ambiente de produção.
+
+  - O ambiente de desenvolvimento fica constantemente renderizando as páginas conforme modificamos o código.
+  - Já o ambiente de produção permanece o mesmo, esse ambiente apresenta mais velocidade, por não ter que ficar se renderizando a cada modificação.
+
+     O ambiente de produção passa por um processo de compilação, para entendermos melhor o que acontece, podemos imaginar que na nossa página, ela requisita uma api e apresenta o resultado de usuários por exemplo. Todo esse processo é feito no servidor, gerando a página pronta para o navegador, sem ter a necessidade de uma renderização feita no navegador como acontece no ambiente de desenvolvimento.
+
+  Rotas dinamicamente estáticas são rotas guardadas e acessadas no momento de build (compilação) no ambiente de produção.
+
+  Podemos informar para o servidor que, no processo de build, ele acesse algumas páginas da nossa aplicação para reduzir o tempo de velocidade carregado entre uma página e outra, geralmente esse recurso é utilizado em produtos de um e-commerce mais vendidos.
+
+    ** Esse recurso só irá funcionar no ambiente de produção **
+
+  Código:
+
+    import { Post } from "@/types/Post";
+
+    type Props = {
+      params: {
+        postId: string;
+      }
+    }
+
+    const Page = async ({ params } : Props) => {
+      const postRequest = await fetch(`[https://](https://jsonplaceholder.typicode.com/posts)https://jsonplaceholder.typicode.com/posts/${params.postId}`)
+      const post: Post = await postRequest.json();
+
+      if (!post.id) return <div>Página não encontrada</div>
+
+      return (
+        <div>
+          <div className="text-center"></div>
+          <h1 className="text-3xl uppercase my-3">{post.title}</h1>
+          <p>{post.body}</p>
+        </div>
+      );
+    }
+
+    export default Page;
+
+    export const generateStaticParams = async () => {
+      const postReq = await fetch("https://jsonplaceholder.typicode.com/posts");
+      const posts: Post[] = await postReq.json();
+
+      return posts.map(post => ({
+        postId: post.id.toString()
+      }))
+    }
+
+    // Aqui estamos dizendo ao servidor para acessar essas rotas e guardar esses dados quando ele estiver compilando o projeto. Recebemos todos os dados dos posts. e retornarmos todos os parâmetros que ele vai precisar para acessar a rota
