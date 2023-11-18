@@ -1,6 +1,13 @@
-const ChatListItem = () => {
+type Props = {
+    onClick: () => {}
+}
+
+const ChatListItem = ({onClick}: Props) => {
     return (
-        <div className="h-[68px] flex cursor-pointer items-center hover:bg-[#F5F5F5]">
+        <div 
+            className="h-[68px] flex cursor-pointer items-center hover:bg-[#F5F5F5]"
+            onClick={onClick}
+            >
             <img
                 className="h-12 w-12 rounded-3xl ml-4"
                 src="https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg"
