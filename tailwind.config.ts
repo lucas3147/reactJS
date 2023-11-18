@@ -20,7 +20,6 @@ const config: Config = {
     fontFamil: {
       'segoe': ['Segoe UI', 'Helvetica Neue', 'Helvetica', 'Lucida Grande', 'Arial']
     }
-    
   },
   plugins: [],
 }

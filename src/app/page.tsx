@@ -45,7 +45,7 @@ export default function Home() {
               placeholder="Procurar ou começar uma nova conversa" />
           </div>
         </div>
-        <div>
+        <div className="chatList">
           {chatList && chatList.map((item, key) => (
             <ChatListItem
               key={key}
