@@ -14,7 +14,15 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
     },
+    backgroundColor: {
+      'greenish-white' : '#d2dbdc',
+    },
+    fontFamil: {
+      'segoe': ['Segoe UI', 'Helvetica Neue', 'Helvetica', 'Lucida Grande', 'Arial']
+    }
+    
   },
   plugins: [],
+  darkMode: 'class'
 }
 export default config
