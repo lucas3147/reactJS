@@ -11,14 +11,15 @@ import MicIcon from '@mui/icons-material/Mic';
 
 type Props = {
     type: IconType,
-    style: {}
+    style: {},
+    className: string
 }
 
 type IconType = 'MicIcon' | 'SendIcon' | 'CloseIcon' | 'EmojiEmotionsIcon' | 'DonutLargeIcon' |'AttachFileIcon' | 'ChatIcon' | 'MoreVertIcon' | 'SearchIcon';
 
-const IconItem = ({type, style}: Props) => {
+const IconItem = ({type, style, className}: Props) => {
     return (
-        <div>
+        <div className={className}>
             {type == 'DonutLargeIcon' &&
                 <DonutLargeIcon style={style} />
             }
