@@ -4,13 +4,17 @@ import ChatIcon from '@mui/icons-material/Chat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import CloseIcon from '@mui/icons-material/Close';
+import SendIcon from '@mui/icons-material/Send';
+import MicIcon from '@mui/icons-material/Mic';
 
 type Props = {
     type: IconType,
     style: {}
 }
 
-type IconType = 'DonutLargeIcon' |'AttachFileIcon' | 'ChatIcon' | 'MoreVertIcon' | 'SearchIcon';
+type IconType = 'MicIcon' | 'SendIcon' | 'CloseIcon' | 'EmojiEmotionsIcon' | 'DonutLargeIcon' |'AttachFileIcon' | 'ChatIcon' | 'MoreVertIcon' | 'SearchIcon';
 
 const IconItem = ({type, style}: Props) => {
     return (
@@ -29,6 +33,18 @@ const IconItem = ({type, style}: Props) => {
             }
             {type == 'AttachFileIcon' &&
                 <AttachFileIcon style={style}/>
+            }
+            {type == 'EmojiEmotionsIcon' &&
+                <EmojiEmotionsIcon style={style}/>
+            }
+            {type == 'CloseIcon' &&
+                <CloseIcon style={style}/>
+            }
+            {type == 'SendIcon' &&
+                <SendIcon style={style}/>
+            }
+            {type == 'MicIcon' &&
+                <MicIcon style={style}/>
             }
         </div>
     )
