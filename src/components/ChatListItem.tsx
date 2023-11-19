@@ -1,16 +1,20 @@
+import { ChatItem } from "@/types/ChatType"
+
 type Props = {
-    onClick: () => {}
+    onClick: () => void,
+    active: boolean,
+    chatItem: ChatItem
 }
 
-const ChatListItem = ({onClick}: Props) => {
+const ChatListItem = ({onClick, active, chatItem}: Props) => {
     return (
         <div 
-            className="h-[68px] flex cursor-pointer items-center hover:bg-[#F5F5F5]"
+            className={"h-[68px] flex cursor-pointer items-center hover:bg-[#F5F5F5] " + (active ? "bg-[#EBEBEB]" : "")}
             onClick={onClick}
             >
             <img
                 className="h-12 w-12 rounded-3xl ml-4"
-                src="https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg"
+                src={chatItem.image}
                 alt=""
             />
             <div
@@ -19,8 +23,8 @@ const ChatListItem = ({onClick}: Props) => {
                 <div
                     className="flex justify-between items-center w-full"
                 >
-                    <div className="text-base">Lucas Lima</div>
-                    <div className="text-xs text-[#999]">19:00</div>
+                    <div className="text-base">{chatItem.title}</div>
+                    <div className="text-xs text-[#999]">{chatItem.date}</div>
                 </div>
                 <div className="text-sm text-[#999] w-full">
                     <p
