@@ -5,8 +5,43 @@ import Picker from '@emoji-mart/react'
 
 const ChatWindow = () => {
 
+    let recognition:SpeechRecognition;
+    let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition !== undefined) {
+        recognition = new SpeechRecognition();
+    }
+
     const [emojiOpen, setEmojiOpen] = useState(false);
-    const handleEmojiClick = () => {}
+    const [text, setText] = useState('');
+    const [listening, setListening] = useState(false);
+
+    const handleEmojiClick = (data: any) => {
+        setText(text + data.native);
+    }
+
+    const handleMicClick = () => {
+        if (recognition !== null) {
+            recognition.onstart = () => {
+                setListening(true);
+            }
+            recognition.onend = () => {
+                setListening(false);
+            }
+            recognition.onresult = (e) => {
+                setText( e.results[0][0].transcript );
+            }
+
+            recognition.start();
+
+        } else {
+            alert('Sinto muito! Esse recurso não está disponível para o seu navegador.');
+        }
+    }
+
+    const handleSendClick = () => {
+
+    }
 
     return (
         <div className="flex flex-col h-full">
@@ -52,7 +87,7 @@ const ChatWindow = () => {
                 className={"chatWindow--emojiArea " + (emojiOpen ? "h-[437px]" : "h-0")}>
                 <Picker 
                     data={data} 
-                    onEmojiSelect={console.log}
+                    onEmojiSelect={handleEmojiClick}
                     theme={'light'} />
             </div>
             <div className="h-[62px] flex items-center">
@@ -68,16 +103,30 @@ const ChatWindow = () => {
                         className="w-full h-10 border-0 outline-none bg-white rounded-3xl text-base text-[#4A4A4A] px-4"
                         type="text"
                         placeholder="Digite uma mensagem"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
                     />
                 </div>
                 <div className="flex my-0 mx-4">
-                    <div >
-                        <IconItem
-                            className="iconTheme"
-                            type="SendIcon"
-                            style={{ color: '#919191' }}
-                        />
-                    </div>
+                    {text === '' &&
+                        <div onClick={handleMicClick}>
+                            <IconItem
+                                className="iconTheme"
+                                type="MicIcon"
+                                style={{ color: listening ? '#009688' : '#919191' }}
+                            />
+                        </div>
+                    }
+                    
+                    {text !== '' && 
+                        <div onClick={handleSendClick}>
+                            <IconItem
+                                className="iconTheme"
+                                type="SendIcon"
+                                style={{ color: '#919191' }}
+                            />
+                        </div>
+                    }
                 </div>
             </div>
         </div>
