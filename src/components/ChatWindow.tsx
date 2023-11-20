@@ -1,6 +1,12 @@
+import { useState } from "react";
 import IconItem from "./IconItem";
+import EmojiPicker from 'emoji-picker-react';
 
 const ChatWindow = () => {
+
+    const [emojiOpen, setEmojiOpen] = useState(false);
+    const handleEmojiClick = () => {}
+
     return (
         <div className="flex flex-col h-full">
             <div className="h-16 border-b-2 border-[#CCC] flex justify-between items-center">
@@ -41,14 +47,23 @@ const ChatWindow = () => {
             <div className="chatWindow--body">
 
             </div>
+            <div 
+                className={"overflow-y-hidden transition-all transition-300 " + (emojiOpen ? "h-52" : "h-0")}>
+                <EmojiPicker
+                    onEmojiClick={handleEmojiClick}
+                    searchDisabled
+                    skinTonesDisabled
+                    width={'auto'}
+                    previewConfig={{showPreview: false}}
+                />
+            </div>
             <div className="h-[62px] flex items-center">
-                <div className="flex my-0 mx-4">
+                <div className="flex my-0 mx-4" onClick={() => setEmojiOpen(!emojiOpen)}>
                     <IconItem
                         className="iconTheme"
                         type="EmojiEmotionsIcon"
-                        style={{ color: '#919191' }}
+                        style={{ color: emojiOpen ? '#009688' : '#919191' }}
                     />
-
                 </div>
                 <div className="flex-1">
                     <input

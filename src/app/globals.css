@@ -49,3 +49,11 @@
   cursor: pointer;
   border-radius: 50%;
 }
+
+aside.EmojiPickerReact {
+  background: none;
+}
+
+aside.epr-emoji-category-label .emoji-group {
+  background: none;
+}

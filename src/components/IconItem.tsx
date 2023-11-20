@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import ChatIcon from '@mui/icons-material/Chat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -8,6 +7,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 
 type Props = {
     type: IconType,
@@ -15,7 +15,7 @@ type Props = {
     className: string
 }
 
-type IconType = 'MicIcon' | 'SendIcon' | 'CloseIcon' | 'EmojiEmotionsIcon' | 'DonutLargeIcon' |'AttachFileIcon' | 'ChatIcon' | 'MoreVertIcon' | 'SearchIcon';
+type IconType = 'InsertEmoticonIcon' | 'MicIcon' | 'SendIcon' | 'CloseIcon' | 'EmojiEmotionsIcon' | 'DonutLargeIcon' |'AttachFileIcon' | 'ChatIcon' | 'MoreVertIcon' | 'SearchIcon';
 
 const IconItem = ({type, style, className}: Props) => {
     return (
@@ -46,6 +46,9 @@ const IconItem = ({type, style, className}: Props) => {
             }
             {type == 'MicIcon' &&
                 <MicIcon style={style}/>
+            }
+            {type == 'InsertEmoticonIcon' &&
+                <InsertEmoticonIcon style={style}/>
             }
         </div>
     )
