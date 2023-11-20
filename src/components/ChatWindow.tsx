@@ -1,6 +1,7 @@
 import { useState } from "react";
 import IconItem from "./IconItem";
-import EmojiPicker from 'emoji-picker-react';
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 const ChatWindow = () => {
 
@@ -48,14 +49,11 @@ const ChatWindow = () => {
 
             </div>
             <div 
-                className={"overflow-y-hidden transition-all transition-300 " + (emojiOpen ? "h-52" : "h-0")}>
-                <EmojiPicker
-                    onEmojiClick={handleEmojiClick}
-                    searchDisabled
-                    skinTonesDisabled
-                    width={'auto'}
-                    previewConfig={{showPreview: false}}
-                />
+                className={"chatWindow--emojiArea " + (emojiOpen ? "h-[437px]" : "h-0")}>
+                <Picker 
+                    data={data} 
+                    onEmojiSelect={console.log}
+                    theme={'light'} />
             </div>
             <div className="h-[62px] flex items-center">
                 <div className="flex my-0 mx-4" onClick={() => setEmojiOpen(!emojiOpen)}>

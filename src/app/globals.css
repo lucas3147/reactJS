@@ -40,6 +40,13 @@
     background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')
 }
 
+.chatWindow--emojiArea {
+  overflow-y: hidden;
+  position: absolute;
+  bottom: 62px;
+  transition: all ease 0.3s;
+}
+
 .iconTheme {
   width: 40px;
   height: 40px;
@@ -54,6 +61,6 @@ aside.EmojiPickerReact {
   background: none;
 }
 
-aside.epr-emoji-category-label .emoji-group {
+h2.epr-emoji-category-label{
   background: none;
 }
