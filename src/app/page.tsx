@@ -15,6 +15,11 @@ export default function Home() {
     { id: 4, title: 'Pai', image: 'https://cdn-icons-png.flaticon.com/512/475/475219.png', date: '19:45' }
   ]);
   const [activeChat, setActiveChat] = useState<ChatItem>();
+  const [user, setUser] = useState({
+    id: 1234,
+    avatar: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png',
+    name: 'Lucas Lima'
+  });
 
   return (
     <div className="flex h-screen bg-[#EDEDED]">
@@ -23,7 +28,7 @@ export default function Home() {
         <header className="h-16 px-4 flex justify-between items-center">
           <img
             className="w-10 h-10 rounded-[20px] cursor-pointer"
-            src="https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png"
+            src={user.avatar}
             alt="icone do avatar" />
           <div
             className="flex"
@@ -73,7 +78,9 @@ export default function Home() {
       </div>
       <div className="flex-1">
         {activeChat?.id !== undefined &&
-          <ChatWindow />
+          <ChatWindow 
+            user={user}
+          />
         }
         {activeChat?.id == undefined &&
           <ChatIntro />

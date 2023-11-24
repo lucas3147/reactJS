@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import IconItem from "./IconItem";
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
+import MessageItem from "./MessageItem";
 
-const ChatWindow = () => {
+type Props = {
+    user: {
+        id: number,
+        avatar: string,
+        name: string
+    }
+}
 
+const ChatWindow = ({user}: Props) => {
+
+    const body = useRef();
     let recognition:SpeechRecognition;
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -15,6 +25,18 @@ const ChatWindow = () => {
     const [emojiOpen, setEmojiOpen] = useState(false);
     const [text, setText] = useState('');
     const [listening, setListening] = useState(false);
+    const [list, setList] = useState([
+        {body: 'Teste', author: 123},
+        {body: 'Teste', author: 123},
+        {body: 'Teste', author: 1234},
+        {body: 'Teste', author: 123},
+    ]);
+
+    useEffect(() => {
+        if (body.current.scrollHeight > body.current.offsetHeight){
+            body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight;
+        }
+    }, [list])
 
     const handleEmojiClick = (data: any) => {
         setText(text + data.native);
@@ -80,8 +102,14 @@ const ChatWindow = () => {
                     />
                 </div>
             </div>
-            <div className="chatWindow--body">
-
+            <div ref={body} className="chatWindow--body">
+                {list.map((item, key) => (
+                    <MessageItem
+                        key={key}
+                        data={item} 
+                        user={user}
+                    />
+                ))}
             </div>
             <div 
                 className={"chatWindow--emojiArea " + (emojiOpen ? "h-[437px]" : "h-0")}>
