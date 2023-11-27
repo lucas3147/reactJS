@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, RefObject } from "react";
 import IconItem from "./IconItem";
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -14,7 +14,7 @@ type Props = {
 
 const ChatWindow = ({user}: Props) => {
 
-    const body = useRef();
+    const body = useRef<HTMLInputElement>(null);
     let recognition:SpeechRecognition;
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -33,7 +33,7 @@ const ChatWindow = ({user}: Props) => {
     ]);
 
     useEffect(() => {
-        if (body.current.scrollHeight > body.current.offsetHeight){
+        if (body.current && body.current.scrollHeight > body.current.offsetHeight){
             body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight;
         }
     }, [list])

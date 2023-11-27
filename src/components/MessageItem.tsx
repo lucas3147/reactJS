@@ -11,18 +11,22 @@ type Props = {
 }
 
 const MessageItem = ({data, user}: Props) => {
+
+    const myMessageStyle = (myStyle: string, otherStyle: string) => {
+        return user.id === data.author ? myStyle : otherStyle
+    }
     return (
         <div 
             className="mb-2 flex"
             style={
-                {justifyContent: user.id === data.author ? 'flex-end' : 'flex-start'}
+                {justifyContent: myMessageStyle('flex-end','flex-start')}
             }
             >
             
             <div 
                 className="bg-[white] rounded-[10px] shadow-[0_1px_1px_1px_#CCC] flex flex-col p-1 max-w-[90%]"
                 style={
-                    {backgroundColor: user.id === data.author ? '#DCF8C6' : 'white'}
+                    {backgroundColor: myMessageStyle('#DCF8C6', 'white')}
                 }
                 >
                 <div className="text-sm my-[5px] mr-10 ml-[5px]">{data.body}</div>
