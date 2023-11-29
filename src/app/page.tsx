@@ -6,6 +6,8 @@ import ChatIntro from '@/components/ChatIntro';
 import ChatWindow from '@/components/ChatWindow';
 import { ChatItem } from '@/types/ChatType';
 import IconItem from '@/components/IconItem';
+import NewChat from '@/components/NewChat';
+import { UserType } from '@/types/UserType';
 
 export default function Home() {
 
@@ -15,16 +17,22 @@ export default function Home() {
     { id: 4, title: 'Pai', image: 'https://cdn-icons-png.flaticon.com/512/475/475219.png', date: '19:45' }
   ]);
   const [activeChat, setActiveChat] = useState<ChatItem>();
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<UserType>({
     id: 1234,
     avatar: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png',
     name: 'Lucas Lima'
   });
+  const [showNewChat, setShowNewChat] = useState(false);
 
   return (
     <div className="flex h-screen bg-[#EDEDED]">
       <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
-
+        <NewChat 
+          chatList={chatList}
+          user={user}
+          show={showNewChat}
+          setShow={setShowNewChat}
+        />
         <header className="h-16 px-4 flex justify-between items-center">
           <img
             className="w-10 h-10 rounded-[20px] cursor-pointer"
@@ -38,11 +46,13 @@ export default function Home() {
               type='DonutLargeIcon'
               style={{ color: '#919191' }}
             />
-            <IconItem
-              className="iconTheme"
-              type='ChatIcon'
-              style={{ color: '#919191' }}
-            />
+            <div onClick={() => setShowNewChat(true)}>
+              <IconItem
+                className="iconTheme"
+                type='ChatIcon'
+                style={{ color: '#919191' }}
+              />
+            </div>
             <IconItem
               className="iconTheme"
               type='MoreVertIcon'
