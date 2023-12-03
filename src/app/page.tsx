@@ -9,6 +9,7 @@ import IconItem from '@/components/IconItem';
 import NewChat from '@/components/NewChat';
 import { UserType } from '@/types/UserType';
 import Login from '@/components/Login';
+import Api from '@/Api';
 
 export default function Home() {
 
@@ -22,6 +23,7 @@ export default function Home() {
   const [showNewChat, setShowNewChat] = useState(false);
 
   const handleLoginData = async (newUser: UserType) => {
+    await Api.addUser(newUser);
     setUser(newUser);
   }
 

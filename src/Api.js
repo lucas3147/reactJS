@@ -1,7 +1,10 @@
 import 'firebase/auth';
 import 'firebase/firestore';
-import {auth} from './firebase.config';
+import {app, auth} from './firebase.config';
 import { GithubAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
+import { getFirestore, collection, addDoc, getDoc, query, where, getDocs } from 'firebase/firestore';
+
+const db = getFirestore(app);
 
 export default {
     githubPopup: async () => {
@@ -27,5 +30,15 @@ export default {
                                     const credential = GithubAuthProvider.credentialFromError(error);
                                     // ...
                                 });
+    },
+    addUser: async (user) => {
+        const q = query(collection(db, "users"), where("name", "==", user.displayName))
+        const docSnap = await getDocs(q);
+        if (docSnap.docs.length == 0) {
+            await addDoc(collection(db, 'users'), {
+                name: user.displayName,
+                photoUrl: user.photoURL
+            });
+        }
     }
 };
