@@ -8,6 +8,7 @@ import { ChatItem } from '@/types/ChatType';
 import IconItem from '@/components/IconItem';
 import NewChat from '@/components/NewChat';
 import { UserType } from '@/types/UserType';
+import Login from '@/components/Login';
 
 export default function Home() {
 
@@ -17,12 +18,18 @@ export default function Home() {
     { id: 4, title: 'Pai', image: 'https://cdn-icons-png.flaticon.com/512/475/475219.png', date: '19:45' }
   ]);
   const [activeChat, setActiveChat] = useState<ChatItem>();
-  const [user, setUser] = useState<UserType>({
-    id: 1234,
-    avatar: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png',
-    name: 'Lucas Lima'
-  });
+  const [user, setUser] = useState<UserType | null>(null);
   const [showNewChat, setShowNewChat] = useState(false);
+
+  const handleLoginData = async (newUser: UserType) => {
+    setUser(newUser);
+  }
+
+  if (user === null) {
+    return (
+      <Login onReceive={handleLoginData}/>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-[#EDEDED]">
@@ -36,7 +43,7 @@ export default function Home() {
         <header className="h-16 px-4 flex justify-between items-center">
           <img
             className="w-10 h-10 rounded-[20px] cursor-pointer"
-            src={user.avatar}
+            src={user.photoURL ? user.photoURL : ""}
             alt="icone do avatar" />
           <div
             className="flex"

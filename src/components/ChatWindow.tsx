@@ -3,16 +3,9 @@ import IconItem from "./IconItem";
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import MessageItem from "./MessageItem";
+import { UserType } from "@/types/UserType";
 
-type Props = {
-    user: {
-        id: number,
-        avatar: string,
-        name: string
-    }
-}
-
-const ChatWindow = ({user}: Props) => {
+const ChatWindow = ({user}: {user: UserType}) => {
 
     const body = useRef<HTMLInputElement>(null);
     let recognition:SpeechRecognition;

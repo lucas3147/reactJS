@@ -1,13 +1,11 @@
+import { UserType } from "@/types/UserType";
+
 type Props = {
     data: { 
         body: string
         author: number
     };
-    user: {
-        id: number,
-        avatar: string,
-        name: string
-    }
+    user: UserType
 }
 
 const MessageItem = ({data, user}: Props) => {
