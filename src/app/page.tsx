@@ -13,18 +13,23 @@ import Api from '@/Api';
 
 export default function Home() {
 
-  const [chatList, setChatList] = useState<ChatItem[]>([
-    { id: 1, title: 'Lucas Lima', image: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png', date: '19:00' },
-    { id: 2, title: 'Gustavo', image: 'https://www.svgrepo.com/show/81103/avatar.svg', date: '19:15' },
-    { id: 4, title: 'Pai', image: 'https://cdn-icons-png.flaticon.com/512/475/475219.png', date: '19:45' }
-  ]);
+  const [chatList, setChatList] = useState<ChatItem[]>([]);
   const [activeChat, setActiveChat] = useState<ChatItem>();
   const [user, setUser] = useState<UserType | null>(null);
+  const [users, setUsers] = useState<UserType[]>([]);
   const [showNewChat, setShowNewChat] = useState(false);
 
   const handleLoginData = async (newUser: UserType) => {
     await Api.addUser(newUser);
     setUser(newUser);
+  }
+
+  const handleNewChat = async () => {
+    if (user){
+      const listUsers = await Api.getContactList(user.id);
+      setUsers(listUsers);
+      setShowNewChat(true);
+    }
   }
 
   if (user === null) {
@@ -38,7 +43,7 @@ export default function Home() {
       <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
         <NewChat 
           chatList={chatList}
-          user={user}
+          users={users}
           show={showNewChat}
           setShow={setShowNewChat}
         />
@@ -55,7 +60,7 @@ export default function Home() {
               type='DonutLargeIcon'
               style={{ color: '#919191' }}
             />
-            <div onClick={() => setShowNewChat(true)}>
+            <div onClick={handleNewChat}>
               <IconItem
                 className="iconTheme"
                 type='ChatIcon'

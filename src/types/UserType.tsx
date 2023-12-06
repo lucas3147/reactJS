@@ -1,5 +1,5 @@
 export type UserType = {
-    id: number,
+    id: string,
     photoURL: string | null,
     displayName: string | null
 }

@@ -9,7 +9,7 @@ const Login = ({onReceive}: Props) => {
     const handleLogin = async () => {
         let user = await Api.githubPopup();
         if (user){
-            const userRegister: UserType = {id: 1, displayName: user.displayName, photoURL: user.photoURL}
+            const userRegister: UserType = {id: user.uid, displayName: user.displayName, photoURL: user.photoURL}
             onReceive(userRegister);
         } else {
             alert('Não foi possível logar')

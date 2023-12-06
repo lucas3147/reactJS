@@ -2,7 +2,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import {app, auth} from './firebase.config';
 import { GithubAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDoc, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDoc, query, where, getDocs, doc } from 'firebase/firestore';
 
 const db = getFirestore(app);
 
@@ -32,13 +32,30 @@ export default {
                                 });
     },
     addUser: async (user) => {
-        const q = query(collection(db, "users"), where("name", "==", user.displayName))
+        const q = query(collection(db, "users"), where("name", "==", user.displayName));
         const docSnap = await getDocs(q);
         if (docSnap.docs.length == 0) {
             await addDoc(collection(db, 'users'), {
+                uid: user.id,
                 name: user.displayName,
                 photoUrl: user.photoURL
             });
         }
+    },
+    getContactList: async (myUserId) => {
+        let list = [];
+
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("uid", "!=", myUserId));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            list.push({
+                id: doc.data().uid,
+                photoURL: doc.data().photoUrl,
+                displayName: doc.data().name
+            });
+        });
+
+        return list;
     }
 };

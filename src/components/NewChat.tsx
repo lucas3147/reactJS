@@ -2,14 +2,8 @@ import { Props } from "@/types/NewChatType";
 import IconItem from "./IconItem";
 import { useState } from "react";
 
-const NewChat = ({chatList, user, show, setShow}: Props) => {
-    const [list, setList] = useState([
-        {id: 123, avatar: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png', name: 'Lucas Lima'},
-        {id: 123, avatar: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png', name: 'Lucas Lima'},
-        {id: 123, avatar: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png', name: 'Lucas Lima'},
-        {id: 123, avatar: 'https://cdn0.iconfinder.com/data/icons/standard-characters/101/mature_male_slicked3-1024.png', name: 'Lucas Lima'},
-    ]);
-
+const NewChat = ({chatList, users, show, setShow}: Props) => {
+    const [list, setList] = useState(users);
     return (
         <div
             className="transition-all duration-500 w-[35%] max-w-[415px] fixed top-0 bottom-0 bg-[white] flex flex-col border-r-[1px] border-[#DDD]"
@@ -41,12 +35,12 @@ const NewChat = ({chatList, user, show, setShow}: Props) => {
                     >
                         <img 
                             className="w-[50px] h-[50px] rounded-[50%] mr-4" 
-                            src={item.avatar} 
+                            src={item.photoURL ? item.photoURL : ''} 
                             alt="avatar do perfil" />
                         <div 
                             className="text-[17px] text-black"
                         >
-                            {item.name}
+                            {item.displayName}
                         </div>
                     </div>
                 ))}
