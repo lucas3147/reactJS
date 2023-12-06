@@ -3,7 +3,6 @@ import IconItem from "./IconItem";
 import { useState } from "react";
 
 const NewChat = ({chatList, users, show, setShow}: Props) => {
-    const [list, setList] = useState(users);
     return (
         <div
             className="transition-all duration-500 w-[35%] max-w-[415px] fixed top-0 bottom-0 bg-[white] flex flex-col border-r-[1px] border-[#DDD]"
@@ -26,9 +25,10 @@ const NewChat = ({chatList, users, show, setShow}: Props) => {
                     Nova conversa
                 </div>
             </div>
+            
             <div 
                 className="newChat--list">
-                {list.map((item, key) => (
+                {users.map((item, key) => (
                     <div 
                         key={key}
                         className="flex items-center p-4 cursor-pointer hover:bg-[#F5F5F5]"
