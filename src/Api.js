@@ -64,35 +64,40 @@ export default {
         return list;
     },
     addNewChat: async (user, otherUser) => {
-        let newChat = await addDoc(collection(db, 'chats'), {
-            messages: [],
-            users: [user.id, otherUser.id]
-        });
-
-        let docRef = doc(db, 'users', user.codeDataBase);
-
-        await updateDoc(docRef, {
-            chats: arrayUnion({
-                chatId: newChat.id,
-                title: otherUser.displayName,
-                image: otherUser.photoURL,
-                with: otherUser.id
-            })
-        });
-
-        docRef = doc(db, 'users', otherUser.codeDataBase);
-
-        await updateDoc(docRef, {
-            chats: arrayUnion({
-                chatId: newChat.id,
-                title: user.displayName,
-                image: user.photoURL,
-                with: user.id
-            })
-        });
+        const usersRef = collection(db, "chats");
+        const q = query(usersRef, where("users", "array-contains", otherUser.id));
+        const docSnapshot = await getDocs(q);
+        if (docSnapshot.docs.length == 0) {
+            let newChat = await addDoc(collection(db, 'chats'), {
+                messages: [],
+                users: [user.id, otherUser.id]
+            });
+    
+            let docRef = doc(db, 'users', user.codeDataBase);
+    
+            await updateDoc(docRef, {
+                chats: arrayUnion({
+                    chatId: newChat.id,
+                    title: otherUser.displayName,
+                    image: otherUser.photoURL,
+                    with: otherUser.id
+                })
+            });
+    
+            docRef = doc(db, 'users', otherUser.codeDataBase);
+    
+            await updateDoc(docRef, {
+                chats: arrayUnion({
+                    chatId: newChat.id,
+                    title: user.displayName,
+                    image: user.photoURL,
+                    with: user.id
+                })
+            });
+        }
     },
     onChatList: (codeUser, setChatList) => {
-        return onSnapshot(doc(db, 'chats', codeUser), (doc) => {
+        return onSnapshot(doc(db, 'users', codeUser), (doc) => {
             if (doc.exists) {
                 let data = doc.data();
                 if (data.chats) {

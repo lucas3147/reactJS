@@ -30,8 +30,7 @@ const ChatListItem = ({onClick, active, chatItem}: Props) => {
                     <p
                         className="overflow-hidden whitespace-nowrap text-ellipsis m-0"
                     >
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus, fugit quasi expedita laboriosam nihil aliquam tenetur saepe eveniet atque modi officiis quibusdam alias facere repellendus corporis enim excepturi dolorem numquam.
-                        ?</p>
+                        {chatItem.lastMessage}</p>
                 </div>
             </div>
         </div>
