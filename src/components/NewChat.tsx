@@ -1,8 +1,28 @@
 import { Props } from "@/types/NewChatType";
 import IconItem from "./IconItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { UserType } from "@/types/UserType";
+import Api from "@/Api";
 
-const NewChat = ({chatList, users, show, setShow}: Props) => {
+const NewChat = ({chatList, user, show, setShow}: Props) => {
+    const [list, setList] = useState<UserType[]>([])
+
+    useEffect(() => {
+        const getList = async () => {
+            if (user){
+                const listUsers = await Api.getContactList(user.id);
+                setList(listUsers);
+            }
+        }
+        getList();
+    }, [user]);
+
+    const addNewChat = async (otherUser: UserType) => {
+        await Api.addNewChat(user, otherUser);
+
+        setShow(false);
+    }
+
     return (
         <div
             className="transition-all duration-500 w-[35%] max-w-[415px] fixed top-0 bottom-0 bg-[white] flex flex-col border-r-[1px] border-[#DDD]"
@@ -28,10 +48,11 @@ const NewChat = ({chatList, users, show, setShow}: Props) => {
             
             <div 
                 className="newChat--list">
-                {users.map((item, key) => (
+                {list.map((item, key) => (
                     <div 
                         key={key}
                         className="flex items-center p-4 cursor-pointer hover:bg-[#F5F5F5]"
+                        onClick={() => addNewChat(item)}
                     >
                         <img 
                             className="w-[50px] h-[50px] rounded-[50%] mr-4" 

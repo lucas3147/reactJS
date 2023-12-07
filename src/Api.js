@@ -1,8 +1,8 @@
 import 'firebase/auth';
 import 'firebase/firestore';
 import {app, auth} from './firebase.config';
-import { GithubAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDoc, query, where, getDocs, doc } from 'firebase/firestore';
+import { GithubAuthProvider, signInWithPopup, getAuth, updateCurrentUser } from "firebase/auth";
+import { getFirestore, collection, addDoc, onSnapshot, query, where, getDocs, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 const db = getFirestore(app);
 
@@ -32,14 +32,18 @@ export default {
                                 });
     },
     addUser: async (user) => {
-        const q = query(collection(db, "users"), where("name", "==", user.displayName));
+        const q = query(collection(db, "users"), where("uid", "==", user.id));
         const docSnap = await getDocs(q);
         if (docSnap.docs.length == 0) {
-            await addDoc(collection(db, 'users'), {
+            const docRef = await addDoc(collection(db, 'users'), {
                 uid: user.id,
                 name: user.displayName,
                 photoUrl: user.photoURL
             });
+
+            user.codeDataBase = docRef.id;
+        } else {
+            user.codeDataBase = docSnap.docs[0].id;
         }
     },
     getContactList: async (myUserId) => {
@@ -52,10 +56,49 @@ export default {
             list.push({
                 id: doc.data().uid,
                 photoURL: doc.data().photoUrl,
-                displayName: doc.data().name
+                displayName: doc.data().name,
+                codeDataBase: doc.id
             });
         });
 
         return list;
+    },
+    addNewChat: async (user, otherUser) => {
+        let newChat = await addDoc(collection(db, 'chats'), {
+            messages: [],
+            users: [user.id, otherUser.id]
+        });
+
+        let docRef = doc(db, 'users', user.codeDataBase);
+
+        await updateDoc(docRef, {
+            chats: arrayUnion({
+                chatId: newChat.id,
+                title: otherUser.displayName,
+                image: otherUser.photoURL,
+                with: otherUser.id
+            })
+        });
+
+        docRef = doc(db, 'users', otherUser.codeDataBase);
+
+        await updateDoc(docRef, {
+            chats: arrayUnion({
+                chatId: newChat.id,
+                title: user.displayName,
+                image: user.photoURL,
+                with: user.id
+            })
+        });
+    },
+    onChatList: (codeUser, setChatList) => {
+        return onSnapshot(doc(db, 'chats', codeUser), (doc) => {
+            if (doc.exists) {
+                let data = doc.data();
+                if (data.chats) {
+                    setChatList(data.chats);
+                }
+            }
+        });
     }
 };

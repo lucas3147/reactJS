@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChatListItem from '@/components/ChatListItem';
 import ChatIntro from '@/components/ChatIntro';
 import ChatWindow from '@/components/ChatWindow';
@@ -16,8 +16,14 @@ export default function Home() {
   const [chatList, setChatList] = useState<ChatItem[]>([]);
   const [activeChat, setActiveChat] = useState<ChatItem>();
   const [user, setUser] = useState<UserType | null>(null);
-  const [users, setUsers] = useState<UserType[]>([]);
   const [showNewChat, setShowNewChat] = useState(false);
+
+  useEffect(() => {
+    if (user !== null) {
+      let onsub = Api.onChatList(user.codeDataBase, setChatList);
+      return onsub;
+    }
+  },[user]);
 
   const handleLoginData = async (newUser: UserType) => {
     await Api.addUser(newUser);
@@ -25,11 +31,7 @@ export default function Home() {
   }
 
   const handleNewChat = async () => {
-    if (user){
-      const listUsers = await Api.getContactList(user.id);
-      setUsers(listUsers);
-      setShowNewChat(true);
-    }
+    setShowNewChat(true);
   }
 
   if (user === null) {
@@ -43,7 +45,7 @@ export default function Home() {
       <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
         <NewChat 
           chatList={chatList}
-          users={users}
+          user={user}
           show={showNewChat}
           setShow={setShowNewChat}
         />

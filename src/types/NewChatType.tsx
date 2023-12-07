@@ -3,7 +3,7 @@ import { UserType } from './UserType';
 
 export type Props = {
     chatList: ChatItem[],
-    users: UserType[],
+    user: UserType,
     show: boolean,
     setShow: (showNewChat: boolean) => void
 }
