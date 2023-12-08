@@ -1,9 +1,11 @@
 import { UserType } from "@/types/UserType";
+import { Timestamp } from "firebase/firestore";
 
 type Props = {
-    data: { 
-        body: string
-        author: number
+    data: {
+        body: string,
+        author: string,
+        date: Timestamp
     };
     user: UserType
 }
@@ -28,7 +30,7 @@ const MessageItem = ({data, user}: Props) => {
                 }
                 >
                 <div className="text-sm my-[5px] mr-10 ml-[5px]">{data.body}</div>
-                <div className="text-[11px] text-[#999] mt-[-15px] mr-[5px] text-right h-4">13:00</div>
+                <div className="text-[11px] text-[#999] mt-[-15px] mr-[5px] text-right h-4">{`${data.date.toDate().getHours()}:${data.date.toDate().getMinutes()}`}</div>
             </div>
 
         </div>

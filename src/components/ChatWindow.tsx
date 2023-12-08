@@ -4,8 +4,10 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import MessageItem from "./MessageItem";
 import { UserType } from "@/types/UserType";
+import { ChatItem } from "@/types/ChatType";
+import Api from "@/Api";
 
-const ChatWindow = ({user}: {user: UserType}) => {
+const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) => {
 
     const body = useRef<HTMLInputElement>(null);
     let recognition:SpeechRecognition;
@@ -18,18 +20,20 @@ const ChatWindow = ({user}: {user: UserType}) => {
     const [emojiOpen, setEmojiOpen] = useState(false);
     const [text, setText] = useState('');
     const [listening, setListening] = useState(false);
-    const [list, setList] = useState([
-        {body: 'Teste', author: 123},
-        {body: 'Teste', author: 123},
-        {body: 'Teste', author: 1234},
-        {body: 'Teste', author: 123},
-    ]);
+    const [list, setList] = useState([]);
+    const [users, setUsers] = useState<UserType>();
 
     useEffect(() => {
         if (body.current && body.current.scrollHeight > body.current.offsetHeight){
             body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight;
         }
-    }, [list])
+    }, [list]);
+
+    useEffect(() => {
+        setList([]);
+        let unsub = Api.onChatContent(activeChat.chatId, setList, setUsers);
+        return unsub;
+    }, [activeChat.chatId]);
 
     const handleEmojiClick = (data: any) => {
         setText(text + data.native);
@@ -54,8 +58,18 @@ const ChatWindow = ({user}: {user: UserType}) => {
         }
     }
 
-    const handleSendClick = () => {
+    const handleSendClick = async () => {
+        if (text !== '') {
+            setText('');
+            setEmojiOpen(false);
+            await Api.sendMessage(activeChat, user.id, 'text', text, users);
+        }
+    }
 
+    const handleInputKeyUp = (e: any) => {
+        if (e.keyCode == 13) {
+            handleSendClick();
+        }
     }
 
     return (
@@ -67,13 +81,13 @@ const ChatWindow = ({user}: {user: UserType}) => {
                 >
                     <img
                         className="h-10 w-10 rounded-[50%] ml-4 mr-4"
-                        src="https://www.svgrepo.com/show/81103/avatar.svg"
+                        src={activeChat.image}
                         alt=""
                     />
                     <div
                         className="text-base text-black"
                     >
-                        Gustavo
+                        {activeChat.title}
                     </div>
                 </div>
 
@@ -126,6 +140,7 @@ const ChatWindow = ({user}: {user: UserType}) => {
                         placeholder="Digite uma mensagem"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
+                        onKeyUp={handleInputKeyUp}
                     />
                 </div>
                 <div className="flex my-0 mx-4">

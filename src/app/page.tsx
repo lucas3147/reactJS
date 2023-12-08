@@ -96,19 +96,20 @@ export default function Home() {
             <ChatListItem
               key={key}
               chatItem={chatList[key]}
-              active={activeChat?.id == chatList[key].id}
+              active={activeChat?.chatId == chatList[key].chatId}
               onClick={() => setActiveChat(chatList[key])}
             />
           ))}
         </div>
       </div>
       <div className="flex-1">
-        {activeChat?.id !== undefined &&
+        {activeChat?.chatId !== undefined &&
           <ChatWindow 
             user={user}
+            activeChat={activeChat}
           />
         }
-        {activeChat?.id == undefined &&
+        {activeChat?.chatId == undefined &&
           <ChatIntro />
         }
 

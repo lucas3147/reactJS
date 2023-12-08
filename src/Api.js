@@ -2,7 +2,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import {app, auth} from './firebase.config';
 import { GithubAuthProvider, signInWithPopup, getAuth, updateCurrentUser } from "firebase/auth";
-import { getFirestore, collection, addDoc, onSnapshot, query, where, getDocs, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, onSnapshot, query, where, getDocs, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 
 const db = getFirestore(app);
 
@@ -70,7 +70,7 @@ export default {
         if (docSnapshot.docs.length == 0) {
             let newChat = await addDoc(collection(db, 'chats'), {
                 messages: [],
-                users: [user.id, otherUser.id]
+                users: [user.codeDataBase, otherUser.codeDataBase]
             });
     
             let docRef = doc(db, 'users', user.codeDataBase);
@@ -105,5 +105,50 @@ export default {
                 }
             }
         });
+    },
+    onChatContent: (chatId, setList, setUsers) => {
+        return onSnapshot(doc(db, 'chats', chatId), (doc) => {
+            if (doc.exists) {
+                let data = doc.data();
+                setList(data.messages);
+                setUsers(data.users);
+            }
+        });
+    },
+    sendMessage: async (chatData, userId, type, body, users) => {
+        let now = new Date();
+        let docRef = doc(db, 'chats', chatData.chatId);
+    
+        await updateDoc(docRef, {
+            messages: arrayUnion({
+                type,
+                author: userId,
+                body,
+                date: now
+            })
+        });
+        console.log(users)
+
+        for(let i in users) {
+            let docRef = doc(db, 'users', users[i]);
+
+            let docSnap = await getDoc(docRef);
+            let data = docSnap.data();
+            console.log(data);
+            if (data.chats) {
+                let chats = [...data.chats];
+
+                for (let e in chats) {
+                    if (chats[e].chatId == chatData.chatId) {
+                        chats[e].lastMessage = body;
+                        chats[e].lastMessageDate = now;
+                    }
+                }
+
+                await updateDoc(docRef, {
+                    chats
+                });
+            }
+        }
     }
 };

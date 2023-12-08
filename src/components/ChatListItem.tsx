@@ -24,7 +24,7 @@ const ChatListItem = ({onClick, active, chatItem}: Props) => {
                     className="flex justify-between items-center w-full"
                 >
                     <div className="text-base">{chatItem.title}</div>
-                    <div className="text-xs text-[#999]">{chatItem.date}</div>
+                    <div className="text-xs text-[#999]">{`${chatItem.lastMessageDate.toDate().getHours()}:${chatItem.lastMessageDate.toDate().getMinutes()}`}</div>
                 </div>
                 <div className="text-sm text-[#999] w-full">
                     <p

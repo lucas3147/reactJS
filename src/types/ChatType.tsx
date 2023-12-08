@@ -1,7 +1,9 @@
+import { Timestamp } from "firebase/firestore"
+
 export type ChatItem = {
-    id: number,
+    chatId: string,
     title: string,
     image: string,
-    date: string,
+    lastMessageDate: Timestamp,
     lastMessage: string
 }
