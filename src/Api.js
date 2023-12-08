@@ -140,14 +140,12 @@ export default {
                 date: now
             })
         });
-        console.log(users)
 
         for(let i in users) {
             let docRef = doc(db, 'users', users[i]);
 
             let docSnap = await getDoc(docRef);
             let data = docSnap.data();
-            console.log(data);
             if (data.chats) {
                 let chats = [...data.chats];
 
