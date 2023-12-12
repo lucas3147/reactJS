@@ -4,23 +4,24 @@ import { useState, useEffect } from "react";
 import { UserType } from "@/types/UserType";
 import Api from "@/Api";
 
-const NewChat = ({chatList, user, show, setShow}: Props) => {
-    const [list, setList] = useState<UserType[]>([])
+const NewChat = ({listContacts, setListContacts, user, show, setShow}: Props) => {
+    const [list, setList] = useState<UserType[]>([]);
 
     useEffect(() => {
         const getList = async () => {
             if (user){
-                let listContacts = await Api.getContactsIncluded(user.id);
                 const listUsers = await Api.getContactList(listContacts);
                 setList(listUsers);
             }
         }
         getList();
-    }, [user]);
+    }, [listContacts]);
 
     const addNewChat = async (otherUser: UserType) => {
         await Api.addNewChat(user, otherUser);
-
+        let newContacts = await Api.getContactsIncluded(user.id);
+        console.log(newContacts)
+        setListContacts(newContacts);
         setShow(false);
     }
 

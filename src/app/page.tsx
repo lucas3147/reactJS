@@ -17,16 +17,19 @@ export default function Home() {
   const [activeChat, setActiveChat] = useState<ChatItem>();
   const [user, setUser] = useState<UserType | null>(null);
   const [showNewChat, setShowNewChat] = useState(false);
+  const [listContacts, setListContacts] = useState<any[]>([]);
 
   useEffect(() => {
     if (user !== null) {
       let onsub = Api.onChatList(user.codeDataBase, setChatList);
       return onsub;
     }
-  },[user]);
+  },[listContacts]);
 
   const handleLoginData = async (newUser: UserType) => {
     await Api.addUser(newUser);
+    let contacts = await Api.getContactsIncluded(newUser.id);
+    setListContacts(contacts);
     setUser(newUser);
   }
 
@@ -44,7 +47,8 @@ export default function Home() {
     <div className="flex h-screen bg-[#EDEDED]">
       <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
         <NewChat 
-          chatList={chatList}
+          listContacts={listContacts}
+          setListContacts={setListContacts}
           user={user}
           show={showNewChat}
           setShow={setShowNewChat}
