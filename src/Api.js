@@ -144,12 +144,14 @@ export default {
         });
 
         for(let i in users) {
-            let docRef = doc(db, 'users', users[i]);
+            let docRef = collection(db, "users");
 
-            let docSnap = await getDoc(docRef);
-            let data = docSnap.data();
-            if (data.chats) {
-                let chats = [...data.chats];
+            
+            const q = query(docRef, where("uid", "==", users[i]));
+            const docSnap = await getDocs(q);
+            let data = docSnap.docs[0];
+            if (data.data().chats) {
+                let chats = [...data.data().chats];
 
                 for (let e in chats) {
                     if (chats[e].chatId == chatData.chatId) {
@@ -158,7 +160,7 @@ export default {
                     }
                 }
 
-                await updateDoc(docRef, {
+                await updateDoc(doc(db, 'users', data.id), {
                     chats
                 });
             }
