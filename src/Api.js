@@ -44,13 +44,17 @@ export default {
             user.codeDataBase = docRef.id;
         } else {
             user.codeDataBase = docSnap.docs[0].id;
+            await updateDoc(doc(db, 'users', user.codeDataBase), {
+                uid: user.id,
+                name: user.displayName,
+                photoUrl: user.photoURL
+            });
         }
     },
-    getContactList: async (myUserId) => {
+    getContactList: async (myContactsIncluded) => {
         let list = [];
-
         const usersRef = collection(db, "users");
-        const q = query(usersRef, where("uid", "!=", myUserId));
+        const q = query(usersRef, where("uid", "not-in", myContactsIncluded));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             list.push({
@@ -66,7 +70,7 @@ export default {
     addNewChat: async (user, otherUser) => {
         let newChat = await addDoc(collection(db, 'chats'), {
             messages: [],
-            users: [user.codeDataBase, otherUser.codeDataBase]
+            users: [user.id, otherUser.id]
         });
     
         let docRef = doc(db, 'users', user.codeDataBase);
@@ -159,5 +163,19 @@ export default {
                 });
             }
         }
+    },
+    getContactsIncluded: async (myUserId) => {
+        let list = [];
+        const usersRef = collection(db, "chats");
+        const q = query(usersRef, where("users", "array-contains", myUserId));
+        const docSnapshot = await getDocs(q);
+        docSnapshot.forEach((doc) => {
+            list.push(doc.data().users[0]);
+            list.push(doc.data().users[1]);
+        });
+        if(list.length == 0){
+            list.push(myUserId);
+        }
+        return list;
     }
 };

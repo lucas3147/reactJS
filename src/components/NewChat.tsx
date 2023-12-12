@@ -10,7 +10,8 @@ const NewChat = ({chatList, user, show, setShow}: Props) => {
     useEffect(() => {
         const getList = async () => {
             if (user){
-                const listUsers = await Api.getContactList(user.id);
+                let listContacts = await Api.getContactsIncluded(user.id);
+                const listUsers = await Api.getContactList(listContacts);
                 setList(listUsers);
             }
         }
