@@ -1,4 +1,5 @@
 import { ChatItem } from "@/types/ChatType"
+import { useState } from "react";
 
 type Props = {
     onClick: () => void,
@@ -24,7 +25,9 @@ const ChatListItem = ({onClick, active, chatItem}: Props) => {
                     className="flex justify-between items-center w-full"
                 >
                     <div className="text-base">{chatItem.title}</div>
-                    <div className="text-xs text-[#999]">{`${chatItem.lastMessageDate.toDate().getHours()}:${chatItem.lastMessageDate.toDate().getMinutes()}`}</div>
+                    <div className="text-xs text-[#999]">
+                        {chatItem.lastMessageDate && `${chatItem.lastMessageDate.toDate().getHours().toString().padStart(2, '0')}:${chatItem.lastMessageDate.toDate().getMinutes().toString().padStart(2, '0')}`}
+                    </div>
                 </div>
                 <div className="text-sm text-[#999] w-full">
                     <p

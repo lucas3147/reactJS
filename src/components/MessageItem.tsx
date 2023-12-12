@@ -30,7 +30,7 @@ const MessageItem = ({data, user}: Props) => {
                 }
                 >
                 <div className="text-sm my-[5px] mr-10 ml-[5px]">{data.body}</div>
-                <div className="text-[11px] text-[#999] mt-[-15px] mr-[5px] text-right h-4">{`${data.date.toDate().getHours()}:${data.date.toDate().getMinutes()}`}</div>
+                <div className="text-[11px] text-[#999] mt-[-15px] mr-[5px] text-right h-4">{`${data.date.toDate().getHours().toString().padStart(2, '0')}:${data.date.toDate().getMinutes().toString().padStart(2, '0')}`}</div>
             </div>
 
         </div>

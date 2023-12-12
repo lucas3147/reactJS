@@ -64,37 +64,32 @@ export default {
         return list;
     },
     addNewChat: async (user, otherUser) => {
-        const usersRef = collection(db, "chats");
-        const q = query(usersRef, where("users", "array-contains", otherUser.id));
-        const docSnapshot = await getDocs(q);
-        if (docSnapshot.docs.length == 0) {
-            let newChat = await addDoc(collection(db, 'chats'), {
-                messages: [],
-                users: [user.codeDataBase, otherUser.codeDataBase]
-            });
+        let newChat = await addDoc(collection(db, 'chats'), {
+            messages: [],
+            users: [user.codeDataBase, otherUser.codeDataBase]
+        });
     
-            let docRef = doc(db, 'users', user.codeDataBase);
+        let docRef = doc(db, 'users', user.codeDataBase);
     
-            await updateDoc(docRef, {
-                chats: arrayUnion({
-                    chatId: newChat.id,
-                    title: otherUser.displayName,
-                    image: otherUser.photoURL,
-                    with: otherUser.id
-                })
-            });
+        await updateDoc(docRef, {
+            chats: arrayUnion({
+                chatId: newChat.id,
+                title: otherUser.displayName,
+                image: otherUser.photoURL,
+                with: otherUser.id
+            })
+        });
     
-            docRef = doc(db, 'users', otherUser.codeDataBase);
+        docRef = doc(db, 'users', otherUser.codeDataBase);
     
-            await updateDoc(docRef, {
-                chats: arrayUnion({
-                    chatId: newChat.id,
-                    title: user.displayName,
-                    image: user.photoURL,
-                    with: user.id
-                })
-            });
-        }
+        await updateDoc(docRef, {
+            chats: arrayUnion({
+                chatId: newChat.id,
+                title: user.displayName,
+                image: user.photoURL,
+                with: user.id
+            })
+        });
     },
     onChatList: (codeUser, setChatList) => {
         return onSnapshot(doc(db, 'users', codeUser), (doc) => {
@@ -104,7 +99,10 @@ export default {
                     let chats = [...data.chats];
 
                     chats.sort((a,b) => {
-                        if (a.lastMessageDate === undefined || b.lastMessageDate === undefined) {
+                        if (a.lastMessageDate === undefined) {
+                            return -1;
+                        }
+                        if (b.lastMessageDate === undefined) {
                             return -1;
                         }
                         if (a.lastMessageDate.seconds < b.lastMessageDate.seconds) {
@@ -114,7 +112,7 @@ export default {
                         }
                     })
 
-                    setChatList(data.chats);
+                    setChatList(chats);
                 }
             }
         });
