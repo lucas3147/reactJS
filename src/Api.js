@@ -52,20 +52,27 @@ export default {
 
             const q = query(collection(db, "users"), where("uid", "!=", user.id));
             const querySnapshot = await getDocs(q);
+            let listChatsOfUser = [];
             if (querySnapshot){
-                querySnapshot.forEach((docRef) => {
+                querySnapshot.forEach(async (docRef) => {
                     if (docRef.data().chats){
-                        docRef.data().chats.forEach(async (chat) => {
+                        docRef.data().chats.forEach((chat) => {
                             if (chat.with == user.id) 
                             {
-                                await updateDoc(doc(db, 'users', docRef.id), {
-                                    chats: [{
-                                        ...chat,
-                                        title: user.displayName,
-                                    }]
+                                listChatsOfUser.push({
+                                    ...chat,
+                                    title: user.displayName,
+                                });
+                            } else {
+                                listChatsOfUser.push({
+                                    ...chat
                                 });
                             }
-                        })
+                        });
+
+                        await updateDoc(doc(db, 'users', docRef.id), {
+                            chats: listChatsOfUser
+                        });
                     }
                 });
             }
