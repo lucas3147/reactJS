@@ -49,6 +49,26 @@ export default {
                 name: user.displayName,
                 photoUrl: user.photoURL
             });
+
+            const q = query(collection(db, "users"), where("uid", "!=", user.id));
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot){
+                querySnapshot.forEach((docRef) => {
+                    if (docRef.data().chats){
+                        docRef.data().chats.forEach(async (chat) => {
+                            if (chat.with == user.id) 
+                            {
+                                await updateDoc(doc(db, 'users', docRef.id), {
+                                    chats: [{
+                                        ...chat,
+                                        title: user.displayName,
+                                    }]
+                                });
+                            }
+                        })
+                    }
+                });
+            }
         }
     },
     getContactList: async (myContactsIncluded) => {

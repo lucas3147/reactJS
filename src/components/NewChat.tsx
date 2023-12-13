@@ -20,7 +20,6 @@ const NewChat = ({listContacts, setListContacts, user, show, setShow}: Props) =>
     const addNewChat = async (otherUser: UserType) => {
         await Api.addNewChat(user, otherUser);
         let newContacts = await Api.getContactsIncluded(user.id);
-        console.log(newContacts)
         setListContacts(newContacts);
         setShow(false);
     }
