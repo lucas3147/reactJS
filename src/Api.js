@@ -56,7 +56,10 @@ export default {
             if (querySnapshot){
                 querySnapshot.forEach(async (docRef) => {
                     if (docRef.data().chats){
+                        listChatsOfUser = [];
+
                         docRef.data().chats.forEach((chat) => {
+
                             if (chat.with == user.id) 
                             {
                                 listChatsOfUser.push({
