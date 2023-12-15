@@ -30,7 +30,7 @@ const NewChat = ({listContacts, setListContacts, user, show, setShow}: Props) =>
             style={{left: show ? '0' : '-415px'}}
         >
             <div
-                className="flex bg-[#00BFA5] items-center px-4 pb-4 pt-[60px]">
+                className="flex bg-[#008069] items-center px-4 pb-4 pt-[60px]">
 
                 <div onClick={() => setShow(false)}>
                     <IconItem

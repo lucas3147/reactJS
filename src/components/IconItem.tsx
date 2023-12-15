@@ -9,6 +9,8 @@ import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
 
 type Props = {
     type: IconType,
@@ -16,7 +18,7 @@ type Props = {
     className?: string
 }
 
-type IconType = 'ArrowBackIcon' | 'InsertEmoticonIcon' | 'MicIcon' | 'SendIcon' | 'CloseIcon' | 'EmojiEmotionsIcon' | 'DonutLargeIcon' |'AttachFileIcon' | 'ChatIcon' | 'MoreVertIcon' | 'SearchIcon';
+type IconType = 'CheckIcon' | 'EditIcon' | 'ArrowBackIcon' | 'InsertEmoticonIcon' | 'MicIcon' | 'SendIcon' | 'CloseIcon' | 'EmojiEmotionsIcon' | 'DonutLargeIcon' |'AttachFileIcon' | 'ChatIcon' | 'MoreVertIcon' | 'SearchIcon';
 
 const IconItem = ({type, style, className}: Props) => {
     return (
@@ -53,6 +55,12 @@ const IconItem = ({type, style, className}: Props) => {
             }
             {type == 'ArrowBackIcon' &&
                 <ArrowBackIcon style={style}/>
+            }
+            {type == 'EditIcon' &&
+                <EditIcon style={style}/>
+            }
+            {type == 'CheckIcon' &&
+                <CheckIcon style={style}/>
             }
         </div>
     )

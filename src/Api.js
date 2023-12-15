@@ -42,43 +42,59 @@ export default {
             });
 
             user.codeDataBase = docRef.id;
+            return true;
         } else {
             user.codeDataBase = docSnap.docs[0].id;
-            await updateDoc(doc(db, 'users', user.codeDataBase), {
-                uid: user.id,
-                name: user.displayName,
-                photoUrl: user.photoURL
+            return false;
+        }
+    },
+    getUser: async (myUserId) => {
+        const q = query(collection(db, "users"), where("uid", "==", myUserId));
+        const docSnap = await getDocs(q);
+        let data = docSnap.docs[0].data();
+
+        return {
+            id: data.uid,
+            photoURL: data.photoUrl,
+            displayName: data.name,
+            codeDataBase: docSnap.docs[0].id
+        }
+    },
+    updateUser: async (user) => {
+        await updateDoc(doc(db, 'users', user.codeDataBase), {
+            uid: user.id,
+            name: user.displayName,
+            photoUrl: user.photoURL
+        });
+
+        const q = query(collection(db, "users"), where("uid", "!=", user.id));
+        const querySnapshot = await getDocs(q);
+        let listChatsOfUser = [];
+        if (querySnapshot){
+            querySnapshot.forEach(async (docRef) => {
+                if (docRef.data().chats){
+                    listChatsOfUser = [];
+
+                    docRef.data().chats.forEach((chat) => {
+
+                        if (chat.with == user.id) 
+                        {
+                            listChatsOfUser.push({
+                                ...chat,
+                                title: user.displayName,
+                            });
+                        } else {
+                            listChatsOfUser.push({
+                                ...chat
+                            });
+                        }
+                    });
+
+                    await updateDoc(doc(db, 'users', docRef.id), {
+                        chats: listChatsOfUser
+                    });
+                }
             });
-
-            const q = query(collection(db, "users"), where("uid", "!=", user.id));
-            const querySnapshot = await getDocs(q);
-            let listChatsOfUser = [];
-            if (querySnapshot){
-                querySnapshot.forEach(async (docRef) => {
-                    if (docRef.data().chats){
-                        listChatsOfUser = [];
-
-                        docRef.data().chats.forEach((chat) => {
-
-                            if (chat.with == user.id) 
-                            {
-                                listChatsOfUser.push({
-                                    ...chat,
-                                    title: user.displayName,
-                                });
-                            } else {
-                                listChatsOfUser.push({
-                                    ...chat
-                                });
-                            }
-                        });
-
-                        await updateDoc(doc(db, 'users', docRef.id), {
-                            chats: listChatsOfUser
-                        });
-                    }
-                });
-            }
         }
     },
     getContactList: async (myContactsIncluded) => {

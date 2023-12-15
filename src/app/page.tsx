@@ -10,6 +10,7 @@ import NewChat from '@/components/NewChat';
 import { UserType } from '@/types/UserType';
 import Login from '@/components/Login';
 import Api from '@/Api';
+import Perfil from '@/components/Perfil';
 
 export default function Home() {
 
@@ -17,6 +18,7 @@ export default function Home() {
   const [activeChat, setActiveChat] = useState<ChatItem>();
   const [user, setUser] = useState<UserType | null>(null);
   const [showNewChat, setShowNewChat] = useState(false);
+  const [showPerfil, setShowPerfil] = useState(false);
   const [listContacts, setListContacts] = useState<any[]>([]);
 
   useEffect(() => {
@@ -27,7 +29,10 @@ export default function Home() {
   },[listContacts]);
 
   const handleLoginData = async (newUser: UserType) => {
-    await Api.addUser(newUser);
+    let userAdded = await Api.addUser(newUser);
+    if (userAdded == false) {
+      newUser = await Api.getUser(newUser.id);
+    }
     let contacts = await Api.getContactsIncluded(newUser.id);
     setListContacts(contacts);
     setUser(newUser);
@@ -35,6 +40,10 @@ export default function Home() {
 
   const handleNewChat = async () => {
     setShowNewChat(true);
+  }
+
+  const handlePerfil = async () => {
+    setShowPerfil(true);
   }
 
   if (user === null) {
@@ -53,11 +62,19 @@ export default function Home() {
           show={showNewChat}
           setShow={setShowNewChat}
         />
+        <Perfil
+          show={showPerfil}
+          setShow={setShowPerfil}
+          user={user}
+          setUser={setUser}
+        />
         <header className="h-16 px-4 flex justify-between items-center">
-          <img
-            className="w-10 h-10 rounded-[20px] cursor-pointer"
-            src={user.photoURL ? user.photoURL : ""}
-            alt="icone do avatar" />
+          <div onClick={handlePerfil}>
+            <img
+              className="w-10 h-10 rounded-[20px] cursor-pointer"
+              src={user.photoURL ? user.photoURL : ""}
+              alt="icone do avatar" />
+          </div>
           <div
             className="flex"
           >
