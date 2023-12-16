@@ -114,32 +114,39 @@ export default {
         return list;
     },
     addNewChat: async (user, otherUser) => {
-        let newChat = await addDoc(collection(db, 'chats'), {
-            messages: [],
-            users: [user.id, otherUser.id]
-        });
-    
-        let docRef = doc(db, 'users', user.codeDataBase);
-    
-        await updateDoc(docRef, {
-            chats: arrayUnion({
-                chatId: newChat.id,
-                title: otherUser.displayName,
-                image: otherUser.photoURL,
-                with: otherUser.id
-            })
-        });
-    
-        docRef = doc(db, 'users', otherUser.codeDataBase);
-    
-        await updateDoc(docRef, {
-            chats: arrayUnion({
-                chatId: newChat.id,
-                title: user.displayName,
-                image: user.photoURL,
-                with: user.id
-            })
-        });
+        const usersRef = collection(db, "chats");
+        const q = query(usersRef, where("users", "array-contains", user.id));
+        const docSnapshot = await getDocs(q);
+        let data = true;
+        data = docSnapshot.docs.some(d => d.data().users[0] == otherUser.id || d.data().users[1] == otherUser.id);
+        if (data == false) {
+            let newChat = await addDoc(collection(db, 'chats'), {
+                messages: [],
+                users: [user.id, otherUser.id]
+            });
+
+            let docRef = doc(db, 'users', user.codeDataBase);
+
+            await updateDoc(docRef, {
+                chats: arrayUnion({
+                    chatId: newChat.id,
+                    title: otherUser.displayName,
+                    image: otherUser.photoURL,
+                    with: otherUser.id
+                })
+            });
+
+            docRef = doc(db, 'users', otherUser.codeDataBase);
+
+            await updateDoc(docRef, {
+                chats: arrayUnion({
+                    chatId: newChat.id,
+                    title: user.displayName,
+                    image: user.photoURL,
+                    with: user.id
+                })
+            });
+        }
     },
     onChatList: (codeUser, setChatList) => {
         return onSnapshot(doc(db, 'users', codeUser), (doc) => {
