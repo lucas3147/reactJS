@@ -8,12 +8,42 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+}
+
+@media (max-width: 1600px) {
+  .home {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 100vh;
+  }
+}
+
+@media (min-width: 1600px) {
+   .home {
+    margin-top: 25px;
+    height: calc(100vh - 50px);
+   }
+}
+
+.home {
+  margin: auto;
+  display: flex;
+  max-width: 1600px;
+  background-color: #EDEDED;
 }
 
 .chatList {

@@ -53,7 +53,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen bg-[#EDEDED]">
+    <div className="home">
       <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
         <NewChat 
           listContacts={listContacts}

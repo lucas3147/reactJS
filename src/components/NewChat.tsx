@@ -6,6 +6,7 @@ import Api from "@/Api";
 
 const NewChat = ({listContacts, setListContacts, user, show, setShow}: Props) => {
     const [list, setList] = useState<UserType[]>([]);
+    const [disabledContact, setDisabledContact] = useState(false);
 
     useEffect(() => {
         const getList = async () => {
@@ -18,10 +19,12 @@ const NewChat = ({listContacts, setListContacts, user, show, setShow}: Props) =>
     }, [listContacts]);
 
     const addNewChat = async (otherUser: UserType) => {
+        setDisabledContact(true);
         await Api.addNewChat(user, otherUser);
         let newContacts = await Api.getContactsIncluded(user.id);
         setListContacts(newContacts);
         setShow(false);
+        setDisabledContact(false);
     }
 
     return (
@@ -53,6 +56,7 @@ const NewChat = ({listContacts, setListContacts, user, show, setShow}: Props) =>
                     <div 
                         key={key}
                         className="flex items-center p-4 cursor-pointer hover:bg-[#F5F5F5]"
+                        style={{pointerEvents: disabledContact ? 'none' : 'auto'}}
                         onClick={() => addNewChat(item)}
                     >
                         <img 
