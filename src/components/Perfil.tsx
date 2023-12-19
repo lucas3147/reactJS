@@ -33,8 +33,7 @@ const Perfil = ({show , setShow, user, setUser}: Props) => {
 
     return (
         <div
-            className="transition-all duration-500 w-[35%] max-w-[415px] fixed top-0 bottom-0 bg-[white] flex flex-col border-r-[1px] border-[#DDD]"
-            style={{left: show ? '0' : '-415px'}}
+            className={`verticalFlap ${show ? 'openFlap' : 'closeFlap'} transition-all duration-500 w-[35%] max-w-[415px] absolute top-0 bottom-0 bg-[white] flex flex-col border-r-[1px] border-[#DDD]`}
         >
             <div
                 className="flex bg-[#008069] items-center px-4 pb-4 pt-[60px]">

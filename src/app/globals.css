@@ -11,7 +11,17 @@
 body {
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.hiddenComponents {
+  background-color: #E1E0DD;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
 }
@@ -24,26 +34,42 @@ body {
   }
 }
 
-@media (max-width: 1600px) {
+@media (max-width: 1536px) {
   .home {
     margin-top: 0px;
     margin-bottom: 0px;
+    width: 100vw;
     height: 100vh;
   }
 }
 
-@media (min-width: 1600px) {
-   .home {
-    margin-top: 25px;
+@media (min-width: 1536px) {
+   .home,
+   .verticalFlap {
     height: calc(100vh - 50px);
+   }
+
+   .home {
+    width: 1536px;
    }
 }
 
 .home {
-  margin: auto;
+  text-align: center;
   display: flex;
-  max-width: 1600px;
-  background-color: #EDEDED;
+  max-width: 1536px;
+  background-color: #F0F2F5;
+  position: relative;
+}
+
+.openFlap {
+  left: 0px;
+  z-index: 1;
+}
+
+.closeFlap {
+  left: -415px;
+  z-index: -1;
 }
 
 .chatList {

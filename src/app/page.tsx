@@ -53,87 +53,91 @@ export default function Home() {
   }
 
   return (
-    <div className="home">
-      <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
-        <NewChat 
-          listContacts={listContacts}
-          setListContacts={setListContacts}
-          user={user}
-          show={showNewChat}
-          setShow={setShowNewChat}
-        />
-        <Perfil
-          show={showPerfil}
-          setShow={setShowPerfil}
-          user={user}
-          setUser={setUser}
-        />
-        <header className="h-16 px-4 flex justify-between items-center">
-          <div onClick={handlePerfil}>
-            <img
-              className="w-10 h-10 rounded-[20px] cursor-pointer"
-              src={user.photoURL ? user.photoURL : ""}
-              alt="icone do avatar" />
-          </div>
-          <div
-            className="flex"
-          >
-            <IconItem
-              className="iconTheme"
-              type='DonutLargeIcon'
-              style={{ color: '#919191' }}
-            />
-            <div onClick={handleNewChat}>
+    <div className="hiddenComponents">
+      <div className="absolute w-screen h-[89px] bg-[#00A884] top-0">
+      </div>
+      <div className="home">
+        <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
+          <NewChat
+            listContacts={listContacts}
+            setListContacts={setListContacts}
+            user={user}
+            show={showNewChat}
+            setShow={setShowNewChat}
+          />
+          <Perfil
+            show={showPerfil}
+            setShow={setShowPerfil}
+            user={user}
+            setUser={setUser}
+          />
+          <header className="h-16 px-4 flex justify-between items-center">
+            <div onClick={handlePerfil}>
+              <img
+                className="w-10 h-10 rounded-[20px] cursor-pointer"
+                src={user.photoURL ? user.photoURL : ""}
+                alt="icone do avatar" />
+            </div>
+            <div
+              className="flex"
+            >
               <IconItem
                 className="iconTheme"
-                type='ChatIcon'
+                type='DonutLargeIcon'
+                style={{ color: '#919191' }}
+              />
+              <div onClick={handleNewChat}>
+                <IconItem
+                  className="iconTheme"
+                  type='ChatIcon'
+                  style={{ color: '#919191' }}
+                />
+              </div>
+              <IconItem
+                className="iconTheme"
+                type='MoreVertIcon'
                 style={{ color: '#919191' }}
               />
             </div>
-            <IconItem
-              className="iconTheme"
-              type='MoreVertIcon'
-              style={{ color: '#919191' }}
-            />
-          </div>
-        </header>
+          </header>
 
-        <div className="bg-[#F6F6F6] border-b-2 border-[#EEE] py-1 px-4">
-          <div className="bg-[white] h-10 rounded-[20px] flex items-center py-0 px-[10px]">
-            <IconItem
-              className="iconTheme"
-              type='SearchIcon'
-              style={{ color: '#919191' }}
-            />
-            <input
-              className="bg-[transparent] flex-1 border-0 outline-none ml-2 overflow-hidden whitespace-nowrap"
-              type="search"
-              placeholder="Procurar ou começar uma nova conversa" />
-          </div>
-          
-        </div>
-        <div className="chatList">
-          {chatList && chatList.map((item, key) => (
-            <ChatListItem
-              key={key}
-              chatItem={chatList[key]}
-              active={activeChat?.chatId == chatList[key].chatId}
-              onClick={() => setActiveChat(chatList[key])}
-            />
-          ))}
-        </div>
-      </div>
-      <div className="flex-1">
-        {activeChat?.chatId !== undefined &&
-          <ChatWindow 
-            user={user}
-            activeChat={activeChat}
-          />
-        }
-        {activeChat?.chatId == undefined &&
-          <ChatIntro />
-        }
+          <div className="bg-[#F6F6F6] border-b-2 border-[#EEE] py-1 px-4">
+            <div className="bg-[white] h-10 rounded-[20px] flex items-center py-0 px-[10px]">
+              <IconItem
+                className="iconTheme"
+                type='SearchIcon'
+                style={{ color: '#919191' }}
+              />
+              <input
+                className="bg-[transparent] flex-1 border-0 outline-none ml-2 overflow-hidden whitespace-nowrap"
+                type="search"
+                placeholder="Procurar ou começar uma nova conversa" />
+            </div>
 
+          </div>
+          <div className="chatList">
+            {chatList && chatList.map((item, key) => (
+              <ChatListItem
+                key={key}
+                chatItem={chatList[key]}
+                active={activeChat?.chatId == chatList[key].chatId}
+                onClick={() => setActiveChat(chatList[key])}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="flex-1">
+          {activeChat?.chatId !== undefined &&
+            <ChatWindow
+              user={user}
+              activeChat={activeChat}
+            />
+          }
+          {activeChat?.chatId == undefined &&
+            <ChatIntro />
+          }
+
+        </div>
       </div>
     </div>
   )

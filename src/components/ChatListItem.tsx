@@ -29,11 +29,12 @@ const ChatListItem = ({onClick, active, chatItem}: Props) => {
                         {chatItem.lastMessageDate && `${chatItem.lastMessageDate.toDate().getHours().toString().padStart(2, '0')}:${chatItem.lastMessageDate.toDate().getMinutes().toString().padStart(2, '0')}`}
                     </div>
                 </div>
-                <div className="text-sm text-[#999] w-full">
+                <div className="flex text-sm text-[#999] w-full">
                     <p
                         className="overflow-hidden whitespace-nowrap text-ellipsis m-0"
                     >
-                        {chatItem.lastMessage}</p>
+                        {chatItem.lastMessage}
+                    </p>
                 </div>
             </div>
         </div>
