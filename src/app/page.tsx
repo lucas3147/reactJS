@@ -54,7 +54,7 @@ export default function Home() {
 
   return (
     <div className="hiddenComponents">
-      <div className="absolute w-screen h-[89px] bg-[#00A884] top-0">
+      <div className="absolute w-screen h-[141px] bg-[#00A884] top-0">
       </div>
       <div className="home">
         <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
