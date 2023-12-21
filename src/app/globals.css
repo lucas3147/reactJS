@@ -26,6 +26,36 @@ body {
   height: 100vh;
 }
 
+@keyframes openCard {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes closeCard {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -34,7 +64,7 @@ body {
   }
 }
 
-@media (max-width: 1536px) {
+@media (max-width: 1600px) {
   .home {
     margin-top: 0px;
     margin-bottom: 0px;
@@ -43,33 +73,37 @@ body {
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1600px) {
    .home,
    .verticalFlap {
     height: calc(100vh - 50px);
    }
 
    .home {
-    width: 1536px;
+    width: 1600px;
    }
 }
 
 .home {
   text-align: center;
   display: flex;
-  max-width: 1536px;
+  max-width: 1600px;
   background-color: #F0F2F5;
   position: relative;
 }
 
 .openFlap {
-  left: 0px;
   z-index: 1;
+  left: 0px;
+  animation-name: openCard;
+  animation-duration: 0.5s;
 }
 
 .closeFlap {
-  left: -415px;
   z-index: -1;
+  left: -415px;
+  animation-name: closeCard;
+  animation-duration: 0.5s;
 }
 
 .chatList {

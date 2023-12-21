@@ -11,6 +11,7 @@ import { UserType } from '@/types/UserType';
 import Login from '@/components/Login';
 import Api from '@/Api';
 import Perfil from '@/components/Perfil';
+import DropDownOptions from '@/components/DropDownOptions';
 
 export default function Home() {
 
@@ -57,6 +58,7 @@ export default function Home() {
       <div className="absolute w-screen h-[141px] bg-[#00A884] top-0">
       </div>
       <div className="home">
+        <DropDownOptions />
         <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
           <NewChat
             listContacts={listContacts}
