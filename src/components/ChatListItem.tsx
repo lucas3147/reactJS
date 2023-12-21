@@ -24,7 +24,9 @@ const ChatListItem = ({onClick, active, chatItem}: Props) => {
                 <div
                     className="flex justify-between items-center w-full"
                 >
-                    <div className="text-base text-[#111B21]">{chatItem.title}</div>
+                    <div className="text-base text-[#111B21] overflow-hidden whitespace-nowrap text-ellipsis m-0">
+                        {chatItem.title}
+                    </div>
                     <div className="text-xs text-[#999]">
                         {chatItem.lastMessageDate && `${chatItem.lastMessageDate.toDate().getHours().toString().padStart(2, '0')}:${chatItem.lastMessageDate.toDate().getMinutes().toString().padStart(2, '0')}`}
                     </div>

@@ -21,6 +21,7 @@ export default function Home() {
   const [showNewChat, setShowNewChat] = useState(false);
   const [showPerfil, setShowPerfil] = useState(false);
   const [listContacts, setListContacts] = useState<any[]>([]);
+  const [showGeneralOptions, setShowGeneralOptions] = useState(false);
 
   useEffect(() => {
     if (user !== null) {
@@ -47,6 +48,10 @@ export default function Home() {
     setShowPerfil(true);
   }
 
+  const handleGeneralOptions = () => {
+    setShowGeneralOptions(!showGeneralOptions);
+  }
+
   if (user === null) {
     return (
       <Login onReceive={handleLoginData}/>
@@ -58,8 +63,16 @@ export default function Home() {
       <div className="absolute w-screen h-[141px] bg-[#00A884] top-0">
       </div>
       <div className="home">
-        <DropDownOptions />
-        <div className="sidebar w-2/6 max-w-[415px] flex flex-col border-r-2 border-[#ddd]">
+        {showGeneralOptions && 
+          <DropDownOptions 
+            options={
+              [{id: 1, name: 'Opção 1'}]
+            }
+            submit={() => alert('oi')}
+          />
+        }
+        
+        <div className="sidebar w-2/6 max-w-[415px] min-w-[350px] flex flex-col border-r-2 border-[#ddd]">
           <NewChat
             listContacts={listContacts}
             setListContacts={setListContacts}
@@ -95,11 +108,14 @@ export default function Home() {
                   style={{ color: '#919191' }}
                 />
               </div>
-              <IconItem
-                className="iconTheme"
-                type='MoreVertIcon'
-                style={{ color: '#919191' }}
-              />
+              <div onClick={handleGeneralOptions}>
+                <IconItem
+                  className="iconTheme"
+                  type='MoreVertIcon'
+                  style={{ color: '#919191' }}
+                />
+              </div>
+              
             </div>
           </header>
 
