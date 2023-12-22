@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, RefObject } from "react";
+import { useState, useEffect, useRef, RefObject, MouseEvent } from "react";
 import IconItem from "./IconItem";
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -6,6 +6,7 @@ import MessageItem from "./MessageItem";
 import { UserType } from "@/types/UserType";
 import { ChatItem } from "@/types/ChatType";
 import Api from "@/Api";
+import DropDownOptions from "./DropDownOptions";
 
 const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) => {
 
@@ -22,6 +23,8 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
     const [listening, setListening] = useState(false);
     const [list, setList] = useState([]);
     const [users, setUsers] = useState<UserType>();
+    const [showUserOptions, setShowUserOptions] = useState(false);
+    const [positionX, setPositionX] = useState(0);
 
     useEffect(() => {
         if (body.current && body.current.scrollHeight > body.current.offsetHeight){
@@ -72,8 +75,26 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
         }
     }
 
+    const handleUserOptions = (e: MouseEvent) => {
+        var el = e.currentTarget;
+        var coordenadas = el.getBoundingClientRect();
+        setPositionX(coordenadas.left);
+        setShowUserOptions(!showUserOptions);
+    }
+
     return (
         <div className="flex flex-col h-full">
+            {showUserOptions &&
+                <DropDownOptions
+                    options={
+                        [
+                            { id: 1, name: 'Apagar conversa' },
+                        ]
+                    }
+                    submit={() => alert('oi')}
+                    left={positionX}
+                />
+            }
             <div className="h-16 border-b-2 border-[#CCC] flex justify-between items-center">
 
                 <div
@@ -102,11 +123,14 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
                         type="AttachFileIcon"
                         style={{ color: '#919191' }}
                     />
-                    <IconItem
-                        className="iconTheme"
-                        type="MoreVertIcon"
-                        style={{ color: '#919191' }}
-                    />
+                    <div onClick={(e) => handleUserOptions(e)}>
+                        <IconItem
+                            className="iconTheme"
+                            type="MoreVertIcon"
+                            style={{ color: '#919191' }}
+                        />
+                    </div>
+
                 </div>
             </div>
             <div ref={body} className="chatWindow--body">

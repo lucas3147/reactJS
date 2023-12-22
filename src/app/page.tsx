@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import ChatListItem from '@/components/ChatListItem';
 import ChatIntro from '@/components/ChatIntro';
 import ChatWindow from '@/components/ChatWindow';
@@ -22,6 +22,7 @@ export default function Home() {
   const [showPerfil, setShowPerfil] = useState(false);
   const [listContacts, setListContacts] = useState<any[]>([]);
   const [showGeneralOptions, setShowGeneralOptions] = useState(false);
+  const [positionX, setPositionX] = useState(0);
 
   useEffect(() => {
     if (user !== null) {
@@ -48,7 +49,10 @@ export default function Home() {
     setShowPerfil(true);
   }
 
-  const handleGeneralOptions = () => {
+  const handleGeneralOptions = (e: MouseEvent) => {
+    var el = e.currentTarget;
+    var coordenadas = el.getBoundingClientRect();
+    setPositionX(coordenadas.left);
     setShowGeneralOptions(!showGeneralOptions);
   }
 
@@ -66,12 +70,16 @@ export default function Home() {
         {showGeneralOptions && 
           <DropDownOptions 
             options={
-              [{id: 1, name: 'Opção 1'}]
+              [
+               {id: 1, name: 'Configurações'},
+               {id: 2, name: 'Desconectar'}
+              ]
             }
             submit={() => alert('oi')}
+            left={130}
           />
         }
-        
+
         <div className="sidebar w-2/6 max-w-[415px] min-w-[350px] flex flex-col border-r-2 border-[#ddd]">
           <NewChat
             listContacts={listContacts}
@@ -108,7 +116,7 @@ export default function Home() {
                   style={{ color: '#919191' }}
                 />
               </div>
-              <div onClick={handleGeneralOptions}>
+              <div onClick={(e) => handleGeneralOptions(e)}>
                 <IconItem
                   className="iconTheme"
                   type='MoreVertIcon'
