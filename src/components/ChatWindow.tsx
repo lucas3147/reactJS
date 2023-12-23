@@ -22,9 +22,8 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
     const [text, setText] = useState('');
     const [listening, setListening] = useState(false);
     const [list, setList] = useState([]);
-    const [users, setUsers] = useState<UserType>();
+    const [users, setUsers] = useState<UserType[]>();
     const [showUserOptions, setShowUserOptions] = useState(false);
-    const [positionX, setPositionX] = useState(0);
 
     useEffect(() => {
         if (body.current && body.current.scrollHeight > body.current.offsetHeight){
@@ -76,10 +75,13 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
     }
 
     const handleUserOptions = (e: MouseEvent) => {
-        var el = e.currentTarget;
-        var coordenadas = el.getBoundingClientRect();
-        setPositionX(coordenadas.left);
         setShowUserOptions(!showUserOptions);
+    }
+
+    const deleteConversation = async () => {
+        setShowUserOptions(false);
+        await Api.deleteConversation(users);
+        setList([]);
     }
 
     return (
@@ -88,11 +90,10 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
                 <DropDownOptions
                     options={
                         [
-                            { id: 1, name: 'Apagar conversa' },
+                            { id: 1, name: 'Apagar conversa', action: deleteConversation },
                         ]
                     }
-                    submit={() => alert('oi')}
-                    left={positionX}
+                    right={27}
                 />
             }
             <div className="h-16 border-b-2 border-[#CCC] flex justify-between items-center">
@@ -123,7 +124,10 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
                         type="AttachFileIcon"
                         style={{ color: '#919191' }}
                     />
-                    <div onClick={(e) => handleUserOptions(e)}>
+                    <div 
+                        onClick={(e) => handleUserOptions(e)}
+                        style={{pointerEvents: showUserOptions ? 'none' : 'auto'}}
+                     >
                         <IconItem
                             className="iconTheme"
                             type="MoreVertIcon"
@@ -134,7 +138,7 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
                 </div>
             </div>
             <div ref={body} className="chatWindow--body">
-                {list.map((item, key) => (
+                {list.length > 0 && list.map((item, key) => (
                     <MessageItem
                         key={key}
                         data={item} 

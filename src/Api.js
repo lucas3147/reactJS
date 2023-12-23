@@ -2,7 +2,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import {app, auth} from './firebase.config';
 import { GithubAuthProvider, signInWithPopup, getAuth, updateCurrentUser } from "firebase/auth";
-import { getFirestore, collection, addDoc, onSnapshot, query, where, getDocs, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, onSnapshot, query, where, getDocs, doc, updateDoc, arrayUnion, getDoc, deleteField } from 'firebase/firestore';
 
 const db = getFirestore(app);
 
@@ -185,9 +185,10 @@ export default {
     },
     sendMessage: async (chatData, userId, type, body, users) => {
         let now = new Date();
-        let docRef = doc(db, 'chats', chatData.chatId);
+        let chatsRef = doc(db, 'chats', chatData.chatId);
+        let usersRef = collection(db, "users");
     
-        await updateDoc(docRef, {
+        await updateDoc(chatsRef, {
             messages: arrayUnion({
                 type,
                 author: userId,
@@ -195,12 +196,9 @@ export default {
                 date: now
             })
         });
-
+        
         for(let i in users) {
-            let docRef = collection(db, "users");
-
-            
-            const q = query(docRef, where("uid", "==", users[i]));
+            const q = query(usersRef, where("uid", "==", users[i]));
             const docSnap = await getDocs(q);
             let data = docSnap.docs[0];
             if (data.data().chats) {
@@ -232,5 +230,38 @@ export default {
             list.push(myUserId);
         }
         return list;
+    },
+    deleteConversation: async (users) => {
+        const listUsers = users;
+        const chatsRef = collection(db, "chats");
+        const usersRef = collection(db, "users");
+        let q = query(chatsRef, where("users", "==", users));
+        let docSnapshot = await getDocs(q);
+        let chatData = docSnapshot.docs[0];
+        if (chatData.id) {
+            await updateDoc(doc(db, 'chats', chatData.id), {
+                messages: []
+            });
+        }
+
+        for(let i in users) {
+            const q = query(usersRef, where("uid", "==", users[i]));
+            const docSnap = await getDocs(q);
+            let userData = docSnap.docs[0];
+            if (userData.data().chats) {
+                let chats = [...userData.data().chats];
+
+                for (let e in chats) {
+                    if (chats[e].chatId == chatData.id) {
+                        chats[e].lastMessage = '';
+                        chats[e].lastMessageDate = '';
+                    }
+                }
+
+                await updateDoc(doc(db, 'users', userData.id), {
+                    chats
+                });
+            }
+        }
     }
 };

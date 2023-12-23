@@ -1,4 +1,5 @@
 export type OptionsType = {
     id: number,
-    name: string
+    name: string,
+    action?: () => void;
 }
