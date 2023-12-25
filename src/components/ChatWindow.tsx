@@ -93,8 +93,12 @@ const ChatWindow = ({user, activeChat, showUserOptions, setShowUserOptions}: Pro
 
     const deleteConversation = async () => {
         setShowUserOptions(false);
-        await Api.deleteConversation(users);
-        setList([]);
+        if (await Api.validationUser(user.id)) {
+            await Api.deleteConversation(users);
+            setList([]);
+        } else {
+            alert('Sinto muito. Você não tem acesso!');
+        }
     }
 
     return (

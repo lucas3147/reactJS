@@ -263,5 +263,20 @@ export default {
                 });
             }
         }
+    },
+    validationUser: async (idUser) => {
+        if (idUser) {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("uid", "==", idUser));
+            const docSnap = await getDocs(q);
+            let userData = docSnap.docs[0];
+            if (userData.data().admin) {
+                return true;
+            } else {
+                return false
+            }
+        } else {
+            return false;
+        }
     }
 };
