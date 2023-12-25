@@ -92,6 +92,21 @@ body {
   position: relative;
 }
 
+.options {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  color: #3B4A54;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: wrap;
+  min-width: 0;
+  box-shadow: 0 2px 5px 0 rgba(11,20,26,.26),0 2px 10px 0 rgba(11,20,26,.16);
+}
+
 .openFlap {
   z-index: 1;
   left: 0px;

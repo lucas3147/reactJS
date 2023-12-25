@@ -22,6 +22,7 @@ export default function Home() {
   const [showPerfil, setShowPerfil] = useState(false);
   const [listContacts, setListContacts] = useState<any[]>([]);
   const [showGeneralOptions, setShowGeneralOptions] = useState(false);
+  const [showUserOptions, setShowUserOptions] = useState(false);
 
   useEffect(() => {
     if (user !== null) {
@@ -52,6 +53,18 @@ export default function Home() {
     setShowGeneralOptions(!showGeneralOptions);
   }
 
+  const handleDisableFeatures = (e: MouseEvent) => {
+    var divElement: any = e.target;
+    if (divElement.classList[0] != 'options') {
+      if (showGeneralOptions) {
+        setShowGeneralOptions(false);
+      }
+      if (showUserOptions) {
+        setShowUserOptions(false);
+      }
+    }
+  }
+
   if (user === null) {
     return (
       <Login onReceive={handleLoginData}/>
@@ -62,7 +75,7 @@ export default function Home() {
     <div className="hiddenComponents">
       <div className="absolute w-screen h-[141px] bg-[#00A884] top-0">
       </div>
-      <div className="home">
+      <div className="home" onClick={(e) => handleDisableFeatures(e)}>
         <div className="sidebar w-2/6 max-w-[415px] min-w-[350px] flex flex-col border-r-2 border-[#ddd]">
           <div className="relative">
           {showGeneralOptions &&
@@ -154,6 +167,8 @@ export default function Home() {
             <ChatWindow
               user={user}
               activeChat={activeChat}
+              showUserOptions={showUserOptions}
+              setShowUserOptions={setShowUserOptions}
             />
           }
           {activeChat?.chatId == undefined &&

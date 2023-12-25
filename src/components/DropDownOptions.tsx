@@ -30,7 +30,7 @@ const DropDownOptions = ({options, left, right} : Props) => {
 
     return (
         <div 
-            className={`py-[5px] rounded-[4px] bg-[white] text-[14px] text-[#3B4A54] shadow-3xl flex flex-1 flex-col flex-wrap min-w-0 text`}
+            className={`options`}
             style={myStyle}
         >
             <ul>

@@ -8,7 +8,14 @@ import { ChatItem } from "@/types/ChatType";
 import Api from "@/Api";
 import DropDownOptions from "./DropDownOptions";
 
-const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) => {
+type Props = {
+    showUserOptions: boolean,
+    setShowUserOptions: (showUserOptions: boolean) => void,
+    user: UserType,
+    activeChat: ChatItem
+}
+
+const ChatWindow = ({user, activeChat, showUserOptions, setShowUserOptions}: Props) => {
 
     const body = useRef<HTMLInputElement>(null);
     let recognition:SpeechRecognition;
@@ -23,7 +30,6 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
     const [listening, setListening] = useState(false);
     const [list, setList] = useState([]);
     const [users, setUsers] = useState<UserType[]>();
-    const [showUserOptions, setShowUserOptions] = useState(false);
 
     useEffect(() => {
         if (body.current && body.current.scrollHeight > body.current.offsetHeight){
@@ -78,6 +84,13 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
         setShowUserOptions(!showUserOptions);
     }
 
+    const handleDisableFeatures = (e: MouseEvent) => {
+        var divElement: any = e.target;
+        if (divElement.classList[0] != 'options' && showUserOptions) {
+            setShowUserOptions(false);
+        }
+    }
+
     const deleteConversation = async () => {
         setShowUserOptions(false);
         await Api.deleteConversation(users);
@@ -85,7 +98,7 @@ const ChatWindow = ({user, activeChat}: {user: UserType, activeChat: ChatItem}) 
     }
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full" onClick={handleDisableFeatures}>
             {showUserOptions &&
                 <DropDownOptions
                     options={
