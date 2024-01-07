@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import MyStudies from './src/components/MyStudies';
+import MyStudies from './src/pages/StudyHomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import MainStackView from './src/navigators/MainStack';
 

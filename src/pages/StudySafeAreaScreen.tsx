@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native"
 import { Button, StyleSheet, Text, View } from "react-native"
-import { StackParamsType } from "../../types/StackParamsType";
+import { StackParamsType } from "../types/StackParamsType";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 type Props = NativeStackScreenProps<StackParamsType, 'SafeAreaView'>;
@@ -8,7 +8,7 @@ type Props = NativeStackScreenProps<StackParamsType, 'SafeAreaView'>;
 const SafeAreaViewTest = ({navigation, route}: Props) => {
 
     const handleBack = () => {
-        navigation.navigate('Home');
+        navigation.navigate('Home'); 
     }
 
     return (

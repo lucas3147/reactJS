@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import SafeAreaViewTest from "../pages/studies/SafeAreaView";
-import MyStudies from "../components/MyStudies";
+import SafeAreaViewTest from "../pages/StudySafeAreaScreen";
+import MyStudies from "../pages/StudyHomeScreen";
 import { StackParamsType } from "../types/StackParamsType";
 
 const RootStack = createStackNavigator<StackParamsType>();
