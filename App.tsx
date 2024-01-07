@@ -1,21 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import MyStudies from './src/components/MyStudies';
+import { NavigationContainer } from '@react-navigation/native';
+import MainStackView from './src/navigators/MainStack';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={
-        {color:'white'}
-      }>Meu primeiro app no celular!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <MainStackView/>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
