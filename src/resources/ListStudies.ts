@@ -1,6 +1,10 @@
 export const myStudies = [
     {
-        title: 'Estudo Safe Area',
+        title: 'Meu primeiro estudo',
         nameRoot: 'SafeAreaView'
+    },
+    {
+        title: 'Estudo 02',
+        nameRoot: 'Home'
     }
 ]
