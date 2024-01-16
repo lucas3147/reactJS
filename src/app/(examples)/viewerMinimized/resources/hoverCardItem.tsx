@@ -3,10 +3,11 @@ import { ReactNode } from "react";
 type Props = { 
     title: ReactNode, 
     callback: (activedCard: boolean) => void,
-    delay?: number
+    delay?: number,
+    className: string
  }
 
-const HoverCardItem = ({title, callback, delay}: Props) => {
+const HoverCardItem = ({title, callback, delay, className}: Props) => {
     var hoverTime: NodeJS.Timeout;
 
     const handleMouseOver = (delay?: number) => {
@@ -26,7 +27,7 @@ const HoverCardItem = ({title, callback, delay}: Props) => {
         <div
             onMouseOver={() => handleMouseOver(delay)}
             onMouseOut={() => handleMouseOut()}
-            className="w-64 h-64 mr-8 bg-zinc-700 p-4 cursor-pointer"
+            className={className}
         >
             {title}
         </div>

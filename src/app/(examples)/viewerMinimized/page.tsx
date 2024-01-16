@@ -19,11 +19,12 @@ const viewerMinimized = () => {
                 title="Exibição de páginas minimizada"
                 subtitle="Para usar quando quiser renderizar alguma coisa em html ao passar o mouse em cima"
             />
-            <div className="flex py-4 pl-8">
+            <div className="flex border-b-2 border-b-white pl-8">
                 <div className="relative">
                     <HoverCardItem
                         title="Caixa 1"
                         callback={setActivedCard1}
+                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg"
                     />
                     <ViewCardItem
                         title="Exibidor da caixa 1"
@@ -36,6 +37,7 @@ const viewerMinimized = () => {
                     <HoverCardItem
                         title="Caixa 2"
                         callback={setActivedCard2}
+                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg"
                     />
                     <ViewCardItem
                         title="Exibidor da caixa 2"
@@ -49,6 +51,7 @@ const viewerMinimized = () => {
                     <HoverCardItem
                         title="Caixa 3"
                         callback={setActivedCard3}
+                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg"
                     />
                     <ViewCardItem
                         title="Exibidor da caixa 3"
