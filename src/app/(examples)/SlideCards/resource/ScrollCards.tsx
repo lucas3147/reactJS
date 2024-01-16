@@ -24,7 +24,7 @@ const ScrollCards = ({align} : Props) => {
         <div 
             onMouseUp={onMouseUp} 
             ref={refScroll} 
-            className={`flex items-center ${align == 'RightToLeft' ? 'flex-row-reverse' : ''} relative top-[50%] translate-y-[-50%] scroll-smooth rounded-md bg-slate-500 w-[1000px] h-72 overflow-y-hidden overflow-x-auto`}
+            className={`flex items-center ${align == 'RightToLeft' ? 'flex-row-reverse' : ''} scroll-smooth rounded-md bg-slate-500 w-[1000px] h-72 overflow-y-hidden overflow-x-auto`}
         >
             { align == 'center' &&
                 <div className="min-w-[150px] h-64 bg-transparent rounded-md mr-14">

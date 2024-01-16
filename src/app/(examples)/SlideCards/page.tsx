@@ -1,16 +1,18 @@
-import ScrollCards from "@/components/ScrollCards";
-import TitleExample from "@/components/TitleExample";
+import ContainerPages from "@/components/Container";
+import ScrollCards from "@/app/(examples)/SlideCards/resource/ScrollCards";
+import CardTitle from "@/components/CardTitle";
 
 const SliderCard = () => {
     return (
-        <TitleExample
-            title="cards simples"
-            subtitle="Padrão simples para utilizar"
-        >
+        <ContainerPages>
+            <CardTitle
+                title="cards simples"
+                subtitle="Padrão simples para utilizar"
+            />
             <ScrollCards
                 align="LeftToRight"
             />
-        </TitleExample>
+        </ContainerPages>
     )
 }
 
