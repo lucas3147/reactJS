@@ -24,7 +24,7 @@ const viewerMinimized = () => {
                     <HoverCardItem
                         title="Caixa 1"
                         callback={setActivedCard1}
-                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg"
+                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg hover:bg-zinc-600"
                     />
                     <ViewCardItem
                         title="Exibidor da caixa 1"
@@ -37,7 +37,7 @@ const viewerMinimized = () => {
                     <HoverCardItem
                         title="Caixa 2"
                         callback={setActivedCard2}
-                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg"
+                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg hover:bg-zinc-600"
                     />
                     <ViewCardItem
                         title="Exibidor da caixa 2"
@@ -51,7 +51,7 @@ const viewerMinimized = () => {
                     <HoverCardItem
                         title="Caixa 3"
                         callback={setActivedCard3}
-                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg"
+                        className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg hover:bg-zinc-600"
                     />
                     <ViewCardItem
                         title="Exibidor da caixa 3"
