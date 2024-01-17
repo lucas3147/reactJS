@@ -13,6 +13,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.4",
     "@mui/material": "^5.15.4",
+    "@types/html2canvas": "^1.0.0",
+    "html2canvas": "^1.4.1",
     "material-icons": "^1.13.12",
     "next": "14.0.0",
     "react": "^18",

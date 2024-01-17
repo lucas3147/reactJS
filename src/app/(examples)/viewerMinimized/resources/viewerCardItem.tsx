@@ -16,7 +16,9 @@ const ViewCardItem = ({children, actived, scale} : Props) => {
             className={`absolute top-[100%] left-0 rounded-md border-zinc-300 border-[1px]`}
             style={{display: actived ? 'block' : 'none', height: dimensions.height, width: dimensions.width}}
         >
-            <div className={`origin-top-left scale-[${scale}]`}>
+            <div 
+                style={{scale}}
+                className='origin-top-left'>
                 {children}
             </div>
         </div>
