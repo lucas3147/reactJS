@@ -21,7 +21,7 @@ export default function Home() {
     setSearchExample(e.target.value);
 
     console.log(e.target.value);
-    let examples = ListExamples.filter(ex => ex.title.includes(e.target.value) || e.target.value.trim() == '');
+    let examples = ListExamples.filter(ex => ex.title.toLowerCase().includes(e.target.value.toLowerCase()) || e.target.value.trim() == '');
 
     setMyExamples(examples);
   }
