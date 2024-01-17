@@ -16,7 +16,7 @@ const screenRecorder = () => {
             />
             <div className="flex items-center">
                 <button
-                    className="bg-zinc-700 px-10 py-6 font-bold uppercase rounded-lg border-b-8 border-b-zinc-400 mr-40"
+                    className="bg-zinc-700 px-10 py-6 font-bold uppercase rounded-lg border-b-8 border-b-zinc-400 mr-40 hover:bg-zinc-800"
                 >
                     Gravar
                 </button>
