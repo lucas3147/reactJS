@@ -1,10 +1,18 @@
 'use client'
 import CardItem from "@/components/CardItem";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { CardItemType } from "@/types/CardItemType";
 
 
 export default function Home() {
   const router = useRouter();
+
+  const [myExamples] = useState<CardItemType[]>([
+      {title: 'cards simples', subtitle: 'Padrão simples para utilizar', onSubmit: () => router.push('/SlideCards')},
+      {title: 'Exibição em mini tela', subtitle: 'Exibir página sem abrir', onSubmit: () => router.push('/viewerMinimized')},
+      {title: 'Gravador de tela', subtitle: 'Gravar a janela aberta da página', onSubmit: () => router.push('/screenRecorder')}
+    ]);
 
   return (
     <main
@@ -28,16 +36,16 @@ export default function Home() {
         <div
           className="cardList"
         >
-          <CardItem
-            title='cards simples'
-            subtitle="Padrão simples para utilizar"
-            onSubmit={() => router.push('/SlideCards')}
-          />
-          <CardItem
-            title='Exibição em mini tela'
-            subtitle="Exibir página sem abrir"
-            onSubmit={() => router.push('/viewerMinimized')}
-          />
+          {myExamples.map((example, key) =>
+          (
+            <CardItem
+              key={key}
+              title={example.title}
+              subtitle={example.subtitle}
+              onSubmit={example.onSubmit}
+            />
+          )
+          )}
         </div>
       </div>
 

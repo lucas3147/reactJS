@@ -21,12 +21,14 @@ const viewerMinimized = () => {
                 <HoverCardItem
                     title="Caixa 1"
                     className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg hover:bg-zinc-600"
+                    scale={1}
                 >
                     <div className="bg-black w-96 h-40">Olá Mundo</div>
                 </HoverCardItem>
                 <HoverCardItem
                     title="Caixa 2"
                     className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg hover:bg-zinc-600"
+                    scale={1}
                 >
                     <div className="bg-green-600 w-96 h-40">Olá Mundo</div>
                 </HoverCardItem>

@@ -6,10 +6,11 @@ type Props = {
     title: ReactNode,
     delay?: number,
     className: string,
-    children: ReactNode
+    children: ReactNode,
+    scale?: number
  }
 
-const HoverCardItem = ({title, delay, className, children}: Props) => {
+const HoverCardItem = ({title, delay, className, children, scale}: Props) => {
     var hoverTime: NodeJS.Timeout;
     const [activedCard, setActivedCard] = useState(false);
     var content = useRef<any>();
@@ -54,7 +55,7 @@ const HoverCardItem = ({title, delay, className, children}: Props) => {
             {activedCard &&
                 <ViewCardItem
                     actived={activedCard}
-                    scale={1}
+                    scale={scale ?? 1}
                 >
                     <div ref={viewerCard}>
                         <div ref={content}>
