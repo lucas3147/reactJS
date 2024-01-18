@@ -13,14 +13,10 @@ const ViewCardItem = ({children, actived, scale} : Props) => {
 
     return (
         <div
-            className='block absolute top-[100%] left-0 rounded-md border-zinc-300 border-[1px]'
-            
+            className='block absolute top-[100%] left-0 rounded-md border-zinc-300 border-[1px] origin-top-left'
+            style={{scale}}
         >
-            <div 
-                style={{scale}}
-                className='origin-top-left'>
-                {children}
-            </div>
+            {children}
         </div>
     )
 }

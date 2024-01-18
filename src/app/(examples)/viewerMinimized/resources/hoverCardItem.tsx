@@ -7,16 +7,18 @@ type Props = {
     delay?: number,
     className: string,
     children: ReactNode,
-    scale?: number
+    scaleParam?: number
  }
 
-const HoverCardItem = ({title, delay, className, children, scale}: Props) => {
+const HoverCardItem = ({title, delay, className, children, scaleParam}: Props) => {
     var hoverTime: NodeJS.Timeout;
     const [activedCard, setActivedCard] = useState(false);
+    const [scale, setScale] = useState(1);
     var content = useRef<any>();
     var viewerCard = useRef<any>();
     
     useEffect(() => {
+        setScale(scaleParam ?? 1);
         if (activedCard) {
             html2canvas(viewerCard.current).then(function(canvas) {
                 if (viewerCard.current?.contains(canvas) == false) {
@@ -34,6 +36,7 @@ const HoverCardItem = ({title, delay, className, children, scale}: Props) => {
             delay = 1000;
         }
         hoverTime = setTimeout(() => {
+            setScale(1);
             setActivedCard(true);
         }, 1000);
     }
@@ -55,7 +58,7 @@ const HoverCardItem = ({title, delay, className, children, scale}: Props) => {
             {activedCard &&
                 <ViewCardItem
                     actived={activedCard}
-                    scale={scale ?? 1}
+                    scale={scale}
                 >
                     <div ref={viewerCard}>
                         <div ref={content}>
