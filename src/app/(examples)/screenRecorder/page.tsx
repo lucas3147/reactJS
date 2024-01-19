@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const screenRecorder = () => {
     const [tab1, setTab1] = useState(true);
-    const [tab1Value, setTab1Value] = useState('Teste de gravação 01')
+    const [tab1Value, setTab1Value] = useState('Teste de gravação 01 \n\n Bla Bla Bla Bla Bla Bla Bla Bla Bla')
     const [tab2Value, setTab2Value] = useState('Teste de gravação 02')
 
     return (
