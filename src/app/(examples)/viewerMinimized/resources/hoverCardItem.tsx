@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import ViewCardItem from "./viewerCardItem";
 import html2canvas from "html2canvas";
 
@@ -7,10 +7,11 @@ type Props = {
     delay?: number,
     className: string,
     children: ReactNode,
-    scaleParam?: number
+    scaleParam?: number,
+    styleViewCardOpen?: CSSProperties
  }
 
-const HoverCardItem = ({title, delay, className, children, scaleParam}: Props) => {
+const HoverCardItem = ({title, delay, className, children, scaleParam, styleViewCardOpen}: Props) => {
     var hoverTime: NodeJS.Timeout;
     const [activedCard, setActivedCard] = useState(false);
     const [scale, setScale] = useState(1);
@@ -59,6 +60,7 @@ const HoverCardItem = ({title, delay, className, children, scaleParam}: Props) =
                 <ViewCardItem
                     actived={activedCard}
                     scale={scale}
+                    style={styleViewCardOpen}
                 >
                     <div ref={viewerCard}>
                         <div ref={content}>

@@ -21,7 +21,8 @@ const viewerMinimized = () => {
                 <HoverCardItem
                     title="Caixa 1"
                     className="w-64 h-14 mr-8 bg-zinc-700 p-4 cursor-pointer rounded-t-lg hover:bg-zinc-600"
-                    scaleParam={0.25}
+                    scaleParam={0.35}
+                    styleViewCardOpen={{border: '4px solid white', borderRadius: '28px'}}
                 >
                     <div className="bg-black">
                         <SliderCard/>
