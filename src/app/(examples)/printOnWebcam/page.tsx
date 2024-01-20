@@ -36,9 +36,12 @@ const printOnWebcam = () => {
                 <div
                     className="w-[800px] h-[450px] p-2 bg-zinc-700 border-2 rounded-[12px]"
                 >
-                    <Video 
+                    <Video
                         activedWebcam={webcamOn}
+                        setActivedWebcam={setWebcamOn}
+                        options={{video: {height: 430, width: 780}, audio: true}}
                     />
+                    
                 </div>
             </div>
             
