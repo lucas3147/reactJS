@@ -1,25 +1,39 @@
-import { HtmlHTMLAttributes, useEffect, useRef } from "react"
+import { HtmlHTMLAttributes, MutableRefObject, useEffect, useRef } from "react"
 
-const Video = ({activedWebcam} : {activedWebcam: boolean}) => {
-    const video = useRef<any>()
+type Props = {
+    optionsStream: MediaStreamConstraints,
+    activedWebcam: boolean,
+    videoRef: MutableRefObject<any>
+}
+
+const Video = ({activedWebcam, optionsStream, videoRef} : Props) => {
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({video: true})
-        .then(function (mediaStream) {
-            video.current.srcObject = mediaStream;
-        })
-        .catch(function (err) {
-            alert('Não há permissões para acessar a webcam');
-        })
+        var videoItem = videoRef.current;
+        if (activedWebcam) {
+            navigator.mediaDevices.getUserMedia(optionsStream)
+            .then(function (mediaStream) {
+                videoItem.style.display = 'block';
+                videoItem.srcObject = mediaStream;
+                videoItem.play();
+            })
+            .catch(function (err) {
+                alert('Não há permissões para acessar a webcam');
+            })
+        } else {
+            if (videoItem.srcObject) {
+                const mediaStream = videoItem.srcObject;
+                mediaStream.getTracks().forEach( track => track.stop() );
+                videoItem.style.display = 'none';
+            }
+        }
     }, [activedWebcam]);
     
 
     return (
         <div>
             <video
-                ref={video}
-                width={780}
-                height={430}
+                ref={videoRef}
             />
         </div>
        
