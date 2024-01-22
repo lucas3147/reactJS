@@ -1,33 +1,35 @@
 'use client'
 import CardTitle from "@/components/CardTitle";
-import ContainerPages from "@/components/Container";
+import ContainerPage from "@/components/Container";
 import { useEffect, useRef, useState } from "react";
 import Video from "./resources/Video";
 import IconTheme from "@/components/IconTheme";
+import Webcam from "react-webcam";
 
 const printOnWebcam = () => {
 
-    const video = useRef<any>();
-    const canvas = useRef<any>();
+    const webCamRef = useRef<any>();
+    const photoRef = useRef<any>();
 
     const [webcamOn, setWebcamOn] = useState(false);
     const [photoOpen, setPhotoOpen] = useState(false);
 
     useEffect(() => {
-        if (video.current && canvas.current) {
-            const widthImage = 950;
-            const heightImage = 523;
-            const videoRef = video.current;
-            const canvasRef = canvas.current;
-            canvasRef.height = heightImage;
-            canvasRef.width = widthImage;
-            var context = canvasRef.getContext('2d');
-            context.drawImage(videoRef, 0, 0, widthImage, heightImage);
+        if (webCamRef.current) {
+            var image = new Image();
+            image.src = webCamRef.current.getScreenshot({width: 950, height: 523});
+            console.log(photoRef, image.src);
+            photoRef.current.appendChild(image);
         }
-    }, [photoOpen])
+    }, [photoOpen]);
+
+    const handleSavePhoto = () => {
+
+    }
 
     return (
-        <ContainerPages>
+        <ContainerPage
+        >
             <CardTitle 
                 title="Foto na Webcam"
                 subtitle="Um template pronto para tirar foto na webcam!"
@@ -37,22 +39,30 @@ const printOnWebcam = () => {
                     className="absolute w-[950px] h-[523px]"
                 >
                     <div
-                        onClick={() => setPhotoOpen(false)} 
-                        className="relative top-0 right-0"
+                        className="absolute top-0 right-0"
                     >
                         <IconTheme 
                             type='CloseIcon'
-                            style={{width: '32px', height: '32px', cursor: 'pointer'}}
+                            style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px', marginBottom: '20px'}}
+                            onClick={() => setPhotoOpen(false)}
+                        />
+                        <IconTheme 
+                            type='SaveAltIcon'
+                            style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px'}}
+                            onClick={handleSavePhoto}
                         />
                     </div>
                     
-                    <canvas
-                        ref={canvas}
+                    <div
+                        ref={photoRef}
                     >
-                    </canvas>
+                    </div>
                 </div>
             }
-            <div className="flex flex-col">
+            <div
+                style={{}}
+                className="flex flex-col"
+            >
             
                 <div className="m-auto mb-4">
                     <button
@@ -72,16 +82,20 @@ const printOnWebcam = () => {
                 <div
                     className="w-[800px] h-[450px] p-2 bg-zinc-700 border-2 rounded-[12px]"
                 >
-                    <Video 
-                        activedWebcam={webcamOn}
-                        optionsStream={{video: {height: 430, width: 780}}}
-                        videoRef={video}
-                    />                    
+                    {webcamOn &&
+                        <Webcam
+                            audio={false}
+                            ref={webCamRef}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={{height: 430, width: 780}}
+                        />  
+                    }
+                                      
                 </div>
             </div>
             
 
-        </ContainerPages>
+        </ContainerPage>
     )
 }
 

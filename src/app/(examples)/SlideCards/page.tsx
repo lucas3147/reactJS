@@ -1,10 +1,10 @@
-import ContainerPages from "@/components/Container";
+import ContainerPage from "@/components/Container";
 import ScrollCards from "@/app/(examples)/SlideCards/resource/ScrollCards";
 import CardTitle from "@/components/CardTitle";
 
 const SliderCard = () => {
     return (
-        <ContainerPages>
+        <ContainerPage>
             <CardTitle
                 title="cards simples"
                 subtitle="Padrão simples para utilizar"
@@ -12,7 +12,7 @@ const SliderCard = () => {
             <ScrollCards
                 align="LeftToRight"
             />
-        </ContainerPages>
+        </ContainerPage>
     )
 }
 

@@ -1,6 +1,6 @@
 'use client'
 import CardTitle from "@/components/CardTitle"
-import ContainerPages from "@/components/Container"
+import ContainerPage from "@/components/Container"
 import { useState } from "react";
 
 const screenRecorder = () => {
@@ -9,7 +9,7 @@ const screenRecorder = () => {
     const [tab2Value, setTab2Value] = useState('Teste de gravação 02')
 
     return (
-        <ContainerPages>
+        <ContainerPage>
             <CardTitle
                 title='Gravador de tela'
                 subtitle='Para gravar a janela aberta no lado do cliente e exportar esse vídeo. Template pronto para utilizar'
@@ -48,7 +48,7 @@ const screenRecorder = () => {
                 </div>
             </div>
             
-        </ContainerPages>
+        </ContainerPage>
     )
 }
 

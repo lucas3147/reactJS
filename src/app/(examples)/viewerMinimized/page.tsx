@@ -1,6 +1,6 @@
 'use client'
 import CardTitle from "@/components/CardTitle"
-import ContainerPages from "@/components/Container"
+import ContainerPage from "@/components/Container"
 import { RefObject, useEffect, useRef, useState } from "react";
 import HoverCardItem from "./resources/hoverCardItem";
 import ViewCardItem from "./resources/viewerCardItem";
@@ -12,7 +12,7 @@ import html2canvas from "html2canvas";
 const viewerMinimized = () => {
 
     return (
-        <ContainerPages >
+        <ContainerPage >
             <CardTitle
                 title="Exibição de páginas minimizada"
                 subtitle="Para usar quando quiser renderizar alguma coisa em html ao passar o mouse em cima"
@@ -42,7 +42,7 @@ const viewerMinimized = () => {
                     <div className="bg-blue-500 w-96 h-40">Olá Mundo</div>
                 </HoverCardItem>
             </div>
-        </ContainerPages>
+        </ContainerPage>
     )
 }
 

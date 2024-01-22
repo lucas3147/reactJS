@@ -1,13 +1,19 @@
-import { ReactNode } from "react"
+import { CSSProperties, ReactNode } from "react"
 
-const ContainerPages = ({children}: {children: ReactNode}) => {
+type Props = {
+    children: ReactNode;
+    style?: CSSProperties;
+}
+
+const ContainerPage = ({children, style}: Props) => {
     return (
         <main
             className="h-screen w-screen flex justify-center items-center"
+            style={style}
         >
             {children}
         </main>
     )
 }
 
-export default ContainerPages
+export default ContainerPage
