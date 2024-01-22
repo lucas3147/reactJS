@@ -11,20 +11,29 @@ const printOnWebcam = () => {
     const webCamRef = useRef<any>();
     const photoRef = useRef<any>();
 
+    var image = new Image();
+
     const [webcamOn, setWebcamOn] = useState(false);
     const [photoOpen, setPhotoOpen] = useState(false);
 
     useEffect(() => {
-        if (webCamRef.current) {
-            var image = new Image();
-            image.src = webCamRef.current.getScreenshot({width: 950, height: 523});
-            console.log(photoRef, image.src);
+        if (photoOpen && webcamOn) {
+            image.src = webCamRef.current.getScreenshot({width: 918, height: 491});
             photoRef.current.appendChild(image);
         }
     }, [photoOpen]);
 
     const handleSavePhoto = () => {
+        if (photoOpen && webcamOn) {
+            var link = document.createElement("a");
 
+            document.body.appendChild(link); // for Firefox
+        
+            link.setAttribute("href", image.src);
+            link.setAttribute("download", 'Minha_foto.jpg');
+            link.click();
+            link.remove();
+        }
     }
 
     return (
@@ -36,7 +45,7 @@ const printOnWebcam = () => {
             />
             {photoOpen && 
                 <div 
-                    className="absolute w-[950px] h-[523px]"
+                    className="absolute w-[950px] h-[523px] bg-zinc-700 p-4 rounded-md border-[1px]"
                 >
                     <div
                         className="absolute top-0 right-0"
@@ -56,6 +65,16 @@ const printOnWebcam = () => {
                     <div
                         ref={photoRef}
                     >
+                        {webcamOn == false && 
+                            <div style={
+                                {
+                                    textTransform: 'uppercase',
+                                    margin: 'auto',
+                                    fontWeight: 'bold'
+                                }}>
+                                Ligue a webcam primeiro!
+                            </div>
+                        }
                     </div>
                 </div>
             }
