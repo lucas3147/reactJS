@@ -1,6 +1,6 @@
 'use client'
-import CardTitle from "@/components/CardTitle"
-import ContainerPage from "@/components/Container"
+import TitlePage from "@/components/TitlePage"
+import ContainerPage from "@/components/ContainerPage"
 import { RefObject, useEffect, useRef, useState } from "react";
 import HoverCardItem from "./resources/hoverCardItem";
 import ViewCardItem from "./resources/viewerCardItem";
@@ -13,7 +13,7 @@ const viewerMinimized = () => {
 
     return (
         <ContainerPage >
-            <CardTitle
+            <TitlePage
                 title="Exibição de páginas minimizada"
                 subtitle="Para usar quando quiser renderizar alguma coisa em html ao passar o mouse em cima"
             />

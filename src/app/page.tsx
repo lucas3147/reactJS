@@ -12,7 +12,8 @@ export default function Home() {
     {title: 'cards simples', subtitle: 'Padrão simples para utilizar', onSubmit: () => router.push('/SlideCards')},
     {title: 'Exibição em mini tela', subtitle: 'Exibir página sem abrir', onSubmit: () => router.push('/viewerMinimized')},
     {title: 'Foto na webcam', subtitle: 'Ativar webcam e tirar um print da tela', onSubmit: () => router.push('/printOnWebcam')},
-    {title: 'Gravador de tela', subtitle: 'Gravar a janela aberta da página', onSubmit: () => router.push('/screenRecorder')}
+    {title: 'Gravar Webcam', subtitle: 'Gravamento da webcam e salvar o vídeo', onSubmit: () => router.push('/recordWebcam')},
+    {title: 'Gravador de tela', subtitle: 'Gravar a janela aberta da página', onSubmit: () => router.push('/screenRecorder')},
   ]
 
   const [myExamples, setMyExamples] = useState<CardItemType[]>(ListExamples);

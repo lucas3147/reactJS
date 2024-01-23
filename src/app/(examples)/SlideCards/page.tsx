@@ -1,11 +1,11 @@
-import ContainerPage from "@/components/Container";
+import ContainerPage from "@/components/ContainerPage";
 import ScrollCards from "@/app/(examples)/SlideCards/resource/ScrollCards";
-import CardTitle from "@/components/CardTitle";
+import TitlePage from "@/components/TitlePage";
 
 const SliderCard = () => {
     return (
         <ContainerPage>
-            <CardTitle
+            <TitlePage
                 title="cards simples"
                 subtitle="Padrão simples para utilizar"
             />

@@ -1,4 +1,4 @@
-const CardTitle = ({title, subtitle} : {title: string, subtitle: string}) => {
+const TitlePage = ({title, subtitle} : {title: string, subtitle: string}) => {
     return (
         <div className="flex absolute top-0 flex-col items-center bg-zinc-700 rounded-b-md">
             <div className="p-10">
@@ -13,4 +13,4 @@ const CardTitle = ({title, subtitle} : {title: string, subtitle: string}) => {
     )
 }
 
-export default CardTitle;
+export default TitlePage;

@@ -1,10 +1,10 @@
-import CardTitle from "@/components/CardTitle"
-import ContainerPage from "@/components/Container"
+import TitlePage from "@/components/TitlePage"
+import ContainerPage from "@/components/ContainerPage"
 
 const Midia = () => {
     return (
         <ContainerPage>
-            <CardTitle
+            <TitlePage
                 title="Captura de mídia"
                 subtitle="Teste dos recursos fornecidos pelo W3C. Consulte o site: https://pt.stackoverflow.com/questions/252823/existe-alguma-forma-de-gravar-a-webcam-pelo-html5"
             />

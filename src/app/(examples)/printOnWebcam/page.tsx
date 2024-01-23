@@ -1,6 +1,6 @@
 'use client'
-import CardTitle from "@/components/CardTitle";
-import ContainerPage from "@/components/Container";
+import TitlePage from "@/components/TitlePage";
+import ContainerPage from "@/components/ContainerPage";
 import { useEffect, useRef, useState } from "react";
 import Video from "./resources/Video";
 import IconTheme from "@/components/IconTheme";
@@ -39,7 +39,7 @@ const printOnWebcam = () => {
     return (
         <ContainerPage
         >
-            <CardTitle 
+            <TitlePage 
                 title="Foto na Webcam"
                 subtitle="Um template pronto para tirar foto na webcam!"
             />
@@ -112,8 +112,6 @@ const printOnWebcam = () => {
                                       
                 </div>
             </div>
-            
-
         </ContainerPage>
     )
 }
