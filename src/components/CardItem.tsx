@@ -14,7 +14,7 @@ const CardItem = ({title, subtitle, onSubmit} : {title: string, subtitle: string
             </div>
             
             <button 
-                className="px-4 py-2 rounded-md bg-zinc-800 border-b-4 border-b-zinc-500 hover:border-b-white"
+                className="px-4 py-2 rounded-md bg-zinc-800 border-b-4 border-b-zinc-400 hover:border-b-white"
                 onClick={onSubmit}
                 >
                 acessar

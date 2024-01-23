@@ -29,9 +29,9 @@ export default function Home() {
   return (
     <ContainerPage>
       <div
-        className="max-w-[1280px] max-h-[700px] rounded-md pb-6 h-full w-full bg-zinc-700 flex flex-col"
+        className="max-w-[1280px] max-h-[700px] rounded-[10px] pb-6 h-full w-full bg-zinc-700 flex flex-col"
       >
-        <div className="w-full flex flex-row py-4 px-10">
+        <div className="w-full flex flex-row py-4 px-[44px]">
           <input type="text"
             className="w-full h-10 rounded-md bg-zinc-800 px-4 py-6 outline-none"
             placeholder="Pesquisar exemplo..."
