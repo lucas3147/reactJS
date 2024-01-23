@@ -15,12 +15,14 @@
     "@mui/material": "^5.15.4",
     "@types/html2canvas": "^1.0.0",
     "@types/react-webcam": "^3.0.0",
+    "@types/styled-components": "^5.1.34",
     "html2canvas": "^1.4.1",
     "material-icons": "^1.13.12",
     "next": "14.0.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-webcam": "^7.2.0"
+    "react-webcam": "^7.2.0",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -15,6 +15,7 @@ export default function Home() {
     {title: 'Foto na webcam', subtitle: 'Ativar webcam e tirar um print da tela', onSubmit: () => router.push('/printOnWebcam')},
     {title: 'Gravar Webcam', subtitle: 'Gravamento da webcam e salvar o vídeo', onSubmit: () => router.push('/recordWebcam')},
     {title: 'Gravador de tela', subtitle: 'Gravar a janela aberta da página', onSubmit: () => router.push('/screenRecorder')},
+    {title: 'Buttons', subtitle: 'Estilização de botões', onSubmit: () => router.push('/Buttons')}
   ]
 
   const [myExamples, setMyExamples] = useState<CardItemType[]>(ListExamples);
