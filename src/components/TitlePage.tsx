@@ -1,6 +1,6 @@
 const TitlePage = ({title, subtitle} : {title: string, subtitle: string}) => {
     return (
-        <div className="flex absolute top-0 flex-col items-center bg-zinc-700 rounded-b-md">
+        <div className="top-[-140px] hover:top-0 transition-all flex absolute flex-col items-center bg-zinc-600 rounded-b-md">
             <div className="p-10">
                 <h1
                     className="text-4xl text-center uppercase font-bold font-mono"

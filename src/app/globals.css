@@ -8,6 +8,10 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+body {
+  overflow: hidden;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -30,6 +34,7 @@ body {
   flex: 1;
   overflow-x: auto;
   border-radius: 30px;
+  padding: 0 40px;
 }
 
 .cardList::-webkit-scrollbar {

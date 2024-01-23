@@ -8,7 +8,7 @@ type Props = {
 const ContainerPage = ({children, style}: Props) => {
     return (
         <main
-            className="h-screen w-screen flex justify-center items-center"
+            className="h-screen w-screen flex justify-center items-center overflow-hidden"
             style={style}
         >
             {children}

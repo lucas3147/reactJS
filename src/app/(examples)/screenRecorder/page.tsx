@@ -2,6 +2,7 @@
 import TitlePage from "@/components/TitlePage"
 import ContainerPage from "@/components/ContainerPage"
 import { useState } from "react";
+import DescriptiveItem from "@/components/DescriptiveItem";
 
 const screenRecorder = () => {
     const [tab1, setTab1] = useState(true);

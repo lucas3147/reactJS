@@ -3,6 +3,7 @@ import CardItem from "@/components/CardItem";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, ChangeEventHandler, EventHandler, useEffect, useState } from "react";
 import { CardItemType } from "@/types/CardItemType";
+import ContainerPage from "@/components/ContainerPage";
 
 
 export default function Home() {
@@ -21,23 +22,18 @@ export default function Home() {
 
   const handleSearchExample = (e: any) => {
     setSearchExample(e.target.value);
-
-    console.log(e.target.value);
     let examples = ListExamples.filter(ex => ex.title.toLowerCase().includes(e.target.value.toLowerCase()) || e.target.value.trim() == '');
-
     setMyExamples(examples);
   }
 
   return (
-    <main
-      className="h-screen w-screen flex justify-center items-center"
-    >
+    <ContainerPage>
       <div
-        className="max-w-[1280px] max-h-[820px] rounded-md pb-6 h-full w-full bg-zinc-700 flex flex-col"
+        className="max-w-[1280px] max-h-[700px] rounded-md pb-6 h-full w-full bg-zinc-700 flex flex-col"
       >
-        <div className="w-full flex flex-row py-4 px-6">
+        <div className="w-full flex flex-row py-4 px-10">
           <input type="text"
-            className="w-full h-10 rounded-[15px] bg-zinc-800 px-4 py-6 outline-none"
+            className="w-full h-10 rounded-md bg-zinc-800 px-4 py-6 outline-none"
             placeholder="Pesquisar exemplo..."
             value={searchExample}
             onChange={handleSearchExample}
@@ -59,7 +55,6 @@ export default function Home() {
           )}
         </div>
       </div>
-
-    </main>
+    </ContainerPage>
   )
 }

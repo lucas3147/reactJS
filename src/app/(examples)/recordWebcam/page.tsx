@@ -4,6 +4,7 @@ import ContainerPage from "@/components/ContainerPage"
 import { useCallback, useEffect, useRef, useState } from "react";
 import IconTheme from "@/components/IconTheme";
 import Webcam from "react-webcam";
+import DescriptiveItem from "@/components/DescriptiveItem";
 
 const recordWebcam = () => {
 
@@ -92,6 +93,15 @@ const recordWebcam = () => {
                 title="Gravar webcam"
                 subtitle="Um template simples para usar quando quiser gravar a webcam"
             />
+            <DescriptiveItem
+                resources={[
+                    'Webcam',
+                    'Api MediaRecorder'
+                ]}
+                about={[
+                    {title: 'biblioteca Webcam', link: 'https://www.npmjs.com/package/react-webcam'}
+                ]}
+            />
             {openVideo && 
                 <div 
                     className="absolute w-[950px] h-[537px] bg-zinc-700 p-4 rounded-md border-[1px]"
@@ -99,16 +109,19 @@ const recordWebcam = () => {
                     <div
                         className="absolute top-0 right-0"
                     >
-                        <IconTheme 
-                            type='CloseIcon'
-                            style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px', marginBottom: '20px'}}
-                            onClick={() => setOpenVideo(false)}
-                        />
-                        <IconTheme 
-                            type='SaveAltIcon'
-                            style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px'}}
-                            onClick={handleDownload}
-                        />
+                        <div onClick={() => setOpenVideo(false)}>
+                            <IconTheme 
+                                type='CloseIcon'
+                                style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px', marginBottom: '20px'}}
+                            />
+                        </div>
+                        <div onClick={handleDownload}>
+                            <IconTheme 
+                                type='SaveAltIcon'
+                                style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px'}}
+                                onClick={handleDownload}
+                            />
+                        </div>
                     </div>
                     
                     <div
@@ -133,7 +146,7 @@ const recordWebcam = () => {
             
                 <div className="m-auto mb-4">
                     <button
-                        className="px-8 py-4 bg-zinc-700 hover:bg-zinc-600 uppercase rounded-[12px] mr-6"
+                        className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-md mr-6 text-xl"
                         onClick={() => setWebcamOn(!webcamOn)}
                     >
                         {webcamOn && <>Desligar webcam</>}
@@ -141,7 +154,7 @@ const recordWebcam = () => {
                     </button>
                     { onRecord == false &&
                         <button
-                            className="px-8 py-4 bg-zinc-700 hover:bg-zinc-600 uppercase rounded-[12px] mr-6 "
+                            className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-md mr-6 text-xl"
                             onClick={handleStartRecord}
                         >
                             Gravar
@@ -149,7 +162,7 @@ const recordWebcam = () => {
                     }
                     { onRecord &&
                         <button
-                            className="px-8 py-4 bg-zinc-700 hover:bg-zinc-600 uppercase rounded-[12px] mr-6 border-2"
+                            className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-md mr-6 border-2 text-xl"
                             onClick={handleCloseRecord}
                         >
                             Parar de gravar
@@ -157,10 +170,10 @@ const recordWebcam = () => {
                     }
                     <button
                         style={{opacity: onRecord ? 0.5 : 1}}
-                        className="px-8 py-4 bg-zinc-700 hover:bg-zinc-600 uppercase rounded-[12px] mr-6 "
+                        className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-md mr-6 text-xl"
                         onClick={() => setOpenVideo(true)}
                     >
-                        Abrir Vídeo
+                        Abrir vídeo
                     </button>
                 </div>
                 <div
