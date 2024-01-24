@@ -107,21 +107,18 @@ const recordWebcam = () => {
                     className="absolute w-[950px] h-[537px] bg-zinc-700 p-4 rounded-md border-[1px]"
                 >
                     <div
-                        className="absolute top-0 right-0"
+                        className="absolute top-0 right-[-48px]"
                     >
-                        <div onClick={() => setOpenVideo(false)}>
                             <IconTheme 
                                 type='CloseIcon'
-                                style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px', marginBottom: '20px'}}
+                                style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px', marginBottom: '20px', border: '2px solid'}}
+                                onClick={() => setOpenVideo(false)}
                             />
-                        </div>
-                        <div onClick={handleDownload}>
                             <IconTheme 
                                 type='SaveAltIcon'
-                                style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px'}}
+                                style={{width: '40px', height: '40px', cursor: 'pointer', backgroundColor: 'rgb(63 63 70 / 1)', padding: '5px', borderRadius: '20px', border: '2px solid'}}
                                 onClick={handleDownload}
                             />
-                        </div>
                     </div>
                     
                     <div
