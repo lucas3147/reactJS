@@ -17,6 +17,7 @@ const ViewCardItem = ({children, actived, scale, style} : Props) => {
         borderRadius: '0.375rem',
         border: '1px solid rgb(212, 212, 216)',
         transformOrigin: 'top left',
+        overflow: 'hidden',
         ...style,
     }
 

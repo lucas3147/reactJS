@@ -7,29 +7,59 @@ type Props = {
     delay?: number,
     className: string,
     children: ReactNode,
-    scaleParam?: number,
+    scale: number,
     styleViewCardOpen?: CSSProperties
  }
 
-const HoverCardItem = ({title, delay, className, children, scaleParam, styleViewCardOpen}: Props) => {
+const HoverCardItem = ({title, delay, className, children, scale, styleViewCardOpen}: Props) => {
     var hoverTime: NodeJS.Timeout;
     const [activedCard, setActivedCard] = useState(false);
-    const [scale, setScale] = useState(1);
     var content = useRef<any>();
     var viewerCard = useRef<any>();
     
     useEffect(() => {
-        setScale(scaleParam ?? 1);
         if (activedCard) {
-            html2canvas(viewerCard.current).then(function(canvas) {
+            html2canvas(viewerCard.current, ).then(function(canvas) {
                 if (viewerCard.current?.contains(canvas) == false) {
-                    viewerCard.current.appendChild(canvas);
+                    var widthCurrent = canvas.width - (canvas.width / 3);
+                    var heightCurrent = canvas.height - (canvas.height / 3);
+                    var newCanvas = document.createElement('canvas');
+                    var image = new Image();
+                    var width = widthCurrent * scale;
+                    var height = heightCurrent * scale;
+                    newCanvas.width = width;
+                    newCanvas.height = height;
+                    image.src = canvas.toDataURL('image/jpeg');
+                    var context = newCanvas.getContext('2d');
+                    context?.drawImage(image, 0, 0, width, height);
+                    viewerCard.current.appendChild(newCanvas);
                 }
             });
             
             content.current?.remove();
         }
-    }, [activedCard])
+    }, [activedCard]);
+
+    const copyScreen = async () => {
+        var newCanvas = document.createElement('canvas');
+        
+        var image = new Image();
+
+        var canvas = await html2canvas(viewerCard.current);
+
+        if (viewerCard.current?.contains(canvas) == false) {
+            canvas.width -= (canvas.width / 3);
+            canvas.height -= (canvas.height / 3);
+            /*
+            newCanvas.width = canvas.width;
+            newCanvas.height = canvas.height;*/
+            image.src = canvas.toDataURL('image/jpeg');
+            var context = newCanvas.getContext('2d');
+            context?.drawImage(image, 0, 0, canvas.height, canvas.height);
+        };
+
+        return newCanvas
+    }
 
     const handleMouseOver = (delay?: number) => {
         if (delay == undefined) 
@@ -37,7 +67,6 @@ const HoverCardItem = ({title, delay, className, children, scaleParam, styleView
             delay = 1000;
         }
         hoverTime = setTimeout(() => {
-            setScale(1);
             setActivedCard(true);
         }, 1000);
     }
@@ -59,7 +88,7 @@ const HoverCardItem = ({title, delay, className, children, scaleParam, styleView
             {activedCard &&
                 <ViewCardItem
                     actived={activedCard}
-                    scale={scale}
+                    scale={1}
                     style={styleViewCardOpen}
                 >
                     <div ref={viewerCard}>
