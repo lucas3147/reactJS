@@ -179,7 +179,7 @@ const recordWebcam = () => {
                 >
                     {webcamOn &&
                         <Webcam
-                            audio={false}
+                            audio={true}
                             ref={webCamRef}
                             screenshotFormat="image/jpeg"
                             videoConstraints={{height: 430, width: 780}}
