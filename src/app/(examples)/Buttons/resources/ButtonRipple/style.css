@@ -1,4 +1,4 @@
-span {
+.ripple>span {
     position: absolute;
     background-color: #fff;
     transform: translate(-50%, -50%);

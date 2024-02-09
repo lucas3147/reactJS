@@ -1,0 +1,41 @@
+.lineborder {
+    width: 180px;
+    height: 60px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid #91C9FF;
+    outline: none;
+    transition: 1s ease-in-out;
+    position: relative;
+}
+
+.lineborder>svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    fill: none;
+    stroke: #fff;
+    stroke-dasharray: 150 480;
+    stroke-dashoffset: 150;
+}
+
+@keyframes dash{
+    to {
+        stroke-dashoffset: -480;
+    }
+}
+
+.lineborder:hover {
+  background: #3299ff;
+}
+  
+.lineborder:hover svg {
+    animation: dash 1.5s linear alternate infinite;
+}
+
+.lineborder span {
+    color: white;
+    font-size: 18px;
+    font-weight: 100;
+    position: relative;
+}

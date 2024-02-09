@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import "./style.css";
 
 const ButtonRipple = () => {
     const button = useRef<any>()
@@ -18,7 +19,7 @@ const ButtonRipple = () => {
 
     return (
         <button 
-            className="relative bg-gradient-to-r from-sky-500 to-indigo-500 px-8 py-4 overflow-hidden rounded-[30px]"
+            className="ripple relative bg-gradient-to-r from-sky-500 to-indigo-500 px-8 py-4 overflow-hidden rounded-[30px]"
             onClick={(e) => handleRipple(e)}
             ref={button}
         >
