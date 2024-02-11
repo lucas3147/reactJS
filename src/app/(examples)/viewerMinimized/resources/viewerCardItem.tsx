@@ -3,15 +3,13 @@ import { CSSProperties, HTMLAttributes, ReactNode, ReactPropTypes, StyleHTMLAttr
 type Props = {
     children?: ReactNode, 
     actived: boolean, 
-    scale: number, 
     style?: CSSProperties
 };
 
-const ViewCardItem = ({children, actived, scale, style} : Props) => {
+const ViewCardItem = ({children, actived,  style} : Props) => {
 
     style = {
         position: 'absolute',
-        scale,
         top: '100%',
         left: 0,
         borderRadius: '0.375rem',

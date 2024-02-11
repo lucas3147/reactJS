@@ -1,6 +1,8 @@
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import ViewCardItem from "./viewerCardItem";
 import html2canvas from "html2canvas";
+import { findDOMNode } from "react-dom";
+import { url } from "inspector";
 
 type Props = { 
     title: ReactNode,
@@ -13,53 +15,32 @@ type Props = {
 
 const HoverCardItem = ({title, delay, className, children, scale, styleViewCardOpen}: Props) => {
     var hoverTime: NodeJS.Timeout;
+
     const [activedCard, setActivedCard] = useState(false);
+
     var content = useRef<any>();
     var viewerCard = useRef<any>();
+
+    const addImageLoading = (src: string, width: string, height: string) => {
+        var img = document.createElement('img');
+        img.src = src;
+        img.style.width = width;
+        img.style.height = height;
+        return img;
+    }
     
     useEffect(() => {
         if (activedCard) {
-            html2canvas(viewerCard.current, ).then(function(canvas) {
-                if (viewerCard.current?.contains(canvas) == false) {
-                    var widthCurrent = canvas.width - (canvas.width / 3);
-                    var heightCurrent = canvas.height - (canvas.height / 3);
-                    var newCanvas = document.createElement('canvas');
-                    var image = new Image();
-                    var width = widthCurrent * scale;
-                    var height = heightCurrent * scale;
-                    newCanvas.width = width;
-                    newCanvas.height = height;
-                    image.src = canvas.toDataURL('image/jpeg');
-                    var context = newCanvas.getContext('2d');
-                    context?.drawImage(image, 0, 0, width, height);
-                    viewerCard.current.appendChild(newCanvas);
-                }
+            html2canvas(content.current).then((canvas) => {
+
+                let imgCanva = addImageLoading(canvas.toDataURL(), (canvas.width * scale).toString(), (canvas.height * scale).toString());
+
+                viewerCard.current.appendChild(imgCanva);
             });
             
             content.current?.remove();
         }
     }, [activedCard]);
-
-    const copyScreen = async () => {
-        var newCanvas = document.createElement('canvas');
-        
-        var image = new Image();
-
-        var canvas = await html2canvas(viewerCard.current);
-
-        if (viewerCard.current?.contains(canvas) == false) {
-            canvas.width -= (canvas.width / 3);
-            canvas.height -= (canvas.height / 3);
-            /*
-            newCanvas.width = canvas.width;
-            newCanvas.height = canvas.height;*/
-            image.src = canvas.toDataURL('image/jpeg');
-            var context = newCanvas.getContext('2d');
-            context?.drawImage(image, 0, 0, canvas.height, canvas.height);
-        };
-
-        return newCanvas
-    }
 
     const handleMouseOver = (delay?: number) => {
         if (delay == undefined) 
@@ -68,7 +49,7 @@ const HoverCardItem = ({title, delay, className, children, scale, styleViewCardO
         }
         hoverTime = setTimeout(() => {
             setActivedCard(true);
-        }, 1000);
+        }, delay);
     }
 
     const handleMouseOut = () => {
@@ -88,7 +69,6 @@ const HoverCardItem = ({title, delay, className, children, scale, styleViewCardO
             {activedCard &&
                 <ViewCardItem
                     actived={activedCard}
-                    scale={1}
                     style={styleViewCardOpen}
                 >
                     <div ref={viewerCard}>
