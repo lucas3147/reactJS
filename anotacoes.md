@@ -165,3 +165,31 @@ export const usePosts = () => useQuery({
     staleTime: Infinity // Tempo infinito
 });
 ```
+
+## CONFIGURAÇÕES PADRÃO NO QUERCLIENT
+
+Podemos ter configurações globais que servem para todas as requisições dentro do provider do UseQuery.
+
+Para o código ficar mais organizado, foi feito a seguinte reestruturação:
+
+- Criado arquivo queryClient.ts
+
+    - src>app>utils>queryClient.ts
+
+Nesse arquivo terá as configurações globais para todas as requisições que acontecer dentro do provedor.
+
+Segue código:
+
+```typescript
+import { QueryClient } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: Infinity
+        }
+    }
+});
+
+export default queryClient;
+```
