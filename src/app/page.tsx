@@ -4,20 +4,22 @@ import { usePost, usePosts } from "../utils/queries";
 
 const Page = () => {
 
-  const postItem = usePost(2);
+  const posts = usePosts();
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-white text-3xl">Opa, tudo bem?</h1>
+      <h1 className="text-white text-4xl ">Opa, tudo bem?</h1>
 
-      {postItem.isLoading && 
+      {posts.isLoading && 
         <p>Carregando...</p>
       }
 
 
-      {postItem.data &&
+      {posts.data &&
         <ul>
-            <li key={postItem.data.id}>{postItem.data.title}</li>
+          {posts.data.map((p) => (
+            <li key={p.id}>{p.title}</li>
+          ))}
         </ul>
       }
     </div>

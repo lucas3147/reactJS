@@ -73,3 +73,37 @@ post.isError;
 post.error;
 
 ```
+
+## STATUS DE INTERNET
+
+Além do QueryKey e QueryFunction nos parâmetros do useQuery(), é possível também colocar o nwtworkMode
+
+```typescript
+
+export const usePosts = () => useQuery({ 
+    networkMode: 'online',
+    queryKey: ['posts'],
+    queryFn: getPosts 
+});
+
+// o valor padrão é online
+
+// Se estiver online. Ele só executa o getPosts se estiver conectado na internet.
+
+// Se eu utilizasse outra fonte de dados que não necessita de internet, deve-se mudar o modo online para always.
+
+```
+
+O networkMode é um exemplo de status de internet, no qual conseguimos controlar via código.
+
+### Exemplo de status de internet
+
+```
+Imagine que você está usando uma aplicação na web que utilize o TanStackQuery.
+
+Se por algum momento você perder a conexão (estiver offline). O status de internet do TanStackQuery fica como paused.
+
+Quando retornar o status fica como stale (velho), o que significa que aqueles dados que você está vendo são antigos, e é necessário uma nova requisição para atualizá-los.
+
+Desse modo ele pega novamente os dados, apenas ligando a internet do computador.
+```
