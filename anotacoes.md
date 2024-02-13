@@ -193,3 +193,22 @@ const queryClient = new QueryClient({
 
 export default queryClient;
 ```
+
+## FAZENDO QUERY SOB DEMANDA
+
+E se quisermos criar um botão que direpara uma requisição?
+
+Conseguimos fazer isso. Porém o TanStackQuery tem um recurso que faz o seguinte. Ele cria a requisição no momento da renderização da página, mas não requisita, é como se ficasse desativado. E depois de clicarmos no botão ele ativa.
+
+Propridade:
+
+```typescript
+export const usePosts = (enabled?: boolean) => useQuery({ 
+    networkMode: 'online',
+    queryKey: ['posts'],
+    queryFn: getPosts,
+    staleTime: 2 * 1000,
+    enabled
+});
+// Controlando por uma variável por parâmetro.
+```

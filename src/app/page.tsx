@@ -1,20 +1,34 @@
 "use client"
 
-import { usePost, usePosts } from "../utils/queries";
+import { useState } from "react";
+import { usePosts } from "../utils/queries";
 
 const Page = () => {
+  const [canLoadPosts, setCanLoadPosts] = useState(false);
 
-  const posts = usePosts();
+  const posts = usePosts(canLoadPosts);
+
+  const handleLoadingPostsButton = () => {
+    setCanLoadPosts(true);
+  }
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-white text-2xl">Opa, tudo bem?</h1>
+      <h1 className="text-white text-3xl">Opa, tudo bem?</h1>
+
+      <button
+        onClick={handleLoadingPostsButton}
+        className="border border-white p-3 rounded-md m-3"
+      >
+        Carregar posts
+      </button>
 
       {posts.isLoading && 
         <p>Carregando...</p>
       }
 
-      {posts.isFetching && 
+      {!posts.isLoading && 
+       posts.isFetching && 
         <p>Está recarregando...</p>
       }
 
