@@ -1,34 +1,52 @@
 "use client"
 
 import { useState } from "react";
-import { usePosts } from "../utils/queries";
+import { usePost, usePosts } from "../utils/queries";
 
 const Page = () => {
-  const [canLoadPosts, setCanLoadPosts] = useState(false);
+  const [page, setPage] = useState(0);
 
-  const posts = usePosts(canLoadPosts);
+  const limit = 3;
 
-  const handleLoadingPostsButton = () => {
-    setCanLoadPosts(true);
+  const posts = usePosts(limit, page * limit);
+
+  const handleNextPage = () => {
+    setPage(page + 1);
+  }
+
+  const handlePrevPage = () => {
+    setPage(page == 0 ? 0 : page - 1);
   }
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-white text-3xl">Opa, tudo bem?</h1>
+      <h1 className="text-white text-2xl">Opa, tudo bem?</h1>
 
-      <button
-        onClick={handleLoadingPostsButton}
-        className="border border-white p-3 rounded-md m-3"
+      <div
+        className="border border-white p-3 m-3"
       >
-        Carregar posts
-      </button>
+        <div>Itens por página: {limit}</div>
+        <div>Número da página: {page}</div>
+        <button
+          onClick={handlePrevPage}
+          className="border border-white p-3 m-3"
+        >
+          Página anterior
+        </button>
+        <button
+          onClick={handleNextPage}
+          className="border border-white p-3 m-3"
+        >
+          Próxima página
+        </button>
+      </div>
 
       {posts.isLoading && 
         <p>Carregando...</p>
       }
 
       {!posts.isLoading && 
-       posts.isFetching && 
+        posts.isFetching && 
         <p>Está recarregando...</p>
       }
 

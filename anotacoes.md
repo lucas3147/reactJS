@@ -212,3 +212,5 @@ export const usePosts = (enabled?: boolean) => useQuery({
 });
 // Controlando por uma variável por parâmetro.
 ```
+
+## FAZENDO PAGINAÇÃO 1
