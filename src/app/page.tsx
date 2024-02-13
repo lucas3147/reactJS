@@ -4,14 +4,13 @@ import { usePost, usePosts } from "../utils/queries";
 
 const Page = () => {
 
-  const posts = usePosts();
-  const postItem = usePost(1);
+  const postItem = usePost(2);
 
   return (
     <div className="container mx-auto">
       <h1 className="text-white text-3xl">Opa, tudo bem?</h1>
 
-      {posts.isLoading && 
+      {postItem.isLoading && 
         <p>Carregando...</p>
       }
 
