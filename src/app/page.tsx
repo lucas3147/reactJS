@@ -14,6 +14,9 @@ const Page = () => {
         <p>Carregando...</p>
       }
 
+      {posts.isFetching && 
+        <p>Está recarregando...</p>
+      }
 
       {posts.data &&
         <ul>

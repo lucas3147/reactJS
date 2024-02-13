@@ -107,3 +107,13 @@ Quando retornar o status fica como stale (velho), o que significa que aqueles da
 
 Desse modo ele pega novamente os dados, apenas ligando a internet do computador.
 ```
+
+## LOADING E FETCHING
+
+Já conhecemos o status loading (isLoading)
+
+Vamos conhecer o fetching (isFetching)
+
+É bem sutil a diferença entre eles, mas o fetching para cada requisição que é feita, ele é ativado.
+
+Enquanto que o loading parece ser ativado na primeira vez da requisição.
