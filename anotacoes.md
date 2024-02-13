@@ -117,3 +117,51 @@ Vamos conhecer o fetching (isFetching)
 É bem sutil a diferença entre eles, mas o fetching para cada requisição que é feita, ele é ativado.
 
 Enquanto que o loading parece ser ativado na primeira vez da requisição.
+
+## CONTROLANDO STALETIME
+
+Já conhecemos alguns dos status do TanStack, que é o [stale] e o [paused]
+
+Os status são:
+
+- fresh (fresco)
+
+    - Enquanto estiver com esse status, o TanStack não vai fazer novas requisições
+
+- fetching (requisitando)
+
+- Paused
+
+    - Quando está offline. Requisição pausada
+
+- Stale (obsoleto/velho)
+
+    - Quando está obsoleto, o TanStackQuery sempre vai fazer uma requisição, seja mudar de abas e voltar novamente para aplicação, ou qualquer outro momento
+
+- Inactive (inativo)
+
+Sabendo dos status, é possível controlar o staleTime, ou seja, controlar o tempo do status stale, para não realizar tantas requisições, sem necessidade
+
+### EXEMPLO
+
+Bem simples. Segue código
+
+```typescript
+export const usePosts = () => useQuery({ 
+    networkMode: 'online',
+    queryKey: ['posts'],
+    queryFn: getPosts,
+    staleTime: 2000 // Tempo em milisegundos
+});
+
+// Enquanto a aplicação rodar em menos de 2 segundos, o status query é fresh (fresco), após esse tempo, muda para stale.
+
+// Caso você queira colocar tempo ilimitado. Você coloca uma representação do tempo infinito.
+
+export const usePosts = () => useQuery({ 
+    networkMode: 'online',
+    queryKey: ['posts'],
+    queryFn: getPosts,
+    staleTime: Infinity // Tempo infinito
+});
+```

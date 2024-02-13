@@ -8,7 +8,7 @@ const Page = () => {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-white text-4xl ">Opa, tudo bem?</h1>
+      <h1 className="text-white text-2xl">Opa, tudo bem?</h1>
 
       {posts.isLoading && 
         <p>Carregando...</p>

@@ -4,7 +4,8 @@ import { getPost, getPosts } from "../utils/api";
 export const usePosts = () => useQuery({ 
     networkMode: 'online',
     queryKey: ['posts'],
-    queryFn: getPosts 
+    queryFn: getPosts,
+    staleTime: 60 * 1000
 });
 
 export const usePost = (id: number) => useQuery({
