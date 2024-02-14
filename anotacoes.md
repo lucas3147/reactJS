@@ -239,4 +239,31 @@ export const usePosts = (limit: number, start: number) => useQuery({
 // Terceiro parâmetro: placeholderData
 ```
 
-## 
+## PREFETCH NO TANSTACK
+
+Prefetch significa realizar uma requisição, e guardar os dados dessa requisição, no entanto, naquele momento, não será utilizado esses dados, mas sim no momento em que acharmos mais conviniente.
+
+<strong>
+Observação:
+</strong>
+
+- A utilização do prefetch também se comporta do mesmo modo que uma requisição normal. Ou seja, a utilização status de internet (do stale e e fresh por exemplo) vão influenciar no momento da requisição.
+
+Como realizar esse processo?
+
+- Definindo função:
+
+```ts
+export const useUsersPrefetch = async () => {
+    await queryClient.prefetchQuery({
+        queryKey: ['users'],
+        queryFn: getUsers
+    });
+}
+```
+
+- Chamdno função:
+
+```ts
+useUsersPrefetch();
+```
