@@ -267,3 +267,15 @@ export const useUsersPrefetch = async () => {
 ```ts
 useUsersPrefetch();
 ```
+
+## PEGAR O QUERYCLIENT POR HOOK
+
+Ao invés de exportarmos o queryClient, e importar-los para os nossos arquivos, podemos usar hook que pega o queryClient que está sendo usado naquele contexto.
+
+<strong>
+CÓDIGO
+</strong>
+
+```ts
+const queryClient = useQueryClient();
+```
