@@ -213,4 +213,30 @@ export const usePosts = (enabled?: boolean) => useQuery({
 // Controlando por uma variável por parâmetro.
 ```
 
-## FAZENDO PAGINAÇÃO 1
+## DADOS INICIAIS E PLACEHOLDER DE QUERY
+
+Existem duas maneiras de definir dados iniciais, a primeira utiliza dados reais, ou seja o TanStackQuery trata esses dados relevantes, e a segunda, são dados fictícios, como um placeholdes
+
+Definição
+
+- Dados iniciais: 
+
+```typescript
+export const usePosts = (limit: number, start: number) => useQuery({
+    queryKey: ['posts', {limit, start}],
+    queryFn: () => getPosts(limit, start),
+    InitialData: postsInitialData
+});
+
+// Terceiro parâmetro: InitialData
+
+export const usePosts = (limit: number, start: number) => useQuery({
+    queryKey: ['posts', {limit, start}],
+    queryFn: () => getPosts(limit, start),
+    placeholderData: postsInitialData
+});
+
+// Terceiro parâmetro: placeholderData
+```
+
+## 

@@ -45,11 +45,6 @@ const Page = () => {
         <p>Carregando...</p>
       }
 
-      {!posts.isLoading && 
-        posts.isFetching && 
-        <p>Está recarregando...</p>
-      }
-
       {posts.data &&
         <ul>
           {posts.data.map((p) => (
