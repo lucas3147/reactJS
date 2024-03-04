@@ -298,3 +298,13 @@ export const invalidatePosts = () => {
     });
 }
 ```
+
+## O QUE SÃO MUTATIONS?
+
+Usamos mutations para realizar uma requisição quando o usuário disparar alguma ação, seja um botão, ou o carregamento de um componente...
+
+Mutations se comporta similuar a uma query normal do TanStack, porém elas são preparadas antes de dispararmos a ação. 
+
+Quando disparamos o gatilho que executa a mutation, ela vem acompanhada de dados, como se fosse um post mesmo.
+
+Com a mutation você consegue enviar dados com a requisição que vai ser feita.
