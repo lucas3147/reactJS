@@ -336,3 +336,44 @@ export const addPost = async (data: Omit<Post, "id">): Promise<Post> => {
 }
 // Omit, significa que data é um objeto de Post, sem o atributo 'id'
 ```
+
+## STATUS DE UMA MUTATION
+
+Os mutation tem status de error, pending, de Sucesso, Idle etc...
+
+- isError
+    - Erro na requisição
+- isPeding
+    - Requisição em pendência
+- isSuccess
+    - Sucesso na requisição
+- isIdle
+    - Requisição ociosa, quando criamos a mutation, mas não executamos
+- isPaused
+    - Requisição Pausada
+
+Podemos acessar esses status de outra forma
+
+```js
+addMutation.status : "error" | "idle" | "loading" | "success"
+```
+
+### Exemplos:
+
+```jsx
+<div className="border border-white p-3">
+  <p>Adicionar Novo Post</p>
+  <button disabled={addMutation.isPending} onClick={handleAddButton}>Adicionar</button>
+</div>
+
+<p>{addMutation.isPending && 'Inserindo...'}</p>
+<p>{addMutation.isIdle && 'Ocioso...'}</p>
+<p>{addMutation.isSuccess && 'Sucesso!'}</p>
+```
+
+**Obs: Tem uma opção que reseta a mutation, veremos a seguir**
+
+## RESETANDO MUTATION
+
+Quando resetamos um mutation, o status da requisição retorna para ocioso.
+
