@@ -27,12 +27,9 @@ const Page = () => {
 
       <div className="border border-white p-3">
         <p>Adicionar Novo Post</p>
+        <p onClick={() => addMutation.reset()}>Status: {addMutation.status}</p>
         <button disabled={addMutation.isPending} onClick={handleAddButton}>Adicionar</button>
       </div>
-
-      <p>{addMutation.isPending && 'Inserindo...'}</p>
-      <p>{addMutation.isIdle && 'Ocioso...'}</p>
-      <p>{addMutation.isSuccess && 'Sucesso!'}</p>
 
       {posts.isLoading && 
         <p>Carregando...</p>

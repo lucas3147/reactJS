@@ -377,3 +377,12 @@ addMutation.status : "error" | "idle" | "loading" | "success"
 
 Quando resetamos um mutation, o status da requisição retorna para ocioso.
 
+### Exemplo
+
+```jsx
+<div className="border border-white p-3">
+ <p>Adicionar Novo Post</p>
+ <p onClick={() => addMutation.reset()}>Status: {addMutation.status}</p>
+ <button disabled={addMutation.isPending} onClick={handleAddButton}>Adicionar</button>
+</div>
+```
