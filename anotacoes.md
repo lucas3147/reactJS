@@ -456,3 +456,31 @@ const addMutation = useMutation({
     }
 });
 ```
+
+## SIDE EFFECTS NO MUTATE
+
+É possível colocarmos os efeitos colaterais na função mutate do mutation.
+
+### Exemplo
+
+```ts
+const handleAddButton = () => {
+    addMutation.mutate({
+      title: 'Teste',
+      body: 'Corpo de Teste',
+      userId: 7
+    },
+    {
+      onSuccess: () => {
+        // Tudo certo
+      },
+      onError: () => {
+        // Deu erro
+      },
+      onSettled: () => {
+        // Passou aqui!
+      }
+    })
+  }
+
+```
