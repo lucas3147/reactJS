@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPost, getPosts, getUsers } from "../utils/api";
 import { postsInitialData } from "../data/postsInitialData";
+import queryClient from "./queryClient";
 
 export const usePosts = () => useQuery({
     queryKey: ['posts'],
@@ -25,4 +26,11 @@ export const useUsersPrefetch = async () => {
         queryKey: ['users'],
         queryFn: getUsers
     });
+}
+
+export const invalidatePosts = () => {
+    queryClient.invalidateQueries({
+        queryKey: ['posts'],
+        exact: true
+    })
 }

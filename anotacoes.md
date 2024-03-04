@@ -279,3 +279,22 @@ CÓDIGO
 ```ts
 const queryClient = useQueryClient();
 ```
+
+## INVALIDANDO QUERY
+
+O efeito de invalidar uma query, faz o TanStack realizar uma nova requisição. 
+
+```
+Utilizamos esse recurso por exemplo quando enviamos informações de um formulário por exemplo, e queremos após isso, atualizar alguma lista, porém o TanStack vai ver que o status da requisição está fresh, fazendo com que ele pegue os valores do cache.
+```
+
+### Como utilizamos?
+
+```js
+export const invalidatePosts = () => {
+    queryClient.invalidateQueries({
+        queryKey: ['posts'], //Chaves que queremos invalidar
+        exact: true //Invalida apenas chaves que são exatamente ['posts'], se tirarmos o parâmetro, ele invalida todas as chaves que possuem 'posts' no array
+    });
+}
+```
