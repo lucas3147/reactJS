@@ -10,7 +10,16 @@ const Page = () => {
   const posts = usePosts();
 
   const addMutation = useMutation({
-    mutationFn: addPost
+    mutationFn: addPost,
+    onMutate: (data) => {
+      console.log("dados da mutation", data);
+    },
+    onError: (error, data, context) => {
+      console.log("dados da mutation", data);
+    },
+    onSuccess: (error, data, context) => {
+      console.log("dados da mutation", data);
+    }
   });
 
   const handleAddButton = () => {

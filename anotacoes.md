@@ -386,3 +386,73 @@ Quando resetamos um mutation, o status da requisição retorna para ocioso.
  <button disabled={addMutation.isPending} onClick={handleAddButton}>Adicionar</button>
 </div>
 ```
+
+## SIDE EFFECTS EM MUTATION
+
+Side Effects (efeitos colaterais), são ações disparadas depois de um status mutation mudar.
+
+### OnMutate
+
+É possível executar uma ação na primeira vez que utilizamos uma mutation pelo onMutate, configuramos isso na criação da mutation.
+
+#### Exemplo
+
+```js
+const addMutation = useMutation({
+    mutationFn: addPost,
+    onMutate: (data) => {
+      console.log("dados da mutation", data);
+    }
+});
+```
+
+### OnError
+
+É possível executar uma ação quando houver erro na mutation pelo onError.
+
+#### Exemplo
+
+```js
+const addMutation = useMutation({
+    mutationFn: addPost,
+    onError: (error, data, context) => {
+      console.log("error message", error.message, data, context);
+    }
+    //error é o erro
+    //data é os dados que você enviou
+    //context veremos adiante
+});
+```
+
+### OnSuccess
+
+É possível executar uma ação quando o mutate realiza a requisição com sucesso.
+
+#### Exemplo
+
+```js
+const addMutation = useMutation({
+    mutationFn: addPost,
+    onSuccess: (retorno, data, context) => {
+      console.log("Sucesso", data, context);
+    }
+    //retorno são dados da resposta do servidor
+    //data é os dados que você enviou
+    //context veremos adiante
+});
+```
+
+### OnSettled
+
+É possível executar uma ação quando houver erro ou sucesso no mutate.
+
+#### Exemplo
+
+```js
+const addMutation = useMutation({
+    mutationFn: addPost,
+    OnSettled: (retorno, error, data, context) => {
+      
+    }
+});
+```
