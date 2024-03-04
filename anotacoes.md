@@ -512,3 +512,24 @@ const handleAddButton = async () => {
 Colocamos os Mutatiosn na pasta utils, no arquivo mutations.ts
 
 Siga o código...
+
+## INVALIDANDO PELO MUTATION
+
+É possível invalidar querys pelo mutation para receber dados novos depois de efetuar uma requisição Post POR EXEMPLO.
+
+### EXEMPLO
+
+```ts
+export const useAddPost = () => {
+    const mutation = useMutation({
+        mutationFn: addPost,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['posts']
+            });
+        }
+    });
+
+    return mutation;
+}
+```
