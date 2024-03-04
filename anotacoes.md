@@ -308,3 +308,31 @@ Mutations se comporta similuar a uma query normal do TanStack, porém elas são 
 Quando disparamos o gatilho que executa a mutation, ela vem acompanhada de dados, como se fosse um post mesmo.
 
 Com a mutation você consegue enviar dados com a requisição que vai ser feita.
+
+## FAZENDO UMA MUTATION SIMPLES
+
+Para criar um Mutation é bem simples, basta chamar o seu hook, e após a ação do usuário chamar a função que dispara a requisição.
+
+```ts
+//Em page.tsx
+//Construindo mutation
+const mutation = useMutation({
+  mutationFn: addPost
+});
+
+//Realizando requisição
+const handleAddButton = () => {
+    addMutation.mutate({
+      title: 'Teste',
+      body: 'Corpo de Teste',
+      userId: 7
+    })
+}
+
+//Em api.ts
+export const addPost = async (data: Omit<Post, "id">): Promise<Post> => {
+    const result = await req.post('/posts', data);
+    return result.data;
+}
+// Omit, significa que data é um objeto de Post, sem o atributo 'id'
+```

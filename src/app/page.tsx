@@ -1,25 +1,33 @@
 "use client"
 
+import { useMutation } from "@tanstack/react-query";
 import { invalidatePosts, usePosts, useUsersPrefetch } from "../utils/queries";
+import { addPost } from "../utils/api";
 
 const Page = () => {
   useUsersPrefetch();
 
   const posts = usePosts();
 
-  const handleInsertNewPostButton = () => {
-    // fazer todo o procedimento de inserção...
+  const addMutation = useMutation({
+    mutationFn: addPost
+  });
 
-    invalidatePosts();
+  const handleAddButton = () => {
+    addMutation.mutate({
+      title: 'Teste',
+      body: 'Corpo de Teste',
+      userId: 7
+    })
   }
 
   return (
     <div className="container mx-auto">
       <h1 className="text-white text-2xl">Opa, tudo bem?</h1>
 
-      <div className="p-3 border border-white">
-        <p>Área de inserção de novo post</p>
-        <button onClick={handleInsertNewPostButton} className="border border-white">Inserir novo post</button>
+      <div className="border border-white p-3">
+        <p>Adicionar Novo Post</p>
+        <button onClick={handleAddButton}>Adicionar</button>
       </div>
 
       {posts.isLoading && 

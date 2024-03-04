@@ -20,3 +20,8 @@ export const getUsers = async (): Promise<User[]> => {
     const result = await req.get('/users');
     return result.data;
 }
+
+export const addPost = async (data: Omit<Post, "id">): Promise<Post> => {
+    const result = await req.post('/posts', data);
+    return result.data;
+}
