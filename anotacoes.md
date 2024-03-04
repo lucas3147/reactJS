@@ -506,3 +506,9 @@ const handleAddButton = async () => {
 ```
 
 **Obs: Só é possível pegar o erro agora, se colocar try catch na requisição**
+
+### ORGANIZANDO MUTATIONS
+
+Colocamos os Mutatiosn na pasta utils, no arquivo mutations.ts
+
+Siga o código...
