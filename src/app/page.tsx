@@ -13,23 +13,16 @@ const Page = () => {
     mutationFn: addPost
   });
 
-  const handleAddButton = () => {
-    addMutation.mutate({
+  const handleAddButton = async () => {
+    const data = {
       title: 'Teste',
       body: 'Corpo de Teste',
       userId: 7
-    },
-    {
-      onSuccess: () => {
-        // Tudo certo
-      },
-      onError: () => {
-        // Deu erro
-      },
-      onSettled: () => {
-        // Passou aqui!
-      }
-    })
+    }
+
+    const post = await addMutation.mutateAsync(data);
+    console.log('Deu tudo certo')
+    console.log('Executado depois do mutate')
   }
 
   return (

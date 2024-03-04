@@ -484,3 +484,25 @@ const handleAddButton = () => {
   }
 
 ```
+
+## MUTATE ASSÍNCRONO
+
+Os mutates que utilizamos até agora, são síncronos, ele não espera o resultado da requisição. Podemos usar o mutate assíncrono
+
+### UTILIZANDO
+
+```ts
+const handleAddButton = async () => {
+    const data = {
+      title: 'Teste',
+      body: 'Corpo de Teste',
+      userId: 7
+    }
+
+    const post = await addMutation.mutateAsync(data);
+    console.log('Deu tudo certo')
+    console.log('Executado depois do mutate')
+  }
+```
+
+**Obs: Só é possível pegar o erro agora, se colocar try catch na requisição**
