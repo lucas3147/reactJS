@@ -8,6 +8,7 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GamepadOutlinedIcon from '@mui/icons-material/GamepadOutlined';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import { CSSProperties } from 'react';
 
 type Props = {
@@ -48,6 +49,9 @@ const IconTheme = ({type, style, onClick}: Props) => {
             }
             {type == 'PlayCircleIcon' && 
                 <PlayCircleIcon style={style} onClick={onClick} />
+            }
+            {type == 'DoDisturbOnIcon' && 
+                <DoDisturbOnIcon style={style} onClick={onClick} />
             }
         </div>
     )

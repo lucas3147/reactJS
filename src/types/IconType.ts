@@ -7,4 +7,7 @@ type IconType =
 |'VrpanoOutlinedIcon'  
 |'DashboardOutlinedIcon'
 |'GamepadOutlinedIcon'
-|'ArrowBackIosIcon';
+|'ArrowBackIosIcon'
+|'PlayCircleIcon'
+|'DoDisturbOnIcon'
+;
