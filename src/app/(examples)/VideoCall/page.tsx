@@ -1,11 +1,18 @@
+"use client"
+
 import ContainerPage from "@/components/ContainerPage";
 import DescriptiveItem from "@/components/DescriptiveItem";
 import IconTheme from "@/components/IconTheme";
 import TitlePage from "@/components/TitlePage";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Webcam from "react-webcam";
 
 const VideoCall = () => {
-    
+    const yourWebCamRef = useRef<any>();
+    const otherWebCamRef = useRef<any>();
+
+    const [yourWebcamOn, setYourWebcamOn] = useState(false);
+    const [otherWebcamOn, setOtherWebcamOn] = useState(false);
     return (
         <ContainerPage>
             <TitlePage
@@ -26,11 +33,27 @@ const VideoCall = () => {
                     <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         you
                     </div>
+                    {yourWebcamOn &&
+                        <Webcam
+                            audio={true}
+                            ref={yourWebCamRef}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={{height: 430, width: 780}}
+                        />  
+                    }
                 </div>
                 <div className="w-[692px] h-[640px] bg-zinc-900 rounded-md relative flex justify-center">
                     <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         other
                     </div>
+                    {otherWebcamOn &&
+                        <Webcam
+                            audio={true}
+                            ref={otherWebCamRef}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={{height: 430, width: 780}}
+                        />  
+                    }
                 </div>
                 <div className="flex justify-between items-center px-1 w-32 h-16 rounded-[40px] bg-zinc-800 border-2 absolute bottom-[20px] left-[636px]">
                     <IconTheme
