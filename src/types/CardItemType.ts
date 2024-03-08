@@ -1,5 +1,6 @@
 export type CardItemType = {
     title: string,
     subtitle: string,
-    onSubmit: () => void
+    onSubmit: () => void,
+    iconTheme: IconType
 }
