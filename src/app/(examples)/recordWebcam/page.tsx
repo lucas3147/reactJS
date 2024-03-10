@@ -17,12 +17,6 @@ const recordWebcam = () => {
     const [openVideo, setOpenVideo] = useState(false);
     const [recordedChunks, setRecordedChunks] = useState([]);
 
-    useEffect(() => {
-        if (onRecord && webcamOn) {
-
-        }
-    }, [onRecord]);
-
     const handleStartRecord = useCallback(() => {
         if (webCamRef.current) {
             setOnRecord(!onRecord);
@@ -41,14 +35,11 @@ const recordWebcam = () => {
         }
     }, [webCamRef, setOnRecord, mediaRecorderRef]);
 
-    const handleDataAvailable = useCallback(
-        ({ data } : any) => {
-          if (data.size > 0) {
-            setRecordedChunks((prev) => prev.concat(data));
-          }
-        },
-        [setRecordedChunks]
-      );
+    const handleDataAvailable = useCallback(({ data } : any) => {
+        if (data.size > 0) {
+          setRecordedChunks((prev) => prev.concat(data));
+        }
+    },[setRecordedChunks]);
 
     const handleDownload = useCallback(() => {
         if (recordedChunks.length) {

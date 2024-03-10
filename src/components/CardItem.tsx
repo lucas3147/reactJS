@@ -9,8 +9,7 @@ const CardItem = ({title, subtitle, onSubmit, iconTheme} : {title: string, subti
                     type={iconTheme}
                     style={{
                         width: '40px', 
-                        height: '40px', 
-                        cursor: 'pointer',
+                        height: '40px',
                         marginRight: '20px'
                     }}
                 />
