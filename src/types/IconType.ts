@@ -10,4 +10,5 @@ type IconType =
 |'ArrowBackIosIcon'
 |'PlayCircleIcon'
 |'DoDisturbOnIcon'
+|'LeakAddIcon'
 ;

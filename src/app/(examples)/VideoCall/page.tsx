@@ -6,8 +6,11 @@ import IconTheme from "@/components/IconTheme";
 import TitlePage from "@/components/TitlePage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
+import { SocketDataType } from "./resources/types/SocketDataType";
+import socket from "./resources/socket";
 
 const VideoCall = () => {
+
     const myWebCamRef = useRef<any>();
     const otherWebCamRef = useRef<any>();
     const mediaRecorderRef = useRef<any>(null);
@@ -48,40 +51,35 @@ const VideoCall = () => {
 
             socket.send(JSON.stringify({otherWebcam: blob}));
         }
-    }, [recordedChunks]);
+    }, [recordedChunks]);  
 
-    let socket  = new WebSocket('ws://localhost:3001');
-
-    useEffect(() => {
-        // Lidar com a abertura da conexão
-        socket.addEventListener('open', (event) => {
-            console.log('Conectado')
-
-            socket.send('Olá Servidor. Cliente Lucas aqui!');
-            //socket.send(JSON.stringify({ data: 'seus_dados_aqui' }));
+    const handleConnectServer = () => {
+        socket.addEventListener('open', () => {
+            console.log('Conectado!');
         });
 
         socket.addEventListener('message', (event) => {
-            const video = JSON.parse(event.data);
+             
+
+            if (event.data.type == 'video') {
+                const video = JSON.parse(event.data);
             
-            if (video.otherWebcam.length > 0){
-                const blob = new Blob(recordedChunks, {
-                    type: "video/webm"
-                });
-                const url = URL.createObjectURL(blob);
-                var videoElement = document.createElement("video");
-                videoElement.width = 918;
-                videoElement.height = 491;
-                videoElement.controls = true;
-                videoElement.src = url;
-                otherWebCamRef.current.appendChild(videoElement);
+                if (video.otherWebcam.length > 0){
+                    const blob = new Blob(recordedChunks, {
+                        type: "video/webm"
+                    });
+                    const url = URL.createObjectURL(blob);
+                    var videoElement = document.createElement("video");
+                    videoElement.width = 635;
+                    videoElement.height = 686;
+                    videoElement.controls = true;
+                    videoElement.src = url;
+                    otherWebCamRef.current.appendChild(videoElement);
+                }
             }
         });
 
-    }, []);
-
-    const handleSendServerButton = () => {
-        socket.send('Mensagem aleatória do seu cliente Lucas!');
+        handleStartRecord();
     }
 
     return (
@@ -108,18 +106,12 @@ const VideoCall = () => {
                     <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         you
                     </div>
-                    <button 
-                        className="bg-zinc-900 border-2 h-10 px-4"
-                        onClick={handleSendServerButton}
-                    >
-                        Enviar mensagem ao servidor
-                    </button>
                     {myWebcamOn &&
                         <Webcam
                             audio={true}
                             ref={myWebCamRef}
                             screenshotFormat="image/jpeg"
-                            videoConstraints={{height: 430, width: 780}}
+                            videoConstraints={{height: 635, width: 686}}
                         />  
                     }
                 </div>
@@ -136,7 +128,7 @@ const VideoCall = () => {
                         </div>
                     }
                 </div>
-                <div className="flex justify-between items-center px-1 w-32 h-16 rounded-[40px] bg-zinc-800 border-2 absolute bottom-[20px] left-[636px]">
+                <div className="flex justify-between items-center px-1 w-44 h-16 rounded-[40px] bg-zinc-800 border-2 absolute bottom-[20px] left-[610px]">
                     <IconTheme
                         type="MonochromePhotosOutlinedIcon"
                         style={{
@@ -148,7 +140,7 @@ const VideoCall = () => {
                             border: '2px solid white',
                             cursor: 'pointer'
                         }}
-                        onClick={handleStartRecord}
+                        onClick={() => setMyWebcamOn(true)}
                     />
 
                     <IconTheme
@@ -163,6 +155,21 @@ const VideoCall = () => {
                             cursor: 'pointer'
                         }}
                         onClick={() => setMyWebcamOn(false)}
+                    />
+
+                    <IconTheme
+                        type="LeakAddIcon"
+                        style={{
+                            width: '50px',
+                            height: '50px',
+                            backgroundColor: '#505059',
+                            padding: '5px',
+                            borderRadius: '25px',
+                            border: '2px solid white',
+                            cursor: 'pointer'
+                        }}
+                        className="hover:bg-green-900"
+                        onClick={() => handleConnectServer}
                     />
                 </div>
             </div>

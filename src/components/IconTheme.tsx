@@ -9,49 +9,54 @@ import GamepadOutlinedIcon from '@mui/icons-material/GamepadOutlined';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
+import LeakAddIcon from '@mui/icons-material/LeakAdd';
 import { CSSProperties } from 'react';
 
 type Props = {
     type: IconType,
-    style?: CSSProperties,
+    style?: CSSProperties, 
+    className?: string,
     onClick?: () => void
 }
 
-const IconTheme = ({type, style, onClick}: Props) => {
+const IconTheme = ({type, style, className, onClick}: Props) => {
     return (
         <div>
             {type == 'ArrowDropDownCircleIcon' &&
-                <ArrowDropDownCircleIcon style={style} onClick={onClick} />
+                <ArrowDropDownCircleIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'CloseIcon' && 
-                <CloseIcon style={style} onClick={onClick} />
+                <CloseIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'SaveAltIcon' && 
-                <SaveAltIcon style={style} onClick={onClick} />
+                <SaveAltIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'CameraOutlinedIcon' && 
-                <CameraOutlinedIcon style={style} onClick={onClick} />
+                <CameraOutlinedIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'MonochromePhotosOutlinedIcon' && 
-                <MonochromePhotosOutlinedIcon style={style} onClick={onClick} />
+                <MonochromePhotosOutlinedIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'VrpanoOutlinedIcon' && 
-                <VrpanoOutlinedIcon style={style} onClick={onClick} />
+                <VrpanoOutlinedIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'DashboardOutlinedIcon' && 
-                <DashboardOutlinedIcon style={style} onClick={onClick} />
+                <DashboardOutlinedIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'GamepadOutlinedIcon' && 
-                <GamepadOutlinedIcon style={style} onClick={onClick} />
+                <GamepadOutlinedIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'ArrowBackIosIcon' && 
-                <ArrowBackIosIcon style={style} onClick={onClick} />
+                <ArrowBackIosIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'PlayCircleIcon' && 
-                <PlayCircleIcon style={style} onClick={onClick} />
+                <PlayCircleIcon style={style} className={className} onClick={onClick} />
             }
             {type == 'DoDisturbOnIcon' && 
-                <DoDisturbOnIcon style={style} onClick={onClick} />
+                <DoDisturbOnIcon style={style} className={className} onClick={onClick} />
+            }
+            {type == 'LeakAddIcon' && 
+                <LeakAddIcon style={style} className={className} onClick={onClick} />
             }
         </div>
     )
