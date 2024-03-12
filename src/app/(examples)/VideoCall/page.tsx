@@ -7,9 +7,12 @@ import TitlePage from "@/components/TitlePage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { SocketDataType } from "./resources/types/SocketDataType";
-import socket from "./resources/socket";
+import { url_server } from "./resources/socket";
 
 const VideoCall = () => {
+    let dataSocket: SocketDataType = {type: '', clientId: 0, value: null};
+    var socket : WebSocket;
+    var clientId: number = 0;
 
     const myWebCamRef = useRef<any>();
     const otherWebCamRef = useRef<any>();
@@ -40,28 +43,40 @@ const VideoCall = () => {
     const handleDataAvailable = useCallback(({ data } : any) => {
         if (data.size > 0) {
           setRecordedChunks((prev) => prev.concat(data));
+          console.log('oi')
         }
     },[setRecordedChunks]);
 
     useEffect(() => {
-        if (recordedChunks.length > 0) {
+        if (recordedChunks.length > 0) 
+        {
             const blob = new Blob(recordedChunks, {
               type: "video/webm"
             });
 
-            socket.send(JSON.stringify({otherWebcam: blob}));
+            dataSocket.type = "video";
+            dataSocket.value = blob;
+
+            socket.send(JSON.stringify(dataSocket));
         }
     }, [recordedChunks]);  
 
     const handleConnectServer = () => {
+        socket = new WebSocket(url_server);
+
         socket.addEventListener('open', () => {
             console.log('Conectado!');
         });
 
         socket.addEventListener('message', (event) => {
-             
+            dataSocket = JSON.parse(event.data);
 
-            if (event.data.type == 'video') {
+            if (dataSocket.type == 'firstAccess') {
+                clientId = dataSocket.clientId;
+                console.log(dataSocket.value, dataSocket.clientId);
+            }
+
+            if (dataSocket.type == 'video' && dataSocket.clientId != clientId) {
                 const video = JSON.parse(event.data);
             
                 if (video.otherWebcam.length > 0){
@@ -80,6 +95,10 @@ const VideoCall = () => {
         });
 
         handleStartRecord();
+    }
+
+    const handleMessageTest = () => {
+        socket.send(JSON.stringify({type: 'message', clientId: 0, value: 'Oi Servidor'}))
     }
 
     return (
@@ -119,7 +138,7 @@ const VideoCall = () => {
                     style={{border: otherWebcamOn ? 'solid 2px white' : 'none'}}
                     className="w-[692px] h-[640px] bg-zinc-900 rounded-md relative flex justify-center"
                 >
-                    <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
+                    <div onClick={handleMessageTest} className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         other
                     </div>
                     {otherWebcamOn &&
@@ -169,7 +188,7 @@ const VideoCall = () => {
                             cursor: 'pointer'
                         }}
                         className="hover:bg-green-900"
-                        onClick={() => handleConnectServer}
+                        onClick={handleConnectServer}
                     />
                 </div>
             </div>

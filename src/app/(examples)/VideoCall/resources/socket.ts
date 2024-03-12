@@ -1,7 +1,3 @@
-const PORT = 3001;
+export const PORT = 3001;
 
-const url_server = `ws://localhost:${PORT}`;
-
-const socket  = new WebSocket(url_server);
-
-export default socket;
+export const url_server = `ws://localhost:${PORT}`;
