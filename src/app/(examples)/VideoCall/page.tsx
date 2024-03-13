@@ -58,7 +58,7 @@ const VideoCall = () => {
     }
 
     const handleTest = () => {
-        
+
     }
 
     return (
@@ -71,7 +71,6 @@ const VideoCall = () => {
                 resources={[
                     'Webcam',
                     'Api MediaRecorder',
-                    'Socket.io',
                     'WebRTC API'
                 ]}
                 about={[
