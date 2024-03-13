@@ -6,12 +6,9 @@ import IconTheme from "@/components/IconTheme";
 import TitlePage from "@/components/TitlePage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { SocketDataType } from "./resources/types/SocketDataType";
 import { url_server } from "./resources/socket";
 
 const VideoCall = () => {
-    let dataSocket: SocketDataType = {type: '', clientId: 0, value: null};
-    var socket : WebSocket;
     var clientId: number = 0;
 
     const myWebCamRef = useRef<any>();
@@ -53,52 +50,15 @@ const VideoCall = () => {
             const blob = new Blob(recordedChunks, {
               type: "video/webm"
             });
-
-            dataSocket.type = "video";
-            dataSocket.value = blob;
-
-            socket.send(JSON.stringify(dataSocket));
         }
     }, [recordedChunks]);  
 
     const handleConnectServer = () => {
-        socket = new WebSocket(url_server);
-
-        socket.addEventListener('open', () => {
-            console.log('Conectado!');
-        });
-
-        socket.addEventListener('message', (event) => {
-            dataSocket = JSON.parse(event.data);
-
-            if (dataSocket.type == 'firstAccess') {
-                clientId = dataSocket.clientId;
-                console.log(dataSocket.value, dataSocket.clientId);
-            }
-
-            if (dataSocket.type == 'video' && dataSocket.clientId != clientId) {
-                const video = JSON.parse(event.data);
-            
-                if (video.otherWebcam.length > 0){
-                    const blob = new Blob(recordedChunks, {
-                        type: "video/webm"
-                    });
-                    const url = URL.createObjectURL(blob);
-                    var videoElement = document.createElement("video");
-                    videoElement.width = 635;
-                    videoElement.height = 686;
-                    videoElement.controls = true;
-                    videoElement.src = url;
-                    otherWebCamRef.current.appendChild(videoElement);
-                }
-            }
-        });
-
         handleStartRecord();
     }
 
-    const handleMessageTest = () => {
-        socket.send(JSON.stringify({type: 'message', clientId: 0, value: 'Oi Servidor'}))
+    const handleTest = () => {
+        
     }
 
     return (
@@ -111,10 +71,12 @@ const VideoCall = () => {
                 resources={[
                     'Webcam',
                     'Api MediaRecorder',
-                    'Socket.io'
+                    'Socket.io',
+                    'WebRTC API'
                 ]}
                 about={[
-                    {title: 'biblioteca Webcam', link: 'https://www.npmjs.com/package/react-webcam'}
+                    {title: 'biblioteca Webcam', link: 'https://www.npmjs.com/package/react-webcam'},
+                    {title: 'WebRTC API', link: 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API'}
                 ]}
             />
             <div className="w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative">
@@ -138,7 +100,7 @@ const VideoCall = () => {
                     style={{border: otherWebcamOn ? 'solid 2px white' : 'none'}}
                     className="w-[692px] h-[640px] bg-zinc-900 rounded-md relative flex justify-center"
                 >
-                    <div onClick={handleMessageTest} className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
+                    <div onClick={handleTest} className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         other
                     </div>
                     {otherWebcamOn &&
