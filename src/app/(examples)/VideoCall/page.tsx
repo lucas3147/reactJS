@@ -75,7 +75,7 @@ const VideoCall = () => {
                 ]}
                 about={[
                     {title: 'biblioteca Webcam', link: 'https://www.npmjs.com/package/react-webcam'},
-                    {title: 'documentação WebRTC API', link: 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API'}
+                    {title: 'documentação WebRTC API', link: 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API'},
                     {title: 'exemplo WebRTC API', link: 'https://github.com/mdn/samples-server/blob/master/s/webrtc-simple-datachannel/main.js'}
                 ]}
             />
