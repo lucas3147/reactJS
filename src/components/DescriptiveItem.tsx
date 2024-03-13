@@ -44,7 +44,7 @@ const DescriptiveItem = ({resources, about}: Props) => {
                                     <a
                                         className="underline underline-offset-4"
                                         href={item.link}
-                                        target="blank"
+                                        target="_blank"
                                     >
                                         {item.title}
                                     </a>

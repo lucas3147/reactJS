@@ -71,11 +71,12 @@ const VideoCall = () => {
                 resources={[
                     'Webcam',
                     'Api MediaRecorder',
-                    'WebRTC API'
+                    'WebRTC API',
                 ]}
                 about={[
                     {title: 'biblioteca Webcam', link: 'https://www.npmjs.com/package/react-webcam'},
                     {title: 'documentação WebRTC API', link: 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API'}
+                    {title: 'exemplo WebRTC API', link: 'https://github.com/mdn/samples-server/blob/master/s/webrtc-simple-datachannel/main.js'}
                 ]}
             />
             <div className="w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative">
