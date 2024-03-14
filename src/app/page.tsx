@@ -10,13 +10,13 @@ export default function Home() {
   const router = useRouter();
 
   const ListExamples: CardItemType[] = [
-    {title: 'cards simples', subtitle: 'Padrão simples para utilizar', onSubmit: () => router.push('/SlideCards'), iconTheme: 'DashboardOutlinedIcon'},
-    {title: 'Exibição em mini tela', subtitle: 'Exibir página sem abrir', onSubmit: () => router.push('/viewerMinimized'), iconTheme: 'VrpanoOutlinedIcon'},
-    {title: 'Foto na webcam', subtitle: 'Ativar webcam e tirar um print da tela', onSubmit: () => router.push('/printOnWebcam'), iconTheme: 'MonochromePhotosOutlinedIcon'},
-    {title: 'Gravar Webcam', subtitle: 'Gravamento da webcam e salvar o vídeo', onSubmit: () => router.push('/recordWebcam'), iconTheme: 'CameraOutlinedIcon'},
-    {title: 'Gravador de tela', subtitle: 'Gravar a janela aberta da página', onSubmit: () => router.push('/screenRecorder'), iconTheme: 'CameraOutlinedIcon'},
-    {title: 'Vídeo Chamada', subtitle: 'Emulando uma vídeo chamada com socket simples', onSubmit: () => router.push('/VideoCall'), iconTheme: 'CameraOutlinedIcon'},
-    {title: 'Meus botões', subtitle: 'Estilização de botões', onSubmit: () => router.push('/Buttons'), iconTheme: 'GamepadOutlinedIcon'},
+    {title: 'cards simples', subtitle: 'Padrão simples para utilizar', onSubmit: () => router.push('/examples/SlideCards'), iconTheme: 'DashboardOutlinedIcon'},
+    {title: 'Exibição em mini tela', subtitle: 'Exibir página sem abrir', onSubmit: () => router.push('/examples/viewerMinimized'), iconTheme: 'VrpanoOutlinedIcon'},
+    {title: 'Foto na webcam', subtitle: 'Ativar webcam e tirar um print da tela', onSubmit: () => router.push('/examples/printOnWebcam'), iconTheme: 'MonochromePhotosOutlinedIcon'},
+    {title: 'Gravar Webcam', subtitle: 'Gravamento da webcam e salvar o vídeo', onSubmit: () => router.push('/examples/recordWebcam'), iconTheme: 'CameraOutlinedIcon'},
+    {title: 'Gravador de tela', subtitle: 'Gravar a janela aberta da página', onSubmit: () => router.push('/examples/screenRecorder'), iconTheme: 'CameraOutlinedIcon'},
+    {title: 'Vídeo Chamada', subtitle: 'Emulando uma vídeo chamada com socket simples', onSubmit: () => router.push('/examples/VideoCall'), iconTheme: 'CameraOutlinedIcon'},
+    {title: 'Meus botões', subtitle: 'Estilização de botões', onSubmit: () => router.push('/examples/Buttons'), iconTheme: 'GamepadOutlinedIcon'},
   ]
 
   const [myExamples, setMyExamples] = useState<CardItemType[]>(ListExamples);

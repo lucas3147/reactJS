@@ -6,7 +6,6 @@ import IconTheme from "@/components/IconTheme";
 import TitlePage from "@/components/TitlePage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { url_server } from "./resources/socket";
 
 const VideoCall = () => {
     var clientId: number = 0;
