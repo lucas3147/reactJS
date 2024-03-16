@@ -46,38 +46,38 @@ server.on('connection', (socket) => {
   });
 
   */
-  remoteConnection = wrtc.RTCPeerConnection();
-  remoteConnection.addEventListener("datachannel", (ev) => {
-      receiveChannelCallback(ev);
-    },
-    false,
-  );
+  remoteConnection = new wrtc.RTCPeerConnection();
+  remoteConnection.ondatachannel = receiveChannelCallback;
   
-  console.log('Cliente conectado !');
+  console.log('Ponto remoto rtc estabelecido !');
+
+  socket.send(JSON.stringify({type: 'ice-candidate', data: remoteConnection}));
+
+  console.log('Enviando Ponto remoto para ponto local !');
 
   socket.on('message', (event) => {
-    let data = JSON.parse(event.toString());
+    let message = JSON.parse(event.toString());
 
-    if (data.type == 'ice-candidate') {
-      console.log('Candidato WebRtc detectada');
+    if (message.type == 'ice-candidate') {
+      console.log('Candidato WebRtc detectado', message);
 
-      localPeerConnection = data.value;
+      localPeerConnection = message.data;
 
       remoteConnection.onicecandidate = e => !e.candidate
-        || localPeerConnection.addIceCandidate(e.candidate)
+        || localPeerConnection.addIceCandidate(e.candidate, handleSuccessAddCandidate, handleErrorAddCandidate)
         .catch(handleAddCandidateError);
 
-      socket.send(JSON.stringify({type: 'ice-candidate', data: remoteConnection}));
+      
     }
-    if (data.type == 'offer') {
-      console.log('Conexão WebRtc detectada');
+    if (message.type == 'offer') {
+      console.log('Conexão WebRtc offer detectada');
 
-      localPeerDescription = data.value;
+      localPeerDescription = message.data;
 
       remoteConnection
         .setRemoteDescription(localPeerDescription)
         .then(() => remoteConnection.createAnswer())
-        .then(answer => remoteConnection.setlocalPeerDescription(answer))
+        .then(answer => remoteConnection.setLocalDescription(answer))
         .then(() => socket.send(JSON.stringify({type: 'offer', data: remoteConnection.localDescription})))
         .catch(handleCreateDescriptionError);
     }
@@ -106,6 +106,7 @@ function receiveChannelCallback(event) {
   receiveChannel.onmessage = handleReceiveMessage;
   receiveChannel.onopen = handleReceiveChannelStatusChange;
   receiveChannel.onclose = handleReceiveChannelStatusChange;
+  console.log('Eventos WebRtc escutando !')
 }
 
 function handleReceiveMessage(event) {
@@ -119,10 +120,18 @@ function handleReceiveChannelStatusChange(event) {
   }
 }
 
+function handleSuccessAddCandidate() {
+  console.log('Candidato adicionado com sucesso!')
+}
+
+function handleErrorAddCandidate() {
+  console.log('Não foi possível adicionar candidato!')
+}
+
 function handleCreateDescriptionError(error) {
   console.log("Unable to create an offer: " + error.toString());
 }
 
 function handleAddCandidateError(error) {
-  console.log("Unable to create an offer: " + error.toString());
+  console.log("Unable to add an candidate: " + error.toString());
 }

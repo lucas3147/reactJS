@@ -51,15 +51,19 @@
     
     remoteConnection = new RTCPeerConnection();
     remoteConnection.ondatachannel = receiveChannelCallback;
+
+    console.log(remoteConnection);
     
     // Set up the ICE candidates for the two peers
     
     localConnection.onicecandidate = e => !e.candidate
         || remoteConnection.addIceCandidate(e.candidate)
+        .then(() => console.log('Candidato do ponto remoto adicionado no ponto local'))
         .catch(handleAddCandidateError);
 
     remoteConnection.onicecandidate = e => !e.candidate
         || localConnection.addIceCandidate(e.candidate)
+        .then(() => console.log('Candidato do ponto local adicionado no ponto remoto'))
         .catch(handleAddCandidateError);
     
     // Now create an offer to connect; this starts the process
@@ -147,6 +151,7 @@
     receiveChannel.onmessage = handleReceiveMessage;
     receiveChannel.onopen = handleReceiveChannelStatusChange;
     receiveChannel.onclose = handleReceiveChannelStatusChange;
+    console.log('Eventos escutando...')
   }
   
   // Handle onmessage events for the receiving channel.
@@ -208,6 +213,7 @@
   window.addEventListener('load', startup, false);
 });
 
+// Simulação de conexão WebRTC utilizando websocket
 (function() {
 
   // Define "global" variables
@@ -263,8 +269,6 @@
       sendChannel = localConnection.createDataChannel("sendChannel");
       sendChannel.onopen = handleSendChannelStatusChange;
       sendChannel.onclose = handleSendChannelStatusChange;
-
-      socket.send(JSON.stringify({type: 'ice-candidate', data: localConnection}));
     });
 
     socket.addEventListener('message', (event) => {
@@ -273,11 +277,17 @@
       if (response.type === 'ice-candidate') {
         remoteConnection = response.data;
 
+        console.log('eventos de adicionar candidatos ligado');
+        console.log('candidato remoto:', remoteConnection);
+
         localConnection.onicecandidate = e => !e.candidate
         || remoteConnection.addIceCandidate(e.candidate)
+        .then(() => {
+          console.log('Candidato remoto adicionado!', remoteConnection);
+          socket.send(JSON.stringify({type: 'ice-candidate', data: localConnection}));
+          console.log('Enviando ponto local para ponto remoto', localConnection);
+        })
         .catch(handleAddCandidateError);
-
-        console.log('Candidato adicionado!');
 
         localConnection.createOffer()
         .then(offer => localConnection.setLocalDescription(offer))
@@ -294,7 +304,7 @@
           .setRemoteDescription(remoteDescription)
           .catch(handleCreateDescriptionError);
 
-        console.log('Conexão WebRTC estabelecida')
+        console.log('Conexão WebRTC offer estabelecida')
       }
     });
   }
