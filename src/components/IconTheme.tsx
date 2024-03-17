@@ -10,6 +10,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import LeakAddIcon from '@mui/icons-material/LeakAdd';
+import LeakRemoveIcon from '@mui/icons-material/LeakRemove';
 import { CSSProperties } from 'react';
 
 type Props = {
@@ -57,6 +58,9 @@ const IconTheme = ({type, style, className, onClick}: Props) => {
             }
             {type == 'LeakAddIcon' && 
                 <LeakAddIcon style={style} className={className} onClick={onClick} />
+            }
+            {type == 'LeakRemoveIcon' && 
+                <LeakRemoveIcon style={style} className={className} onClick={onClick} />
             }
         </div>
     )

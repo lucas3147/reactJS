@@ -1,15 +1,17 @@
 export var localConnection: RTCPeerConnection;
 export var remoteConnection: RTCPeerConnection;
 export var sendChannel: RTCDataChannel;
-export var connectionIsOpen: () => void;
-export var connectionIsClose: () => void;
+export var connectionIsOpen: (() => void) | undefined;
+export var connectionIsClose: (() => void) | undefined;
 var remoteDescription: RTCSessionDescription;
 
-export function createLocalConnection (canal: string) {
+export function createLocalConnection (canal: string, connectionCallbackOpen?: () => void, connectionCallbackClose?: () => void) {
     localConnection = new RTCPeerConnection();
     sendChannel = localConnection.createDataChannel(canal);
     sendChannel.onopen = handleSendChannelStatusChange;
     sendChannel.onclose = handleSendChannelStatusChange;
+    connectionIsOpen = connectionCallbackOpen;
+    connectionIsClose = connectionCallbackClose;
 }
 
 export function createRemoteConnection(remotePeerConnection: any) {
@@ -18,17 +20,23 @@ export function createRemoteConnection(remotePeerConnection: any) {
 }
 
 export function addIceCandidate(callbackSuccess: () => void) {
-    localConnection.onicecandidate = e => !e.candidate
-    || remoteConnection.addIceCandidate(e.candidate)
-    .then(() => {
-        console.log('Candidato remoto adicionado!', remoteConnection);
-        callbackSuccess();
-        console.log('Enviando ponto local para ponto remoto', localConnection);
-    })
-    .catch(handleAddCandidateError);
+    localConnection.onicecandidate = e => {
+        if (e.candidate && remoteConnection.addIceCandidate) {
+            remoteConnection.addIceCandidate(e.candidate)
+            .then(() => {
+                console.log('Candidato remoto adicionado!', remoteConnection);
+                callbackSuccess();
+                console.log('Enviando ponto local para ponto remoto', localConnection);
+            })
+            .catch(handleAddCandidateError);
+        }
+        else {
+            handleAddCandidateError();
+        }
+    }
 }
 
-export function createOffer(callbackSuccess: () => void) {
+export async function createOffer(callbackSuccess: () => void) {
     localConnection.createOffer()
     .then(offer => localConnection.setLocalDescription(offer))
     .then(() => {
@@ -45,6 +53,11 @@ export function setRemoteDescription(remotePeerConnection: any) {
     .setRemoteDescription(remoteDescription)
     .then(() => console.log('Conexão WebRTC offer estabelecida'))
     .catch(handleCreateDescriptionError);
+}
+
+export function disconnectedConnection() {
+    sendChannel.close();
+    localConnection.close();
 }
 
 function handleCreateDescriptionError(error: any) {
@@ -68,9 +81,9 @@ function handleSendChannelStatusChange(this: RTCDataChannel, event: Event): any 
     var state = sendChannel.readyState;
   
     if (state === "open") {
-        connectionIsOpen();
+        !connectionIsOpen || connectionIsOpen();
     } else {
-        connectionIsClose();
+        !connectionIsClose || connectionIsClose();
     }
   }
 }

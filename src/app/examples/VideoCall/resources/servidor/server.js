@@ -12,47 +12,23 @@ var remoteConnection = null;
 
 
 server.on('connection', (socket) => {
-  /*
   let clientId = generateClientId();
 
   setClientId(clientId);
 
-  console.log('Cliente conectado !', clientId);
+  console.log('Cliente conectado :', clientId);
 
   socket.send(JSON.stringify({
-    type: 'firstAccess', 
-    clientId, 
-    value: 'Olá cliente, aqui está seu Id:'
+    type: 'open', 
+    data: clientId
   }));
 
-  socket.on('message', (event) => {
-    let data = JSON.parse(event.toString());
+  createRemoteConnection();
 
-    if (data.type == 'firstAccess') {
-      console.log(data.value);
-    }
-    if (data.type == 'message') {
-      console.log('Mensagem do cliente:', data.value, clientId);
-    }
-    if (data.type == 'video') {
-      console.log(data.value);
-    }
-  });
-
-  socket.onclose = () => {
-    listUsersConnected = listUsersConnected.filter(u => u != clientId);
-    console.log('Usuários conectados !', listUsersConnected);
-  };
-  });
-
-  */
-  remoteConnection = new wrtc.RTCPeerConnection();
-  remoteConnection.ondatachannel = receiveChannelCallback;
-  remoteConnection.ontrack = receiveTrack;
-  
-  console.log('Ponto remoto rtc estabelecido !');
-
-  socket.send(JSON.stringify({type: 'ice-candidate', data: remoteConnection}));
+  socket.send(JSON.stringify({
+    type: 'ice-candidate', 
+    data: remoteConnection
+  }));
 
   console.log('Enviando Ponto remoto para ponto local !');
 
@@ -67,8 +43,6 @@ server.on('connection', (socket) => {
       remoteConnection.onicecandidate = e => !e.candidate
         || localPeerConnection.addIceCandidate(e.candidate, handleSuccessAddCandidate, handleErrorAddCandidate)
         .catch(handleAddCandidateError);
-
-      
     }
     if (message.type == 'offer') {
       console.log('Conexão WebRtc offer detectada');
@@ -85,8 +59,10 @@ server.on('connection', (socket) => {
   });
 
   socket.onclose = () => {
+    listUsersConnected = listUsersConnected.filter(u => u != clientId);
     console.log('Socket fechado!', listUsersConnected);
   };
+
 });
 
 function generateClientId() {
@@ -102,12 +78,18 @@ function setClientId(clientId) {
 console.log('Servidor WebSocket ouvindo na porta 3001');
 
 // WEBRTC
+function createRemoteConnection() {
+  remoteConnection = new wrtc.RTCPeerConnection();
+  remoteConnection.ondatachannel = receiveChannelCallback;
+  remoteConnection.ontrack = receiveTrack;
+  console.log('Ponto remoto rtc estabelecido !');
+}
+
 function receiveChannelCallback(event) {
   receiveChannel = event.channel;
   receiveChannel.onmessage = handleReceiveMessage;
   receiveChannel.onopen = handleReceiveChannelStatusChange;
   receiveChannel.onclose = handleReceiveChannelStatusChange;
-  console.log('Eventos WebRtc escutando !')
 }
 
 function receiveTrack(event) {

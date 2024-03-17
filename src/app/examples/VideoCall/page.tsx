@@ -6,15 +6,7 @@ import IconTheme from "@/components/IconTheme";
 import TitlePage from "@/components/TitlePage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { 
-    addIceCandidate, 
-    createLocalConnection, 
-    createOffer, 
-    createRemoteConnection,  
-    localConnection, 
-    remoteConnection, 
-    setRemoteDescription 
-} from "./resources/WebRTC";
+import * as WebRTC from "./resources/WebRTC";
 import TestPage from "@/components/TestPage";
 
 const VideoCall = () => {
@@ -26,6 +18,8 @@ const VideoCall = () => {
     const [myWebcamOn, setMyWebcamOn] = useState(false);
     const [otherWebcamOn, setOtherWebcamOn] = useState(false);
     const [connectionRtcOn, setConnectionRtcOn] = useState(false);
+    const [connectionRemoteOn, setConnectionRemoteOn] = useState(false);
+    const [textMessageServer, setTextMessageServer] = useState('');
 
     useEffect(() => {
         const constraints = { video: true, audio: true };
@@ -37,7 +31,7 @@ const VideoCall = () => {
               const videoTrack = stream.getVideoTracks()[0];
               console.log('Track de vídeo:', videoTrack);
               
-              localConnection.addTrack(videoTrack);
+              WebRTC.localConnection.addTrack(videoTrack);
             } catch (error) {
               console.error('Erro ao obter mídia:', error);
             }
@@ -67,21 +61,27 @@ const VideoCall = () => {
             socketClient.addEventListener('open', () => {
                 console.log('Conectado ao servidor WebSocket');
         
-                createLocalConnection("sendChannel");
+                WebRTC.createLocalConnection(
+                    "sendChannel", 
+                    () => setConnectionRemoteOn(true),
+                    () => setConnectionRemoteOn(false));
             });
         
             socketClient.addEventListener('message', (event) => {
                 const response = JSON.parse(event.data);
                 
+                if (response.type === 'open') {
+                    console.log('Meu id no servidor:', response.data);
+                }
                 if (response.type === 'ice-candidate') {
-                    createRemoteConnection(response.data);
+                    WebRTC.createRemoteConnection(response.data);
             
-                    addIceCandidate(() => socketClient.send(JSON.stringify({type: 'ice-candidate', data: localConnection})));
+                    WebRTC.addIceCandidate(() => socketClient.send(JSON.stringify({type: 'ice-candidate', data: WebRTC.localConnection})));
 
-                    createOffer(() => socketClient.send(JSON.stringify({type: 'offer', data: localConnection.localDescription})));
+                    WebRTC.createOffer(() => socketClient.send(JSON.stringify({type: 'offer', data: WebRTC.localConnection.localDescription})));
                 }
                 if (response.type === 'offer') {
-                    setRemoteDescription(response.data);
+                    WebRTC.setRemoteDescription(response.data);
                 }
             });
         } 
@@ -91,8 +91,9 @@ const VideoCall = () => {
         }
     }
 
-    const handleTest = () => {
-
+    const handleDisconnectServer = () => {
+        WebRTC.disconnectedConnection();
+        setConnectionRemoteOn(false);
     }
 
     return (
@@ -115,7 +116,17 @@ const VideoCall = () => {
             />
             <TestPage
                 titleTest="Enviar mensagem ao servidor"
-                onSubmit={() => socketClient.send(JSON.stringify({type: 'message', data: 'Oi servidor'}))}
+                serverTest={{
+                    onSubmit : () => {
+                        WebRTC.sendChannel.readyState == 'open' ? 
+                        WebRTC.sendChannel.send(textMessageServer) : 
+                        console.log('Estado da conexão:', WebRTC.sendChannel.readyState);
+                        setTextMessageServer('');
+                    },
+                    text : textMessageServer,
+                    setText : setTextMessageServer,
+                    remoteConnectionOn: connectionRemoteOn
+                }}
             />
             <div className="w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative">
                 <div 
@@ -138,12 +149,12 @@ const VideoCall = () => {
                     style={{border: otherWebcamOn ? 'solid 2px white' : 'none'}}
                     className="w-[692px] h-[640px] bg-zinc-900 rounded-md relative flex justify-center"
                 >
-                    <div onClick={handleTest} className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
+                    <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         other
                     </div>
                     {otherWebcamOn &&
                         <div ref={otherWebCamRef}>
-
+                            
                         </div>
                     }
                 </div>
@@ -176,20 +187,37 @@ const VideoCall = () => {
                         onClick={() => setMyWebcamOn(false)}
                     />
 
-                    <IconTheme
-                        type="LeakAddIcon"
-                        style={{
-                            width: '50px',
-                            height: '50px',
-                            backgroundColor: '#505059',
-                            padding: '5px',
-                            borderRadius: '25px',
-                            border: '2px solid white',
-                            cursor: 'pointer'
-                        }}
-                        className="hover:bg-green-900"
-                        onClick={handleConnectServer}
-                    />
+                    {connectionRemoteOn &&
+                        <IconTheme
+                            type="LeakRemoveIcon"
+                            style={{
+                                width: '50px',
+                                height: '50px',
+                                backgroundColor: 'red',
+                                padding: '5px',
+                                borderRadius: '25px',
+                                border: '2px solid white',
+                                cursor: 'pointer'
+                            }}
+                            onClick={handleDisconnectServer}
+                        />
+                    }
+                    {!connectionRemoteOn && 
+                        <IconTheme
+                            type="LeakAddIcon"
+                            style={{
+                                width: '50px',
+                                height: '50px',
+                                padding: '5px',
+                                borderRadius: '25px',
+                                border: '2px solid white',
+                                cursor: 'pointer'
+                            }}
+                            className="hover:bg-green-600"
+                            onClick={handleConnectServer}
+                        />
+                    }
+                    
                 </div>
             </div>
         </ContainerPage>

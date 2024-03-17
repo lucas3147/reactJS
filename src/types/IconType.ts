@@ -11,4 +11,5 @@ type IconType =
 |'PlayCircleIcon'
 |'DoDisturbOnIcon'
 |'LeakAddIcon'
+|'LeakRemoveIcon'
 ;
