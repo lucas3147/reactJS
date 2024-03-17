@@ -6,54 +6,89 @@ import IconTheme from "@/components/IconTheme";
 import TitlePage from "@/components/TitlePage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
+import { 
+    addIceCandidate, 
+    createLocalConnection, 
+    createOffer, 
+    createRemoteConnection,  
+    localConnection, 
+    remoteConnection, 
+    setRemoteDescription 
+} from "./resources/WebRTC";
+import TestPage from "@/components/TestPage";
 
 const VideoCall = () => {
-    var clientId: number = 0;
+    var socketClient: WebSocket;
 
     const myWebCamRef = useRef<any>();
     const otherWebCamRef = useRef<any>();
-    const mediaRecorderRef = useRef<any>(null);
 
     const [myWebcamOn, setMyWebcamOn] = useState(false);
     const [otherWebcamOn, setOtherWebcamOn] = useState(false);
-    const [recordedChunks, setRecordedChunks] = useState([]);
-
-    const handleStartRecord = useCallback(() => {
-        if (myWebCamRef.current) {
-            setMyWebcamOn(!myWebcamOn);
-            mediaRecorderRef.current = new MediaRecorder(myWebCamRef.current.stream, {
-                mimeType: "video/webm"
-            });
-            mediaRecorderRef.current.addEventListener(
-                "dataavailable",
-                handleDataAvailable
-            );
-            mediaRecorderRef.current.start(); 
-        } 
-        else
-        {
-            alert('Ligue a webcam primeiro');
-        }
-    }, [myWebCamRef, setMyWebcamOn, mediaRecorderRef]);
-
-    const handleDataAvailable = useCallback(({ data } : any) => {
-        if (data.size > 0) {
-          setRecordedChunks((prev) => prev.concat(data));
-          console.log('oi')
-        }
-    },[setRecordedChunks]);
+    const [connectionRtcOn, setConnectionRtcOn] = useState(false);
 
     useEffect(() => {
-        if (recordedChunks.length > 0) 
-        {
-            const blob = new Blob(recordedChunks, {
-              type: "video/webm"
-            });
+        const constraints = { video: true, audio: true };
+
+        async function getMedia() {
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia(constraints);
+              
+              const videoTrack = stream.getVideoTracks()[0];
+              console.log('Track de vídeo:', videoTrack);
+              
+              localConnection.addTrack(videoTrack);
+            } catch (error) {
+              console.error('Erro ao obter mídia:', error);
+            }
         }
-    }, [recordedChunks]);  
+
+        if (connectionRtcOn) {
+            getMedia();
+        }
+
+        return () => {
+            if (myWebCamRef.current && myWebCamRef.current.srcObject) {
+                const stream = myWebCamRef.current.srcObject;
+                const tracks = stream.getTracks();
+      
+                tracks.forEach(track => {
+                    track.stop();
+                });
+            }
+        };
+    }, [connectionRtcOn])
 
     const handleConnectServer = () => {
-        handleStartRecord();
+        try
+        {
+            socketClient = new WebSocket('ws://localhost:3001');
+        
+            socketClient.addEventListener('open', () => {
+                console.log('Conectado ao servidor WebSocket');
+        
+                createLocalConnection("sendChannel");
+            });
+        
+            socketClient.addEventListener('message', (event) => {
+                const response = JSON.parse(event.data);
+                
+                if (response.type === 'ice-candidate') {
+                    createRemoteConnection(response.data);
+            
+                    addIceCandidate(() => socketClient.send(JSON.stringify({type: 'ice-candidate', data: localConnection})));
+
+                    createOffer(() => socketClient.send(JSON.stringify({type: 'offer', data: localConnection.localDescription})));
+                }
+                if (response.type === 'offer') {
+                    setRemoteDescription(response.data);
+                }
+            });
+        } 
+        catch (e) 
+        {
+            console.log('Não foi possível estabelecer conexão com o servidor', e);
+        }
     }
 
     const handleTest = () => {
@@ -77,6 +112,10 @@ const VideoCall = () => {
                     {title: 'documentação WebRTC API', link: 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API'},
                     {title: 'exemplo WebRTC API', link: 'https://github.com/mdn/samples-server/blob/master/s/webrtc-simple-datachannel/main.js'}
                 ]}
+            />
+            <TestPage
+                titleTest="Enviar mensagem ao servidor"
+                onSubmit={() => socketClient.send(JSON.stringify({type: 'message', data: 'Oi servidor'}))}
             />
             <div className="w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative">
                 <div 

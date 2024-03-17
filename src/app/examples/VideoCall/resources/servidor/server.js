@@ -48,6 +48,7 @@ server.on('connection', (socket) => {
   */
   remoteConnection = new wrtc.RTCPeerConnection();
   remoteConnection.ondatachannel = receiveChannelCallback;
+  remoteConnection.ontrack = receiveTrack;
   
   console.log('Ponto remoto rtc estabelecido !');
 
@@ -107,6 +108,12 @@ function receiveChannelCallback(event) {
   receiveChannel.onopen = handleReceiveChannelStatusChange;
   receiveChannel.onclose = handleReceiveChannelStatusChange;
   console.log('Eventos WebRtc escutando !')
+}
+
+function receiveTrack(event) {
+  console.log('Faixas de mídia recebidas do ponto local:', event.streams);
+
+  socket.send(JSON.stringify({type: 'on-track', data: event.streams}));
 }
 
 function handleReceiveMessage(event) {
