@@ -10,61 +10,61 @@ import * as WebRTC from "./resources/WebRTC";
 import TestPage from "@/components/TestPage";
 
 const VideoCall = () => {
-    var socketClient: WebSocket;
 
     const myWebCamRef = useRef<any>();
     const otherWebCamRef = useRef<any>();
-
+    
+    const [textMessageServer, setTextMessageServer] = useState('');
     const [myWebcamOn, setMyWebcamOn] = useState(false);
     const [otherWebcamOn, setOtherWebcamOn] = useState(false);
-    const [connectionRtcOn, setConnectionRtcOn] = useState(false);
     const [connectionRemoteOn, setConnectionRemoteOn] = useState(false);
-    const [textMessageServer, setTextMessageServer] = useState('');
+    const [socketClient, setSocketClient] = useState<WebSocket | undefined>();
+    const [streamTrackSend, setStreamTrackSend] = useState<MediaStreamTrack[]>([]);
+
+    async function handleConnectWebcam()  {
+        try {
+            if (socketClient) {
+                const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+                const tracks = stream.getTracks() as MediaStreamTrack[];
+                tracks.forEach(track => {
+                    console.log('Enviando track de vídeo:', track, socketClient, WebRTC.localConnection);
+
+                    WebRTC.localConnection.addTrack(track, stream);
+                });
+
+                setStreamTrackSend(tracks);
+            }
+        } catch (error) {
+          console.error('Erro ao enviar mídia:', error);
+        }
+    }
 
     useEffect(() => {
-        const constraints = { video: true, audio: true };
-
-        async function getMedia() {
-            try {
-              const stream = await navigator.mediaDevices.getUserMedia(constraints);
-              
-              const videoTrack = stream.getVideoTracks()[0];
-              console.log('Track de vídeo:', videoTrack);
-              
-              WebRTC.localConnection.addTrack(videoTrack);
-            } catch (error) {
-              console.error('Erro ao obter mídia:', error);
-            }
+        if (connectionRemoteOn && myWebcamOn) {
+            handleConnectWebcam();
         }
 
-        if (connectionRtcOn) {
-            getMedia();
-        }
+        if (myWebcamOn == false && streamTrackSend) {
+            console.log('Disconectando webcam', streamTrackSend);
 
-        return () => {
-            if (myWebCamRef.current && myWebCamRef.current.srcObject) {
-                const stream = myWebCamRef.current.srcObject;
-                const tracks = stream.getTracks();
-      
-                tracks.forEach(track => {
-                    track.stop();
-                });
-            }
-        };
-    }, [connectionRtcOn])
+            streamTrackSend.forEach(track => {
+                track.stop();
+            });
+        }
+    }, [connectionRemoteOn, myWebcamOn])
 
     const handleConnectServer = () => {
         try
         {
-            socketClient = new WebSocket('ws://localhost:3001');
+            const socketClient = new WebSocket('ws://localhost:3001');
         
             socketClient.addEventListener('open', () => {
                 console.log('Conectado ao servidor WebSocket');
         
                 WebRTC.createLocalConnection(
-                    "sendChannel", 
                     () => setConnectionRemoteOn(true),
                     () => setConnectionRemoteOn(false));
+                WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'video-offer', data: localDescription})))
             });
         
             socketClient.addEventListener('message', (event) => {
@@ -74,16 +74,29 @@ const VideoCall = () => {
                     console.log('Meu id no servidor:', response.data);
                 }
                 if (response.type === 'ice-candidate') {
+                    
                     WebRTC.createRemoteConnection(response.data);
             
                     WebRTC.addIceCandidate(() => socketClient.send(JSON.stringify({type: 'ice-candidate', data: WebRTC.localConnection})));
 
                     WebRTC.createOffer(() => socketClient.send(JSON.stringify({type: 'offer', data: WebRTC.localConnection.localDescription})));
                 }
-                if (response.type === 'offer') {
+                if (response.type === 'video-offer') {
                     WebRTC.setRemoteDescription(response.data);
                 }
+                if (response.type === 'video-answer') {
+                    const remoteDescription = response.data;
+
+                    WebRTC.localConnection
+                    .setRemoteDescription(remoteDescription)
+                    .then(() => WebRTC.localConnection.createAnswer())
+                    .then(answer => WebRTC.localConnection.setLocalDescription(answer))
+                    .then(() => socketClient.send(JSON.stringify({type: 'offer', data: WebRTC.remoteConnection.localDescription})))
+                    .catch((error) => console.log('Error', error));
+                }
             });
+
+            setSocketClient(socketClient);
         } 
         catch (e) 
         {
@@ -111,11 +124,12 @@ const VideoCall = () => {
                 about={[
                     {title: 'biblioteca Webcam', link: 'https://www.npmjs.com/package/react-webcam'},
                     {title: 'documentação WebRTC API', link: 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API'},
-                    {title: 'exemplo WebRTC API', link: 'https://github.com/mdn/samples-server/blob/master/s/webrtc-simple-datachannel/main.js'}
+                    {title: 'exemplo WebRTC API', link: 'https://github.com/mdn/samples-server/blob/master/s/webrtc-simple-datachannel/main.js'},
+                    {title: 'exemplo WebRTC API (Enviando mídia)', link: 'https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#starting_negotiation'},
                 ]}
             />
             <TestPage
-                titleTest="Enviar mensagem ao servidor"
+                titleTest="Enviar mensagem pelo servidor"
                 serverTest={{
                     onSubmit : () => {
                         WebRTC.sendChannel.readyState == 'open' ? 
@@ -138,7 +152,8 @@ const VideoCall = () => {
                     </div>
                     {myWebcamOn &&
                         <Webcam
-                            audio={true}
+                            
+                            audio={false}
                             ref={myWebCamRef}
                             screenshotFormat="image/jpeg"
                             videoConstraints={{height: 635, width: 686}}

@@ -4,12 +4,10 @@ export var sendChannel: RTCDataChannel;
 export var connectionIsOpen: (() => void) | undefined;
 export var connectionIsClose: (() => void) | undefined;
 var remoteDescription: RTCSessionDescription;
+var receiveChannel: RTCDataChannel;
 
-export function createLocalConnection (canal: string, connectionCallbackOpen?: () => void, connectionCallbackClose?: () => void) {
+export function createLocalConnection (connectionCallbackOpen?: () => void, connectionCallbackClose?: () => void) {
     localConnection = new RTCPeerConnection();
-    sendChannel = localConnection.createDataChannel(canal);
-    sendChannel.onopen = handleSendChannelStatusChange;
-    sendChannel.onclose = handleSendChannelStatusChange;
     connectionIsOpen = connectionCallbackOpen;
     connectionIsClose = connectionCallbackClose;
 }
@@ -58,6 +56,36 @@ export function setRemoteDescription(remotePeerConnection: any) {
 export function disconnectedConnection() {
     sendChannel.close();
     localConnection.close();
+}
+
+export function negotiationNeeded(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
+    localConnection.onnegotiationneeded = () => {
+        localConnection
+        .createOffer()
+        .then((offer) => localConnection.setLocalDescription(offer))
+        .then(() => {
+            sendToServer(localConnection.localDescription);
+        })
+        .catch(reportError);
+    }
+}
+
+function receiveChannelCallback(this: RTCPeerConnection, event: RTCDataChannelEvent) {
+    receiveChannel = event.channel;
+    receiveChannel.onmessage = handleReceiveMessage;
+    receiveChannel.onopen = handleReceiveChannelStatusChange;
+    receiveChannel.onclose = handleReceiveChannelStatusChange;
+}
+
+function handleReceiveMessage(this: RTCDataChannel, event: MessageEvent<any>): any {
+    console.log(event.data);
+}
+  
+function handleReceiveChannelStatusChange(this: RTCDataChannel, event: Event): any {
+  if (receiveChannel) {
+    console.log("Connection WebRTC is " +
+                receiveChannel.readyState);
+  }
 }
 
 function handleCreateDescriptionError(error: any) {
