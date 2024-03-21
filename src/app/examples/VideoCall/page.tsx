@@ -17,7 +17,7 @@ const VideoCall = () => {
     const [textMessageServer, setTextMessageServer] = useState('');
     const [myWebcamOn, setMyWebcamOn] = useState(false);
     const [otherWebcamOn, setOtherWebcamOn] = useState(false);
-    const [connectionRemoteOn, setConnectionRemoteOn] = useState(false);
+    const [connectionServerOn, setConnectionServerOn] = useState(false);
     const [socketClient, setSocketClient] = useState<WebSocket | undefined>();
     const [streamTrackSend, setStreamTrackSend] = useState<MediaStreamTrack[]>([]);
 
@@ -40,18 +40,18 @@ const VideoCall = () => {
     }
 
     useEffect(() => {
-        if (connectionRemoteOn && myWebcamOn) {
+        if (connectionServerOn && myWebcamOn) {
             handleConnectWebcam();
         }
 
-        if (myWebcamOn == false && streamTrackSend) {
+        if (myWebcamOn == false && streamTrackSend.length > 0) {
             console.log('Disconectando webcam', streamTrackSend);
 
             streamTrackSend.forEach(track => {
                 track.stop();
             });
         }
-    }, [connectionRemoteOn, myWebcamOn])
+    }, [connectionServerOn, myWebcamOn])
 
     const handleConnectServer = () => {
         try
@@ -61,9 +61,11 @@ const VideoCall = () => {
             socketClient.addEventListener('open', () => {
                 console.log('Conectado ao servidor WebSocket');
         
+                setConnectionServerOn(true);
+
                 WebRTC.createLocalConnection(
-                    () => setConnectionRemoteOn(true),
-                    () => setConnectionRemoteOn(false));
+                    () => setConnectionServerOn(true),
+                    () => setConnectionServerOn(false));
                 WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
                 WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
             });
@@ -98,6 +100,11 @@ const VideoCall = () => {
                 }
             });
 
+            socketClient.addEventListener("close", () => {
+                setConnectionServerOn(false);
+                handlePeerDisconnect();
+            });
+
             setSocketClient(socketClient);
         } 
         catch (e) 
@@ -106,9 +113,9 @@ const VideoCall = () => {
         }
     }
 
-    const handleDisconnectServer = () => {
+    const handlePeerDisconnect = () => {
         WebRTC.disconnectedConnection();
-        setConnectionRemoteOn(false);
+        setConnectionServerOn(false);
     }
 
     return (
@@ -141,10 +148,10 @@ const VideoCall = () => {
                     },
                     text : textMessageServer,
                     setText : setTextMessageServer,
-                    remoteConnectionOn: connectionRemoteOn
+                    remoteConnectionOn: connectionServerOn
                 }}
             />
-            <div className="w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative">
+            <div className={`w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative ${connectionServerOn ? 'border-green-800' : 'border-none'}`}>
                 <div 
                     style={{border: myWebcamOn ? 'solid 2px white' : 'none'}}
                     className="w-[692px] h-[640px] bg-zinc-900 mr-1 rounded-md relative flex justify-center items-center"
@@ -204,7 +211,7 @@ const VideoCall = () => {
                         onClick={() => setMyWebcamOn(false)}
                     />
 
-                    {connectionRemoteOn &&
+                    {connectionServerOn &&
                         <IconTheme
                             type="LeakRemoveIcon"
                             style={{
@@ -216,10 +223,10 @@ const VideoCall = () => {
                                 border: '2px solid white',
                                 cursor: 'pointer'
                             }}
-                            onClick={handleDisconnectServer}
+                            onClick={handlePeerDisconnect}
                         />
                     }
-                    {!connectionRemoteOn && 
+                    {!connectionServerOn && 
                         <IconTheme
                             type="LeakAddIcon"
                             style={{

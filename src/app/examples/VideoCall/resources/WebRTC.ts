@@ -46,8 +46,9 @@ export function addRemoteDescriptionAnswer() {
 }
 
 export function disconnectedConnection() {
-    sendChannel.close();
-    localConnection.close();
+    if (localConnection) {
+        localConnection.close();
+    }
 }
 
 export function negotiationNeeded(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
@@ -58,6 +59,7 @@ export function negotiationNeeded(sendToServer: (localDescription: RTCSessionDes
         .then(() => {
             sendToServer(localConnection.localDescription);
         })
+        .then(() => handleLog('Negociação enviada ao servidor!'))
         .catch(reportError);
     }
 }
@@ -68,7 +70,7 @@ export function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSe
         .then(() => localConnection.createAnswer())
         .then((answer) => localConnection.setLocalDescription(answer))
         .then(() => sendToServer(localConnection.localDescription))
-        .then(() => console.log('Answer criado e enviado resposta'))
+        .then(() => console.log('Answer criado e enviado a resposta'))
         .catch((error) => console.log('Erro', error));
 }
 
@@ -105,6 +107,9 @@ function handleRemoteAddCandidateSuccess() {
 }
 function handleAddCandidateError() {
   console.log("Oh noes! addICECandidate failed!");
+}
+function handleLog(message: string) {
+    console.log(message);
 }
 function sendMessage(message: string) {
   sendChannel.send(message);
