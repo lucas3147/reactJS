@@ -64,7 +64,8 @@ const VideoCall = () => {
                 WebRTC.createLocalConnection(
                     () => setConnectionRemoteOn(true),
                     () => setConnectionRemoteOn(false));
-                WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'video-offer', data: localDescription})))
+                WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
+                WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
             });
         
             socketClient.addEventListener('message', (event) => {
@@ -74,25 +75,26 @@ const VideoCall = () => {
                     console.log('Meu id no servidor:', response.data);
                 }
                 if (response.type === 'ice-candidate') {
-                    
-                    WebRTC.createRemoteConnection(response.data);
-            
-                    WebRTC.addIceCandidate(() => socketClient.send(JSON.stringify({type: 'ice-candidate', data: WebRTC.localConnection})));
-
-                    WebRTC.createOffer(() => socketClient.send(JSON.stringify({type: 'offer', data: WebRTC.localConnection.localDescription})));
+                    WebRTC.addIceCandidate(response.data);
                 }
-                if (response.type === 'video-offer') {
+                if (response.type === 'answer') {
+                    const targetUsername = response.targetUserName;
+                    console.log('answer', targetUsername);
                     WebRTC.setRemoteDescription(response.data);
+                    WebRTC.addRemoteDescriptionAnswer();
                 }
-                if (response.type === 'video-answer') {
-                    const remoteDescription = response.data;
+                if (response.type === 'offer') {
+                    const targetUsername = response.targetUserName;
+                    console.log('offer', targetUsername);
 
-                    WebRTC.localConnection
-                    .setRemoteDescription(remoteDescription)
-                    .then(() => WebRTC.localConnection.createAnswer())
-                    .then(answer => WebRTC.localConnection.setLocalDescription(answer))
-                    .then(() => socketClient.send(JSON.stringify({type: 'offer', data: WebRTC.remoteConnection.localDescription})))
-                    .catch((error) => console.log('Error', error));
+                    WebRTC.createLocalConnection(
+                        () => setOtherWebcamOn(true),
+                        () => setOtherWebcamOn(false)
+                    );
+                    WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
+                    WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                    WebRTC.setRemoteDescription(response.data);
+                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ target: targetUsername, type: "answer", data: localDescription })));
                 }
             });
 
@@ -129,7 +131,7 @@ const VideoCall = () => {
                 ]}
             />
             <TestPage
-                titleTest="Enviar mensagem pelo servidor"
+                titleTest="Enviar mensagem"
                 serverTest={{
                     onSubmit : () => {
                         WebRTC.sendChannel.readyState == 'open' ? 

@@ -1,5 +1,4 @@
 export var localConnection: RTCPeerConnection;
-export var remoteConnection: RTCPeerConnection;
 export var sendChannel: RTCDataChannel;
 export var connectionIsOpen: (() => void) | undefined;
 export var connectionIsClose: (() => void) | undefined;
@@ -12,21 +11,16 @@ export function createLocalConnection (connectionCallbackOpen?: () => void, conn
     connectionIsClose = connectionCallbackClose;
 }
 
-export function createRemoteConnection(remotePeerConnection: any) {
-    remoteConnection = remotePeerConnection;
-    console.log('candidato remoto:', remoteConnection);
+export function addIceCandidate(candidateObj: RTCIceCandidate) {
+    const candidate = new RTCIceCandidate(candidateObj);
+
+    localConnection.addIceCandidate(candidate).catch(reportError);
 }
 
-export function addIceCandidate(callbackSuccess: () => void) {
+export function handleICECandidateEvent(callbackSuccess: (candidate: RTCIceCandidate) => void) {
     localConnection.onicecandidate = e => {
-        if (e.candidate && remoteConnection.addIceCandidate) {
-            remoteConnection.addIceCandidate(e.candidate)
-            .then(() => {
-                console.log('Candidato remoto adicionado!', remoteConnection);
-                callbackSuccess();
-                console.log('Enviando ponto local para ponto remoto', localConnection);
-            })
-            .catch(handleAddCandidateError);
+        if (e.candidate) {
+            callbackSuccess(e.candidate);
         }
         else {
             handleAddCandidateError();
@@ -44,9 +38,7 @@ export async function createOffer(callbackSuccess: () => void) {
     .catch(handleCreateDescriptionError);
 }
 
-export function setRemoteDescription(remotePeerConnection: any) {
-    remoteDescription = remotePeerConnection;
-
+export function addRemoteDescriptionAnswer() {
     localConnection
     .setRemoteDescription(remoteDescription)
     .then(() => console.log('Conexão WebRTC offer estabelecida'))
@@ -68,6 +60,20 @@ export function negotiationNeeded(sendToServer: (localDescription: RTCSessionDes
         })
         .catch(reportError);
     }
+}
+
+export function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
+    localConnection
+        .setRemoteDescription(remoteDescription)
+        .then(() => localConnection.createAnswer())
+        .then((answer) => localConnection.setLocalDescription(answer))
+        .then(() => sendToServer(localConnection.localDescription))
+        .then(() => console.log('Answer criado e enviado resposta'))
+        .catch((error) => console.log('Erro', error));
+}
+
+export function setRemoteDescription(data: any) {
+    remoteDescription = new RTCSessionDescription(data);
 }
 
 function receiveChannelCallback(this: RTCPeerConnection, event: RTCDataChannelEvent) {
