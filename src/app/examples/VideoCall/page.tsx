@@ -102,6 +102,7 @@ const VideoCall = () => {
                     WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: "answer", data: localDescription })));
                 }
                 if (response.type === 'hang-up') {
+                    console.log('hang-up')
                     closeVideoCall();
                 }
             });
@@ -135,7 +136,8 @@ const VideoCall = () => {
 
     const handlePeerDisconnect = () => {
         closeVideoCall();
-        socketClient?.send(JSON.stringify({type: 'hang-up'}))
+        socketClient?.send(JSON.stringify({type: 'hang-up'}));
+        socketClient?.close();
     }
 
     return (
@@ -170,13 +172,15 @@ const VideoCall = () => {
                     remoteConnectionOn: connectionServerOn
                 }}
             />
-            <div className={`w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative ${connectionServerOn ? 'border-green-800' : 'border-none'}`}>
+            <div className={`w-[1400px] h-[650px] bg-zinc-600 rounded-md border-2 flex p-1 relative ${connectionServerOn ? 'border-green-600' : 'border-none'}`}>
                 <div 
-                    style={{border: myWebcamOn ? 'solid 2px white' : 'none'}}
                     className="w-[692px] h-[640px] bg-zinc-900 mr-1 rounded-md relative flex justify-center items-center"
                 >
                     <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         you
+                        {myWebcamOn && connectionServerOn &&
+                            <div className="w-4 h-4 rounded-[8px] bg-green-600 absolute top-0 right-[-8px]"></div>
+                        }
                     </div>
                     {myWebcamOn &&
                         <Webcam
@@ -189,16 +193,19 @@ const VideoCall = () => {
                     }
                 </div>
                 <div 
-                    style={{border: otherWebcamOn ? 'solid 2px white' : 'none'}}
-                    className="w-[692px] h-[640px] bg-zinc-900 rounded-md relative flex justify-center"
+                    className="w-[692px] h-[640px] bg-zinc-900 rounded-md relative flex justify-center z-0"
                 >
-                    <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
+                    <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center z-40">
                         other
+                        {otherWebcamOn &&
+                            <div className="w-4 h-4 rounded-[8px] bg-green-600 absolute top-0 right-[-8px]"></div>
+                        }
                     </div>
                     <video 
                         ref={otherWebCamRef} 
                         width={686} 
                         height={635}
+                        style={{display: otherWebcamOn ? 'block' : 'none'}}
                     >
                             
                     </video>
