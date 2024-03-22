@@ -14,7 +14,8 @@ const VideoCall = () => {
     const myWebCamRef = useRef<any>();
     const otherWebCamRef = useRef<any>();
     
-    const [textMessageServer, setTextMessageServer] = useState('');
+    const [messageRequest, setMessageRequest] = useState('');
+    const [messageResponse, setMessageResponse] = useState('');
     const [myWebcamOn, setMyWebcamOn] = useState(false);
     const [otherWebcamOn, setOtherWebcamOn] = useState(false);
     const [connectionServerOn, setConnectionServerOn] = useState(false);
@@ -59,8 +60,6 @@ const VideoCall = () => {
             const socketClient = new WebSocket('ws://localhost:3001');
         
             socketClient.addEventListener('open', () => {
-                console.log('Conectado ao servidor WebSocket');
-        
                 setConnectionServerOn(true);
 
                 WebRTC.createLocalConnection(
@@ -75,6 +74,10 @@ const VideoCall = () => {
                 
                 if (response.type === 'open') {
                     console.log('Meu id no servidor:', response.data);
+                }
+                if (response.type === 'message') {
+                    setMessageResponse(response.data);
+                    console.log(response.data);
                 }
                 if (response.type === 'ice-candidate') {
                     WebRTC.addIceCandidate(response.data);
@@ -116,6 +119,7 @@ const VideoCall = () => {
     const handlePeerDisconnect = () => {
         WebRTC.disconnectedConnection();
         setConnectionServerOn(false);
+        setMessageResponse('');
     }
 
     return (
@@ -141,13 +145,12 @@ const VideoCall = () => {
                 titleTest="Enviar mensagem"
                 serverTest={{
                     onSubmit : () => {
-                        WebRTC.sendChannel.readyState == 'open' ? 
-                        WebRTC.sendChannel.send(textMessageServer) : 
-                        console.log('Estado da conexão:', WebRTC.sendChannel.readyState);
-                        setTextMessageServer('');
+                        socketClient?.send(JSON.stringify({type: 'message', data: messageRequest}));
+                        setMessageRequest('');
                     },
-                    text : textMessageServer,
-                    setText : setTextMessageServer,
+                    textRequest : messageRequest,
+                    setTextRequest : setMessageRequest,
+                    textResponse : messageResponse,
                     remoteConnectionOn: connectionServerOn
                 }}
             />

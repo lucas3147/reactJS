@@ -5,8 +5,9 @@ type Props = {
     titleTest: string;
     serverTest?: {
         onSubmit: () => void;
-        setText: (text: string) => void;
-        text: string;
+        setTextRequest: (text: string) => void;
+        textRequest: string;
+        textResponse: string;
         remoteConnectionOn: boolean
     }
 }
@@ -32,15 +33,28 @@ const TestPage = ({titleTest, serverTest }: Props) => {
             >
                 <p 
                     className="uppercase font-bold mb-2"
-                >{titleTest ?? 'Teste:'}</p>
+                >
+                    {titleTest ?? 'Teste:'}
+                </p>
+
                 {serverTest &&
                     <div className="flex flex-col justify-center">
+
                         <input 
-                            className="mb-8 text-black w-"
+                            className="mb-4 text-black"
                             type="text"
-                            value={serverTest.text} 
-                            onChange={(e) => serverTest.setText(e.target.value)} 
+                            value={serverTest.textRequest} 
+                            onChange={(e) => serverTest.setTextRequest(e.target.value)} 
                         />
+
+                        <p className="uppercase font-bold mb-2">Outro usuário</p>
+
+                        <div className="mb-4 text-white bg-zinc-500 h-24">
+                            {serverTest.textResponse && 
+                                <p>- {serverTest.textResponse}</p>
+                            }
+                        </div>
+
                         {serverTest.remoteConnectionOn && 
                             <button
                                 className="bg-zinc-800 px-4 py-2 rounded-md border-2 border-zinc-700 mb-4"
@@ -49,6 +63,7 @@ const TestPage = ({titleTest, serverTest }: Props) => {
                                 Enviar
                             </button>
                         }
+                        
                         <div className="flex items-center">
                             <div className={`w-4 h-4 ${serverTest.remoteConnectionOn ? 'bg-green-700' : 'bg-slate-500'} border-2 border-zinc-800 rounded-[8px] mr-2`}>
                             </div>

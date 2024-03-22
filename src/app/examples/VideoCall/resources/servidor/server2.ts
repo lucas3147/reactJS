@@ -1,8 +1,10 @@
-const WebSocket = require('ws');
+import { RawData, WebSocket } from 'ws';
+import { clientType } from './types/clientType';
+import { requestType } from './types/requestType';
 
 const server = new WebSocket.Server({ port: 3001 });
 
-var clients = [];
+var clients: clientType[];
 
 server.on('connection', (socket) => {
     let clientId = generateClientId();
@@ -14,7 +16,7 @@ server.on('connection', (socket) => {
     }));
 
     socket.on('message', (event) => {
-        let message = getRequest(event);
+        let message = getRequest(event) as requestType;
 
         if (message.type == 'message') {
             console.log('mensagem:', message.data);
@@ -61,7 +63,7 @@ server.on('connection', (socket) => {
 
     };
 
-    function broadcast(response) {
+    function broadcast(response: requestType) {
         clients.forEach(function (client) {
             if (client.id !== clientId) {
                 client.socket.send(setResponse(response));
@@ -75,15 +77,15 @@ function generateClientId() {
     return Math.random().toString(36).substring(2, 15);
 }
 
-function getRequest(event) {
+function getRequest(event: RawData) {
     return JSON.parse(event.toString());
 }
 
-function setResponse(response) {
+function setResponse(response: requestType): string {
     return JSON.stringify(response);
 }
 
-function setClientId(id_client, client ) {
+function setClientId(id_client: string, client: any) {
     if (!clients.find(e => e.id == id_client) && clients.length <= 2) {
         clients.push({ id: id_client, socket: client });
         console.log('Cliente conectado :', id_client);
