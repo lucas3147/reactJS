@@ -127,7 +127,7 @@ const VideoCall = () => {
     const closeVideoCall = () => {
         setOtherWebcamOn(false);
 
-        WebRTC.disconnectedConnection();
+        WebRTC.disconnectedPeer();
         
         const mediaStream = otherWebCamRef.current.srcObject as MediaStream;
 

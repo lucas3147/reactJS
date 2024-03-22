@@ -43,8 +43,11 @@ export function addRemoteDescriptionAnswer() {
     }
 }
 
-export function disconnectedConnection() {
+export function disconnectedPeer() {
     if (localConnection) {
+        localConnection.ontrack = null;
+        localConnection.onicecandidate = null;
+        localConnection.onnegotiationneeded = null;
         localConnection.close();
         remoteDescription = null;
     }
