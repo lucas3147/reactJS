@@ -86,6 +86,16 @@ export function handleTrackReceive(webcamCallback: (this: RTCPeerConnection, ev:
     localConnection.ontrack = webcamCallback;
 }
 
+export function handleICEConnectionStateChangeEvent(closeCall: () => void) {
+    localConnection.oniceconnectionstatechange = () => {
+        if (localConnection.iceConnectionState == "closed" || 
+            localConnection.iceConnectionState == "failed") 
+        {
+            closeCall();
+        }
+    }
+}
+
 function receiveChannelCallback(this: RTCPeerConnection, event: RTCDataChannelEvent) {
     receiveChannel = event.channel;
     receiveChannel.onmessage = handleReceiveMessage;

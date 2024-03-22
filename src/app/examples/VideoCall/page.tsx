@@ -60,10 +60,7 @@ const VideoCall = () => {
 
                 WebRTC.createLocalConnection();
                 WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
-                WebRTC.handleICECandidateEvent((candidate) => {
-                    socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate}));
-                    console.log('Candidato enviado!');
-                });
+                WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
                 WebRTC.handleTrackReceive((event) => {
                     otherWebCamRef.current.srcObject = event.streams[0];
                     setOtherWebcamOn(true);
@@ -94,10 +91,8 @@ const VideoCall = () => {
 
                     WebRTC.createLocalConnection();
                     WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
-                    WebRTC.handleICECandidateEvent((candidate) => {
-                        socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate}));
-                        console.log('Candidato enviado!');
-                    });
+                    WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                    WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
                     WebRTC.handleTrackReceive((event) => {
                         otherWebCamRef.current.srcObject = event.streams[0];
                         otherWebCamRef.current.play();
