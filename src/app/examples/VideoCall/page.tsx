@@ -27,7 +27,6 @@ const VideoCall = () => {
             if (socketClient) {
                 const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
                 const track = stream.getTracks()[0] as MediaStreamTrack;
-                console.log('Enviando track de vídeo:', track);
                 WebRTC.localConnection.addTrack(track, stream);
 
                 setStreamTrackSend([track]);
@@ -107,9 +106,8 @@ const VideoCall = () => {
                     WebRTC.setRemoteDescription(response.data);
                     WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: "answer", data: localDescription })));
                 }
-                if (response.type === 'users-disconnect') {
-                    console.log('outro usuário disconectado!');
-                    handleClearOtherWebCam();
+                if (response.type === 'hang-up') {
+                    closeVideoCall();
                 }
             });
 
@@ -126,18 +124,23 @@ const VideoCall = () => {
         }
     }
 
-    const handleClearOtherWebCam = () => {
+    const closeVideoCall = () => {
         setOtherWebcamOn(false);
+
+        WebRTC.disconnectedConnection();
+        
         const mediaStream = otherWebCamRef.current.srcObject as MediaStream;
-        mediaStream.getTracks().forEach( track => track.stop() );
+
+        if (mediaStream) {
+            mediaStream
+            .getTracks()
+            .forEach(track => track.stop());
+        }
     }
 
     const handlePeerDisconnect = () => {
-        WebRTC.disconnectedConnection();
-        setConnectionServerOn(false);
-        setMessageResponse('');
-        setOtherWebcamOn(false);
-        setStreamTrackSend([]);
+        closeVideoCall();
+        socketClient?.send(JSON.stringify({type: 'hang-up'}))
     }
 
     return (

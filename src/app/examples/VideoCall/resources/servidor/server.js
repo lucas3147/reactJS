@@ -53,6 +53,12 @@ server.on('connection', (socket) => {
                 data: localPeerDescription
             });
         }
+
+        if (message.type == 'hang-up') {
+            broadcast({
+                type: 'hang-up'
+            });
+        }
     });
 
     socket.onclose = () => {
@@ -60,7 +66,6 @@ server.on('connection', (socket) => {
         clients.forEach((client) => {
             console.log('Socket fechado!. Usuários conectados:', client.id);
         });
-        broadcast({type: 'users-disconnect'});
     };
 
     function broadcast(response) {
