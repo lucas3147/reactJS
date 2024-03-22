@@ -2,28 +2,24 @@ export var localConnection: RTCPeerConnection;
 export var sendChannel: RTCDataChannel;
 export var connectionIsOpen: (() => void) | undefined;
 export var connectionIsClose: (() => void) | undefined;
-var remoteDescription: RTCSessionDescription;
+var remoteDescription: RTCSessionDescription | null;
 var receiveChannel: RTCDataChannel;
 
-export function createLocalConnection (connectionCallbackOpen?: () => void, connectionCallbackClose?: () => void) {
+export function createLocalConnection () {
     localConnection = new RTCPeerConnection();
-    connectionIsOpen = connectionCallbackOpen;
-    connectionIsClose = connectionCallbackClose;
 }
 
 export function addIceCandidate(candidateObj: RTCIceCandidate) {
     const candidate = new RTCIceCandidate(candidateObj);
-
-    localConnection.addIceCandidate(candidate).catch(reportError);
+    localConnection.addIceCandidate(candidate)
+    .then(() => console.log('Candidato adicionado'))
+    .catch(handleAddCandidateError);
 }
 
 export function handleICECandidateEvent(callbackSuccess: (candidate: RTCIceCandidate) => void) {
     localConnection.onicecandidate = e => {
         if (e.candidate) {
             callbackSuccess(e.candidate);
-        }
-        else {
-            handleAddCandidateError();
         }
     }
 }
@@ -39,15 +35,18 @@ export async function createOffer(callbackSuccess: () => void) {
 }
 
 export function addRemoteDescriptionAnswer() {
-    localConnection
-    .setRemoteDescription(remoteDescription)
-    .then(() => console.log('Conexão WebRTC offer estabelecida'))
-    .catch(handleCreateDescriptionError);
+    if (remoteDescription) {
+        localConnection
+        .setRemoteDescription(remoteDescription)
+        .then(() => console.log('Conexão WebRTC Offer estabelecida'))
+        .catch(handleCreateDescriptionError);
+    }
 }
 
 export function disconnectedConnection() {
     if (localConnection) {
         localConnection.close();
+        remoteDescription = null;
     }
 }
 
@@ -65,17 +64,23 @@ export function negotiationNeeded(sendToServer: (localDescription: RTCSessionDes
 }
 
 export function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
-    localConnection
+    if (remoteDescription) {
+        localConnection
         .setRemoteDescription(remoteDescription)
         .then(() => localConnection.createAnswer())
         .then((answer) => localConnection.setLocalDescription(answer))
         .then(() => sendToServer(localConnection.localDescription))
-        .then(() => console.log('Answer criado e enviado a resposta'))
+        .then(() => console.log('Conexão WebRTC Answer estabelecida'))
         .catch((error) => console.log('Erro', error));
+    }
 }
 
 export function setRemoteDescription(data: any) {
     remoteDescription = new RTCSessionDescription(data);
+}
+
+export function handleTrackReceive(webcamCallback: (this: RTCPeerConnection, ev: RTCTrackEvent) => void) {
+    localConnection.ontrack = webcamCallback;
 }
 
 function receiveChannelCallback(this: RTCPeerConnection, event: RTCDataChannelEvent) {

@@ -24,7 +24,7 @@ server.on('connection', (socket) => {
             });
         }
         if (message.type == 'ice-candidate') {
-            console.log('Candidato WebRtc detectado', message);
+            console.log('Candidato WebRtc detectado');
 
             const candidate = message.data;
 
@@ -57,8 +57,10 @@ server.on('connection', (socket) => {
 
     socket.onclose = () => {
         clients = clients.filter(u => u.id != clientId);
-        clients.forEach((client) => console.log(console.log('Socket fechado!. Usuários conectados:', client.id)));
-
+        clients.forEach((client) => {
+            console.log('Socket fechado!. Usuários conectados:', client.id);
+        });
+        broadcast({type: 'users-disconnect'});
     };
 
     function broadcast(response) {

@@ -26,14 +26,11 @@ const VideoCall = () => {
         try {
             if (socketClient) {
                 const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
-                const tracks = stream.getTracks() as MediaStreamTrack[];
-                tracks.forEach(track => {
-                    console.log('Enviando track de vídeo:', track, socketClient, WebRTC.localConnection);
+                const track = stream.getTracks()[0] as MediaStreamTrack;
+                console.log('Enviando track de vídeo:', track);
+                WebRTC.localConnection.addTrack(track, stream);
 
-                    WebRTC.localConnection.addTrack(track, stream);
-                });
-
-                setStreamTrackSend(tracks);
+                setStreamTrackSend([track]);
             }
         } catch (error) {
           console.error('Erro ao enviar mídia:', error);
@@ -62,11 +59,16 @@ const VideoCall = () => {
             socketClient.addEventListener('open', () => {
                 setConnectionServerOn(true);
 
-                WebRTC.createLocalConnection(
-                    () => setConnectionServerOn(true),
-                    () => setConnectionServerOn(false));
+                WebRTC.createLocalConnection();
                 WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
-                WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                WebRTC.handleICECandidateEvent((candidate) => {
+                    socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate}));
+                    console.log('Candidato enviado!');
+                });
+                WebRTC.handleTrackReceive((event) => {
+                    otherWebCamRef.current.srcObject = event.streams[0];
+                    setOtherWebcamOn(true);
+                });
             });
         
             socketClient.addEventListener('message', (event) => {
@@ -80,26 +82,34 @@ const VideoCall = () => {
                     console.log(response.data);
                 }
                 if (response.type === 'ice-candidate') {
+                    console.log('candidato remoto', response.data);
                     WebRTC.addIceCandidate(response.data);
                 }
                 if (response.type === 'answer') {
-                    const targetUsername = response.targetUserName;
-                    console.log('answer', targetUsername);
+                    console.log('answer');
                     WebRTC.setRemoteDescription(response.data);
                     WebRTC.addRemoteDescriptionAnswer();
                 }
                 if (response.type === 'offer') {
-                    const targetUsername = response.targetUserName;
-                    console.log('offer', targetUsername);
+                    console.log('offer');
 
-                    WebRTC.createLocalConnection(
-                        () => setOtherWebcamOn(true),
-                        () => setOtherWebcamOn(false)
-                    );
+                    WebRTC.createLocalConnection();
                     WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
-                    WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                    WebRTC.handleICECandidateEvent((candidate) => {
+                        socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate}));
+                        console.log('Candidato enviado!');
+                    });
+                    WebRTC.handleTrackReceive((event) => {
+                        otherWebCamRef.current.srcObject = event.streams[0];
+                        otherWebCamRef.current.play();
+                        setOtherWebcamOn(true);
+                    });
                     WebRTC.setRemoteDescription(response.data);
-                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ target: targetUsername, type: "answer", data: localDescription })));
+                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: "answer", data: localDescription })));
+                }
+                if (response.type === 'users-disconnect') {
+                    console.log('outro usuário disconectado!');
+                    handleClearOtherWebCam();
                 }
             });
 
@@ -116,10 +126,18 @@ const VideoCall = () => {
         }
     }
 
+    const handleClearOtherWebCam = () => {
+        setOtherWebcamOn(false);
+        const mediaStream = otherWebCamRef.current.srcObject as MediaStream;
+        mediaStream.getTracks().forEach( track => track.stop() );
+    }
+
     const handlePeerDisconnect = () => {
         WebRTC.disconnectedConnection();
         setConnectionServerOn(false);
         setMessageResponse('');
+        setOtherWebcamOn(false);
+        setStreamTrackSend([]);
     }
 
     return (
@@ -179,11 +197,13 @@ const VideoCall = () => {
                     <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         other
                     </div>
-                    {otherWebcamOn &&
-                        <div ref={otherWebCamRef}>
+                    <video 
+                        ref={otherWebCamRef} 
+                        width={686} 
+                        height={635}
+                    >
                             
-                        </div>
-                    }
+                    </video>
                 </div>
                 <div className="flex justify-between items-center px-1 w-44 h-16 rounded-[40px] bg-zinc-800 border-2 absolute bottom-[20px] left-[610px]">
                     <IconTheme
