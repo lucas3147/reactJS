@@ -8,11 +8,6 @@ server.on('connection', (socket) => {
     let clientId = generateClientId();
     setClientId(clientId, socket);
 
-    socket.send(JSON.stringify({
-        type: 'open',
-        data: clientId
-    }));
-
     socket.on('message', (event) => {
         let message = getRequest(event);
 
@@ -62,10 +57,10 @@ server.on('connection', (socket) => {
     });
 
     socket.onclose = () => {
+        let connectedClients = [];
         clients = clients.filter(u => u.id != clientId);
-        clients.forEach((client) => {
-            console.log('Socket fechado!. Usuários conectados:', client.id);
-        });
+        clients.forEach(client => connectedClients.push(client.id));
+        console.log(`Socket fechado!. ${connectedClients.length} Usuários conectados: ${connectedClients}`);
     };
 
     function broadcast(response) {
@@ -90,14 +85,32 @@ function setResponse(response) {
     return JSON.stringify(response);
 }
 
-function setClientId(id_client, client ) {
-    if (!clients.find(e => e.id == id_client) && clients.length <= 2) {
-        clients.push({ id: id_client, socket: client });
+function setClientId(id_client, socket) {
+    if (!clientInclude(id_client) && clients.length < 2) {
+        clients.push({ id: id_client, socket });
+        socket.send(JSON.stringify({
+            type: 'open',
+            data: id_client
+        }));
         console.log('Cliente conectado :', id_client);
+
     }
     else {
-        console.log('Não é possível se conectar. Limite de clientes excedido!')
+        socket.send(JSON.stringify({
+            type: 'user-limit',
+            data: 'Não é possível se conectar. Limite de clientes excedido!'
+        }));
+        console.log('Limite de usuários excedido');
     }
+}
+
+function clientInclude(id_client) {
+    for (let client of clients) {
+        if (client.id == id_client) {
+            return true;
+        }
+    }
+    return false;
 }
 
 console.log('Servidor WebSocket ouvindo na porta 3001');

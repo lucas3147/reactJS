@@ -55,11 +55,9 @@ const VideoCall = () => {
             const socketClient = new WebSocket('ws://localhost:3001');
         
             socketClient.addEventListener('open', () => {
-                setConnectionServerOn(true);
-
                 WebRTC.createLocalConnection();
-                WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
-                WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                WebRTC.handleNegotiationNeeded((localDescription) => sendToServer({type: 'offer', data: localDescription}));
+                WebRTC.handleICECandidateEvent((candidate) => sendToServer({type: 'ice-candidate', data: candidate}));
                 WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
             });
         
@@ -67,6 +65,7 @@ const VideoCall = () => {
                 const response = JSON.parse(event.data);
                 
                 if (response.type === 'open') {
+                    setConnectionServerOn(true);
                     console.log('Meu id no servidor:', response.data);
                 }
                 if (response.type === 'message') {
@@ -82,16 +81,20 @@ const VideoCall = () => {
                 }
                 if (response.type === 'offer') {
                     WebRTC.createLocalConnection();
-                    WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
-                    WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                    WebRTC.handleNegotiationNeeded((localDescription) => sendToServer({type: 'offer', data: localDescription}));
+                    WebRTC.handleICECandidateEvent((candidate) => sendToServer({type: 'ice-candidate', data: candidate}));
                     WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
                     WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
                     WebRTC.setRemoteDescription(response.data);
-                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: "answer", data: localDescription })));
+                    WebRTC.addRemoteDescriptionOffer((localDescription) => sendToServer({ type: 'answer', data: localDescription }));
                 }
                 if (response.type === 'hang-up') {
                     console.log('hang-up')
                     closeVideoCall();
+                }
+                if (response.type === 'user-limit') {
+                    console.log('Limite de usuários excedido');
+                    closeSocket();
                 }
             });
 
@@ -113,10 +116,26 @@ const VideoCall = () => {
         WebRTC.disconnectedPeer();
     }
 
+    const sendToServer = (message: any) => {
+        if (socketClient && socketClient?.readyState == 1) {
+            socketClient.send(jsonFromString(message));
+        }
+    }
+
+    const jsonFromString = (json: JSON) => {
+        return JSON.stringify(json);
+    }
+
     const handlePeerDisconnect = () => {
         closeVideoCall();
-        socketClient?.send(JSON.stringify({type: 'hang-up'}));
-        socketClient?.close();
+        sendToServer({type: 'hang-up'});
+        closeSocket();
+    }
+
+    const closeSocket = () => {
+        if (socketClient?.readyState == 1) {
+            socketClient?.close();
+        }
     }
 
     const PlayOtherWebcam = (stream: MediaStream) => {
@@ -146,6 +165,7 @@ const VideoCall = () => {
                     'Webcam',
                     'Api MediaRecorder',
                     'WebRTC API',
+                    'WebSocket'
                 ]}
                 about={[
                     {title: 'biblioteca Webcam', link: 'https://www.npmjs.com/package/react-webcam'},
