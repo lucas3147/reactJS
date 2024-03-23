@@ -53,7 +53,7 @@ export function disconnectedPeer() {
     }
 }
 
-export function negotiationNeeded(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
+export function handleNegotiationNeeded(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
     localConnection.onnegotiationneeded = () => {
         localConnection
         .createOffer()

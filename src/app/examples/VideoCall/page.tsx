@@ -28,7 +28,6 @@ const VideoCall = () => {
                 const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
                 const track = stream.getTracks()[0] as MediaStreamTrack;
                 WebRTC.localConnection.addTrack(track, stream);
-
                 setStreamTrackSend([track]);
             }
         } catch (error) {
@@ -59,12 +58,9 @@ const VideoCall = () => {
                 setConnectionServerOn(true);
 
                 WebRTC.createLocalConnection();
-                WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
+                WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
                 WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
-                WebRTC.handleTrackReceive((event) => {
-                    otherWebCamRef.current.srcObject = event.streams[0];
-                    setOtherWebcamOn(true);
-                });
+                WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
             });
         
             socketClient.addEventListener('message', (event) => {
@@ -78,26 +74,18 @@ const VideoCall = () => {
                     console.log(response.data);
                 }
                 if (response.type === 'ice-candidate') {
-                    console.log('candidato remoto', response.data);
                     WebRTC.addIceCandidate(response.data);
                 }
                 if (response.type === 'answer') {
-                    console.log('answer');
                     WebRTC.setRemoteDescription(response.data);
                     WebRTC.addRemoteDescriptionAnswer();
                 }
                 if (response.type === 'offer') {
-                    console.log('offer');
-
                     WebRTC.createLocalConnection();
-                    WebRTC.negotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
+                    WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
                     WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
                     WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
-                    WebRTC.handleTrackReceive((event) => {
-                        otherWebCamRef.current.srcObject = event.streams[0];
-                        otherWebCamRef.current.play();
-                        setOtherWebcamOn(true);
-                    });
+                    WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
                     WebRTC.setRemoteDescription(response.data);
                     WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: "answer", data: localDescription })));
                 }
@@ -121,23 +109,30 @@ const VideoCall = () => {
     }
 
     const closeVideoCall = () => {
-        setOtherWebcamOn(false);
-
+        CloseOtherWebcam();
         WebRTC.disconnectedPeer();
-        
-        const mediaStream = otherWebCamRef.current.srcObject as MediaStream;
-
-        if (mediaStream) {
-            mediaStream
-            .getTracks()
-            .forEach(track => track.stop());
-        }
     }
 
     const handlePeerDisconnect = () => {
         closeVideoCall();
         socketClient?.send(JSON.stringify({type: 'hang-up'}));
         socketClient?.close();
+    }
+
+    const PlayOtherWebcam = (stream: MediaStream) => {
+        otherWebCamRef.current.srcObject = stream;
+        otherWebCamRef.current.play();
+        setOtherWebcamOn(true);
+    }
+
+    const CloseOtherWebcam = () => {
+        const mediaStream = otherWebCamRef.current.srcObject as MediaStream;
+        if (mediaStream) {
+            mediaStream
+            .getTracks()
+            .forEach(track => track.stop());
+        }
+        setOtherWebcamOn(false);
     }
 
     return (
