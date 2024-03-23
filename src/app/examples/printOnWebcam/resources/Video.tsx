@@ -22,7 +22,7 @@ const Video = ({activedWebcam, optionsStream, videoRef} : Props) => {
             })
         } else {
             if (videoItem.srcObject) {
-                const mediaStream = videoItem.srcObject;
+                const mediaStream = videoItem.srcObject as MediaStream;
                 mediaStream.getTracks().forEach( track => track.stop() );
                 videoItem.style.display = 'none';
             }
