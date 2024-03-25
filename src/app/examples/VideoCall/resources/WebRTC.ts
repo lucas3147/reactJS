@@ -2,7 +2,7 @@ export var localConnection: RTCPeerConnection;
 export var sendChannel: RTCDataChannel;
 export var connectionIsOpen: (() => void) | undefined;
 export var connectionIsClose: (() => void) | undefined;
-var remoteDescription: RTCSessionDescription | null;
+export var remoteDescription: RTCSessionDescription | null;
 var receiveChannel: RTCDataChannel;
 
 export function createLocalConnection () {
@@ -92,6 +92,14 @@ export function handleICEConnectionStateChangeEvent(closeCall: () => void) {
             localConnection.iceConnectionState == "failed") 
         {
             closeCall();
+        }
+    }
+}
+
+export function handleSignalingStateChange(closeConnection: () => void) {
+    localConnection.onsignalingstatechange = (event) => {
+        if (localConnection.signalingState == 'closed'){
+            console.log('conexão fechada');
         }
     }
 }

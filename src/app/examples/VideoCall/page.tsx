@@ -21,6 +21,7 @@ const VideoCall = () => {
     const [connectionServerOn, setConnectionServerOn] = useState(false);
     const [socketClient, setSocketClient] = useState<WebSocket | undefined>();
     const [streamTrackSend, setStreamTrackSend] = useState<MediaStreamTrack[]>([]);
+    
 
     async function handleConnectWebcam()  {
         try {
@@ -42,10 +43,7 @@ const VideoCall = () => {
 
         if (myWebcamOn == false && streamTrackSend.length > 0) {
             console.log('Disconectando webcam', streamTrackSend);
-
-            streamTrackSend.forEach(track => {
-                track.stop();
-            });
+            handleCloseConnectWebcam();
         }
     }, [connectionServerOn, myWebcamOn])
 
@@ -56,45 +54,48 @@ const VideoCall = () => {
         
             socketClient.addEventListener('open', () => {
                 WebRTC.createLocalConnection();
-                WebRTC.handleNegotiationNeeded((localDescription) => sendToServer({type: 'offer', data: localDescription}));
-                WebRTC.handleICECandidateEvent((candidate) => sendToServer({type: 'ice-candidate', data: candidate}));
+                WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
+                WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
                 WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
+                WebRTC.handleSignalingStateChange(closeVideoCall);
             });
         
             socketClient.addEventListener('message', (event) => {
                 const response = JSON.parse(event.data);
                 
                 if (response.type === 'open') {
-                    setConnectionServerOn(true);
                     console.log('Meu id no servidor:', response.data);
+                    setConnectionServerOn(true);
                 }
                 if (response.type === 'message') {
                     setMessageResponse(response.data);
                     console.log(response.data);
                 }
                 if (response.type === 'ice-candidate') {
+                    console.log('candidato remoto', response.data);
                     WebRTC.addIceCandidate(response.data);
                 }
                 if (response.type === 'answer') {
+                    console.log('answer');
                     WebRTC.setRemoteDescription(response.data);
                     WebRTC.addRemoteDescriptionAnswer();
                 }
                 if (response.type === 'offer') {
+                    console.log('offer');
+
                     WebRTC.createLocalConnection();
-                    WebRTC.handleNegotiationNeeded((localDescription) => sendToServer({type: 'offer', data: localDescription}));
-                    WebRTC.handleICECandidateEvent((candidate) => sendToServer({type: 'ice-candidate', data: candidate}));
+                    WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
+                    WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
                     WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
+                    WebRTC.handleSignalingStateChange(closeVideoCall);
                     WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
                     WebRTC.setRemoteDescription(response.data);
-                    WebRTC.addRemoteDescriptionOffer((localDescription) => sendToServer({ type: 'answer', data: localDescription }));
+                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })));
                 }
                 if (response.type === 'hang-up') {
                     console.log('hang-up')
                     closeVideoCall();
-                }
-                if (response.type === 'user-limit') {
-                    console.log('Limite de usuários excedido');
-                    closeSocket();
                 }
             });
 
@@ -142,6 +143,12 @@ const VideoCall = () => {
         otherWebCamRef.current.srcObject = stream;
         otherWebCamRef.current.play();
         setOtherWebcamOn(true);
+    }
+
+    const handleCloseConnectWebcam = () => {
+        streamTrackSend.forEach(track => {
+            track.stop();
+        });
     }
 
     const CloseOtherWebcam = () => {
