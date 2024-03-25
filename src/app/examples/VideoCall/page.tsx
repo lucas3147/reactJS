@@ -97,6 +97,9 @@ const VideoCall = () => {
                     console.log('hang-up')
                     closeVideoCall();
                 }
+                if (response.type === 'close-other-webcam') {
+                    CloseOtherWebcam();
+                }
             });
 
             socketClient.addEventListener("close", () => {
@@ -118,7 +121,8 @@ const VideoCall = () => {
     }
 
     const sendToServer = (message: any) => {
-        if (socketClient && socketClient?.readyState == 1) {
+        if (socketClient) {
+            console.log('enviando...')
             socketClient.send(jsonFromString(message));
         }
     }
@@ -149,6 +153,7 @@ const VideoCall = () => {
         streamTrackSend.forEach(track => {
             track.stop();
         });
+        sendToServer({type: 'close-other-webcam'});
     }
 
     const CloseOtherWebcam = () => {

@@ -48,6 +48,12 @@ server.on('connection', (socket) => {
                 data: localPeerDescription
             });
         }
+        if (message.type == 'close-other-webcam') {
+
+            broadcast({
+                type: 'close-other-webcam'
+            });
+        }
 
         if (message.type == 'hang-up') {
             broadcast({
