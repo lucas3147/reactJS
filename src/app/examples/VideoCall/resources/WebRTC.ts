@@ -9,11 +9,13 @@ export function createLocalConnection () {
     localConnection = new RTCPeerConnection();
 }
 
-export function addIceCandidate(candidateObj: RTCIceCandidate) {
+export async function addIceCandidate(candidateObj: RTCIceCandidate) {
     const candidate = new RTCIceCandidate(candidateObj);
-    localConnection.addIceCandidate(candidate)
-    .then(() => console.log('Candidato adicionado'))
-    .catch(handleAddCandidateError);
+    try {
+        await localConnection.addIceCandidate(candidate)
+    } catch (err) {
+        handleAddCandidateError();
+    }
 }
 
 export function handleICECandidateEvent(callbackSuccess: (candidate: RTCIceCandidate) => void) {
@@ -34,9 +36,9 @@ export async function createOffer(callbackSuccess: () => void) {
     .catch(handleCreateDescriptionError);
 }
 
-export function addRemoteDescriptionAnswer() {
+export async function addRemoteDescriptionAnswer() {
     if (remoteDescription) {
-        localConnection
+        await localConnection
         .setRemoteDescription(remoteDescription)
         .then(() => console.log('Conexão WebRTC Offer estabelecida'))
         .catch(handleCreateDescriptionError);
@@ -56,37 +58,58 @@ export function disconnectedPeer() {
     }
 }
 
-export function handleNegotiationNeeded(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
-    localConnection.onnegotiationneeded = () => {
-        localConnection
-        .createOffer()
-        .then((offer) => localConnection.setLocalDescription(offer))
-        .then(() => {
+export async function handleNegotiationNeeded(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
+    localConnection.onnegotiationneeded = async () => {
+        try {
+            const offer = await localConnection.createOffer();
+    
+            await localConnection.setLocalDescription(offer);
+    
             sendToServer(localConnection.localDescription);
-        })
-        .then(() => handleLog('Negociação enviada ao servidor!'))
-        .catch(reportError);
+    
+            console.log('Enviando negociação')
+        } catch (err) {
+            console.log("Error na negociação");
+        };
     }
 }
 
-export function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void, setMyStream: (stream: MediaStream | undefined) => void) {
+export async function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void, myStream: MediaStream | undefined, setMyStream: (stream: MediaStream | undefined) => void) {
     if (remoteDescription) {
-        localConnection
-        .setRemoteDescription(remoteDescription)
-        .then(() => navigator.mediaDevices.getUserMedia({video: true, audio: false}))
-        .then((stream) => {
+        if (localConnection.signalingState != "stable") {
+            await Promise.all([
+                localConnection.setLocalDescription({ type: "rollback" }),
+                localConnection.setRemoteDescription(remoteDescription)
+            ]);
+            return;
+        } else {
+            await localConnection.setRemoteDescription(remoteDescription);
+        }
 
-            stream
-                .getTracks()
-                .forEach((track) => localConnection.addTrack(track, stream));
+        if (!myStream) {
+            var stream : MediaStream;
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+            } catch(err) {
+                console.log('Erro ao abrir a câmera');
+                return;
+            }
 
             setMyStream(stream);
-        })
-        .then(() => localConnection.createAnswer())
-        .then((answer) => localConnection.setLocalDescription(answer))
-        .then(() => sendToServer(localConnection.localDescription))
-        .then(() => console.log('Conexão WebRTC Answer estabelecida'))
-        .catch((error) => console.log('Erro', error));
+        
+            try {
+              stream.getTracks().forEach(
+                track => localConnection.addTrack(track, stream)
+              );
+            } catch(err) {
+                console.log('Erro ao enviar faixa de vídeo');
+            }
+        }
+
+        await localConnection.setLocalDescription(await localConnection.createAnswer());
+
+        sendToServer(localConnection.localDescription);
     }
 }
 
@@ -100,11 +123,13 @@ export function handleTrackReceive(webcamCallback: (this: RTCPeerConnection, ev:
 
 export function handleICEConnectionStateChangeEvent(closeCall: () => void) {
     localConnection.oniceconnectionstatechange = () => {
-        if (localConnection.iceConnectionState == "closed" || 
-            localConnection.iceConnectionState == "failed") 
-        {
-            closeCall();
-        }
+        switch(localConnection.iceConnectionState) {
+            case "closed":
+            case "failed":
+            case "disconnected":
+              closeCall();
+              break;
+          }
     }
 }
 

@@ -26,6 +26,8 @@ const VideoCall = () => {
     async function handleConnectWebcam()  {
         try {
             if (connectionServerOn) {
+                closeMyWebcam();
+                console.log('Adicionando track')
                 const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
                 const track = stream.getTracks()[0] as MediaStreamTrack;
                 WebRTC.localConnection.addTrack(track, stream);
@@ -55,7 +57,11 @@ const VideoCall = () => {
                 WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
                 WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
                 WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
-                WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
+                WebRTC.handleTrackReceive((event) => {
+                    if (event.streams.length > 0) {
+                        PlayOtherWebcam(event.streams[0]);
+                    }
+                });
                 WebRTC.handleSignalingStateChange(closeVideoCall);
             });
         
@@ -82,20 +88,23 @@ const VideoCall = () => {
                 if (response.type === 'offer') {
                     console.log('offer');
                     handleDisconnectWebcam();
-                    closeVideoCall();
 
-                    WebRTC.createLocalConnection();
-                    WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
-                    WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
-                    WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
-                    WebRTC.handleSignalingStateChange(closeVideoCall);
-                    WebRTC.handleTrackReceive((event) => {
-                        if (event.streams.length > 0) {
-                            PlayOtherWebcam(event.streams[0]);
-                        }
-                    });
+                    if (!WebRTC.localConnection) {
+                        WebRTC.createLocalConnection();
+                        WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
+                        WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
+                        WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
+                        WebRTC.handleTrackReceive((event) => {
+                            if (event.streams.length > 0) {
+                                PlayOtherWebcam(event.streams[0]);
+                            }
+                        });
+                        WebRTC.handleSignalingStateChange(closeVideoCall);
+                    }   
+                    
                     WebRTC.setRemoteDescription(response.data);
                     WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })),
+                    streamSend,
                     setStreamSend);
                 }
                 if (response.type === 'hang-up') {
@@ -113,6 +122,8 @@ const VideoCall = () => {
             });
 
             setSocketClient(socketClient);
+
+            
         } 
         catch (e) 
         {
@@ -150,12 +161,14 @@ const VideoCall = () => {
     const PlayOtherWebcam = (stream: MediaStream) => {
         console.log('Chamando outra webcam');
         otherWebCamRef.current.srcObject = stream;
-        var playPromise = otherWebCamRef.current.play();
- 
+        setOtherWebcamOn(true);
+
+        /*
         if (playPromise !== undefined) {
             playPromise.then(() => setOtherWebcamOn(true))
             .catch(() => alert('Não foi possível reproduzir outro webcam'));
         }
+        */
     }
 
     const PlayMyWebcam = (stream: MediaStream) => {
@@ -267,6 +280,7 @@ const VideoCall = () => {
                         ref={otherWebCamRef} 
                         width={686} 
                         height={635}
+                        autoPlay
                         style={{display: otherWebcamOn ? 'block' : 'none'}}
                     >
                             
