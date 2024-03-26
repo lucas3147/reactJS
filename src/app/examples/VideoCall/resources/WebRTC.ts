@@ -48,6 +48,9 @@ export function disconnectedPeer() {
         localConnection.ontrack = null;
         localConnection.onicecandidate = null;
         localConnection.onnegotiationneeded = null;
+        localConnection.oniceconnectionstatechange = null;
+        localConnection.onicegatheringstatechange = null;
+        localConnection.onsignalingstatechange = null;
         localConnection.close();
         remoteDescription = null;
     }
@@ -66,10 +69,19 @@ export function handleNegotiationNeeded(sendToServer: (localDescription: RTCSess
     }
 }
 
-export function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
+export function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void, setMyStream: (stream: MediaStream | undefined) => void) {
     if (remoteDescription) {
         localConnection
         .setRemoteDescription(remoteDescription)
+        .then(() => navigator.mediaDevices.getUserMedia({video: true, audio: false}))
+        .then((stream) => {
+
+            stream
+                .getTracks()
+                .forEach((track) => localConnection.addTrack(track, stream));
+
+            setMyStream(stream);
+        })
         .then(() => localConnection.createAnswer())
         .then((answer) => localConnection.setLocalDescription(answer))
         .then(() => sendToServer(localConnection.localDescription))

@@ -20,32 +20,30 @@ const VideoCall = () => {
     const [otherWebcamOn, setOtherWebcamOn] = useState(false);
     const [connectionServerOn, setConnectionServerOn] = useState(false);
     const [socketClient, setSocketClient] = useState<WebSocket | undefined>();
-    const [streamTrackSend, setStreamTrackSend] = useState<MediaStreamTrack[]>([]);
+    const [streamSend, setStreamSend] = useState<MediaStream>();
     
 
     async function handleConnectWebcam()  {
         try {
-            if (socketClient) {
+            if (connectionServerOn) {
                 const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
                 const track = stream.getTracks()[0] as MediaStreamTrack;
                 WebRTC.localConnection.addTrack(track, stream);
-                setStreamTrackSend([track]);
+                setStreamSend(stream);
+            } else {
+                const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+                PlayMyWebcam(stream);
             }
         } catch (error) {
-          console.error('Erro ao enviar mídia:', error);
+            console.error('Erro ao enviar mídia:', error);
         }
     }
 
     useEffect(() => {
-        if (connectionServerOn && myWebcamOn) {
-            handleConnectWebcam();
+        if (streamSend) {
+            PlayMyWebcam(streamSend);
         }
-
-        if (myWebcamOn == false && streamTrackSend.length > 0) {
-            console.log('Disconectando webcam', streamTrackSend);
-            handleCloseConnectWebcam();
-        }
-    }, [connectionServerOn, myWebcamOn])
+    }, [streamSend]);
 
     const handleConnectServer = () => {
         try
@@ -83,22 +81,29 @@ const VideoCall = () => {
                 }
                 if (response.type === 'offer') {
                     console.log('offer');
+                    handleDisconnectWebcam();
+                    closeVideoCall();
 
                     WebRTC.createLocalConnection();
                     WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
                     WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
                     WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
                     WebRTC.handleSignalingStateChange(closeVideoCall);
-                    WebRTC.handleTrackReceive((event) => PlayOtherWebcam(event.streams[0]));
+                    WebRTC.handleTrackReceive((event) => {
+                        if (event.streams.length > 0) {
+                            PlayOtherWebcam(event.streams[0]);
+                        }
+                    });
                     WebRTC.setRemoteDescription(response.data);
-                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })));
+                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })),
+                    setStreamSend);
                 }
                 if (response.type === 'hang-up') {
                     console.log('hang-up')
                     closeVideoCall();
                 }
                 if (response.type === 'close-other-webcam') {
-                    CloseOtherWebcam();
+                    closeOtherWebcam();
                 }
             });
 
@@ -116,13 +121,12 @@ const VideoCall = () => {
     }
 
     const closeVideoCall = () => {
-        CloseOtherWebcam();
+        closeOtherWebcam();
         WebRTC.disconnectedPeer();
     }
 
     const sendToServer = (message: any) => {
         if (socketClient) {
-            console.log('enviando...')
             socketClient.send(jsonFromString(message));
         }
     }
@@ -144,26 +148,58 @@ const VideoCall = () => {
     }
 
     const PlayOtherWebcam = (stream: MediaStream) => {
+        console.log('Chamando outra webcam');
         otherWebCamRef.current.srcObject = stream;
-        otherWebCamRef.current.play();
-        setOtherWebcamOn(true);
+        var playPromise = otherWebCamRef.current.play();
+ 
+        if (playPromise !== undefined) {
+            playPromise.then(() => setOtherWebcamOn(true))
+            .catch(() => alert('Não foi possível reproduzir outro webcam'));
+        }
     }
 
-    const handleCloseConnectWebcam = () => {
-        streamTrackSend.forEach(track => {
+    const PlayMyWebcam = (stream: MediaStream) => {
+        console.log('Chamando minha webcam');
+        myWebCamRef.current.load();
+        myWebCamRef.current.srcObject = stream;
+        var playPromise = myWebCamRef.current.play();
+ 
+        if (playPromise !== undefined) {
+            playPromise.then(() => setMyWebcamOn(true))
+            .catch(() => alert('Não foi possível reproduzir minha webcam'));
+        }
+    }
+
+    const handleDisconnectWebcam = () => {
+        streamSend?.getTracks().forEach(track => {
             track.stop();
         });
+        closeMyWebcam();
         sendToServer({type: 'close-other-webcam'});
     }
 
-    const CloseOtherWebcam = () => {
+    const closeOtherWebcam = () => {
         const mediaStream = otherWebCamRef.current.srcObject as MediaStream;
         if (mediaStream) {
             mediaStream
             .getTracks()
             .forEach(track => track.stop());
         }
+        otherWebCamRef.current.removeAttribute("src");
+        otherWebCamRef.current.removeAttribute("srcObject");
         setOtherWebcamOn(false);
+    }
+
+    const closeMyWebcam = () => {
+        const mediaStream = myWebCamRef.current.srcObject as MediaStream;
+        if (mediaStream) {
+            mediaStream
+            .getTracks()
+            .forEach(track => track.stop());
+        }
+        myWebCamRef.current.removeAttribute("src");
+        myWebCamRef.current.removeAttribute("srcObject");
+        setMyWebcamOn(false);
     }
 
     return (
@@ -209,15 +245,14 @@ const VideoCall = () => {
                             <div className="w-4 h-4 rounded-[8px] bg-green-600 absolute top-0 right-[-8px]"></div>
                         }
                     </div>
-                    {myWebcamOn &&
-                        <Webcam
+                    <video 
+                        ref={myWebCamRef} 
+                        width={686} 
+                        height={635}
+                        style={{display: myWebcamOn ? 'block' : 'none'}}
+                    >
                             
-                            audio={false}
-                            ref={myWebCamRef}
-                            screenshotFormat="image/jpeg"
-                            videoConstraints={{height: 635, width: 686}}
-                        />  
-                    }
+                    </video>
                 </div>
                 <div 
                     className="w-[692px] h-[640px] bg-zinc-900 rounded-md relative flex justify-center z-0"
@@ -249,7 +284,7 @@ const VideoCall = () => {
                             border: '2px solid white',
                             cursor: 'pointer'
                         }}
-                        onClick={() => setMyWebcamOn(true)}
+                        onClick={handleConnectWebcam}
                     />
 
                     <IconTheme
@@ -263,7 +298,7 @@ const VideoCall = () => {
                             border: '2px solid white',
                             cursor: 'pointer'
                         }}
-                        onClick={() => setMyWebcamOn(false)}
+                        onClick={handleDisconnectWebcam}
                     />
 
                     {connectionServerOn &&
