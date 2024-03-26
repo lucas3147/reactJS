@@ -58,7 +58,7 @@ const VideoCall = () => {
                 WebRTC.handleICECandidateEvent((candidate) => socketClient.send(JSON.stringify({type: 'ice-candidate', data: candidate})));
                 WebRTC.handleICEConnectionStateChangeEvent(closeVideoCall);
                 WebRTC.handleTrackReceive((event) => {
-                    if (event.streams.length > 0) {
+                    if (event.streams[0]) {
                         PlayOtherWebcam(event.streams[0]);
                     }
                 });
@@ -87,7 +87,6 @@ const VideoCall = () => {
                 }
                 if (response.type === 'offer') {
                     console.log('offer');
-                    handleDisconnectWebcam();
 
                     if (!WebRTC.localConnection) {
                         WebRTC.createLocalConnection();
@@ -103,6 +102,8 @@ const VideoCall = () => {
                     }   
                     
                     WebRTC.setRemoteDescription(response.data);
+                    console.log(myWebcamOn);
+                    WebRTC.setContrainsts({video: myWebcamOn, audio: false});
                     WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })),
                     streamSend,
                     setStreamSend);
@@ -159,7 +160,7 @@ const VideoCall = () => {
     }
 
     const PlayOtherWebcam = (stream: MediaStream) => {
-        console.log('Chamando outra webcam');
+        console.log('Chamando outra webcam', stream);
         otherWebCamRef.current.srcObject = stream;
         setOtherWebcamOn(true);
 

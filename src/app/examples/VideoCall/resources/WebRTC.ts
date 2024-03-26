@@ -1,9 +1,7 @@
 export var localConnection: RTCPeerConnection;
 export var sendChannel: RTCDataChannel;
-export var connectionIsOpen: (() => void) | undefined;
-export var connectionIsClose: (() => void) | undefined;
 export var remoteDescription: RTCSessionDescription | null;
-var receiveChannel: RTCDataChannel;
+var contraints: MediaStreamConstraints | undefined;
 
 export function createLocalConnection () {
     localConnection = new RTCPeerConnection();
@@ -87,24 +85,27 @@ export async function addRemoteDescriptionOffer(sendToServer: (localDescription:
         }
 
         if (!myStream) {
-            var stream : MediaStream;
+            
+            var stream : MediaStream | undefined;
 
             try {
-                stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+                stream = await navigator.mediaDevices.getUserMedia(contraints);
             } catch(err) {
                 console.log('Erro ao abrir a câmera');
-                return;
             }
 
-            setMyStream(stream);
+            if (stream) {
+                setMyStream(stream);
         
-            try {
-              stream.getTracks().forEach(
-                track => localConnection.addTrack(track, stream)
-              );
-            } catch(err) {
-                console.log('Erro ao enviar faixa de vídeo');
-            }
+                try {
+                    stream.getTracks().forEach(
+                        track => localConnection.addTrack(track, stream as MediaStream)
+                    );
+                } catch (err) {
+                    console.log('Erro ao enviar faixa de vídeo', err);
+                }
+            }   
+            
         }
 
         await localConnection.setLocalDescription(await localConnection.createAnswer());
@@ -141,22 +142,8 @@ export function handleSignalingStateChange(closeConnection: () => void) {
     }
 }
 
-function receiveChannelCallback(this: RTCPeerConnection, event: RTCDataChannelEvent) {
-    receiveChannel = event.channel;
-    receiveChannel.onmessage = handleReceiveMessage;
-    receiveChannel.onopen = handleReceiveChannelStatusChange;
-    receiveChannel.onclose = handleReceiveChannelStatusChange;
-}
-
-function handleReceiveMessage(this: RTCDataChannel, event: MessageEvent<any>): any {
-    console.log(event.data);
-}
-  
-function handleReceiveChannelStatusChange(this: RTCDataChannel, event: Event): any {
-  if (receiveChannel) {
-    console.log("Connection WebRTC is " +
-                receiveChannel.readyState);
-  }
+export function setContrainsts(contrains: MediaStreamConstraints | undefined) {
+    contraints = contrains;
 }
 
 function handleCreateDescriptionError(error: any) {
@@ -170,22 +157,4 @@ function handleRemoteAddCandidateSuccess() {
 }
 function handleAddCandidateError() {
   console.log("Oh noes! addICECandidate failed!");
-}
-function handleLog(message: string) {
-    console.log(message);
-}
-function sendMessage(message: string) {
-  sendChannel.send(message);
-}
-
-function handleSendChannelStatusChange(this: RTCDataChannel, event: Event): any {
-  if (sendChannel) {
-    var state = sendChannel.readyState;
-  
-    if (state === "open") {
-        !connectionIsOpen || connectionIsOpen();
-    } else {
-        !connectionIsClose || connectionIsClose();
-    }
-  }
 }
