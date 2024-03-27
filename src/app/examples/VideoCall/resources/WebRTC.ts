@@ -72,7 +72,7 @@ export async function handleNegotiationNeeded(sendToServer: (localDescription: R
     }
 }
 
-export async function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void, myStream: MediaStream | undefined, setMyStream: (stream: MediaStream | undefined) => void) {
+export async function addRemoteDescriptionOffer(sendToServer: (localDescription: RTCSessionDescription | null) => void) {
     if (remoteDescription) {
         if (localConnection.signalingState != "stable") {
             await Promise.all([
@@ -82,30 +82,6 @@ export async function addRemoteDescriptionOffer(sendToServer: (localDescription:
             return;
         } else {
             await localConnection.setRemoteDescription(remoteDescription);
-        }
-
-        if (!myStream) {
-            
-            var stream : MediaStream | undefined;
-
-            try {
-                stream = await navigator.mediaDevices.getUserMedia(contraints);
-            } catch(err) {
-                console.log('Erro ao abrir a câmera');
-            }
-
-            if (stream) {
-                setMyStream(stream);
-        
-                try {
-                    stream.getTracks().forEach(
-                        track => localConnection.addTrack(track, stream as MediaStream)
-                    );
-                } catch (err) {
-                    console.log('Erro ao enviar faixa de vídeo', err);
-                }
-            }   
-            
         }
 
         await localConnection.setLocalDescription(await localConnection.createAnswer());

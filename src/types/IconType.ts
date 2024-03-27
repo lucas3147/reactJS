@@ -12,4 +12,7 @@ type IconType =
 |'DoDisturbOnIcon'
 |'LeakAddIcon'
 |'LeakRemoveIcon'
+|'NoPhotographyIcon'
+|'KeyboardVoiceIcon'
+|'MicOffIcon'
 ;

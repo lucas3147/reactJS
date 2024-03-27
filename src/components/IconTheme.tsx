@@ -11,6 +11,9 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import LeakAddIcon from '@mui/icons-material/LeakAdd';
 import LeakRemoveIcon from '@mui/icons-material/LeakRemove';
+import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
+import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
+import MicOffIcon from '@mui/icons-material/MicOff';
 import { CSSProperties } from 'react';
 
 type Props = {
@@ -61,6 +64,15 @@ const IconTheme = ({type, style, className, onClick}: Props) => {
             }
             {type == 'LeakRemoveIcon' && 
                 <LeakRemoveIcon style={style} className={className} onClick={onClick} />
+            }
+            {type == 'NoPhotographyIcon' && 
+                <NoPhotographyIcon style={style} className={className} onClick={onClick} />
+            }
+            {type == 'KeyboardVoiceIcon' && 
+                <KeyboardVoiceIcon style={style} className={className} onClick={onClick} />
+            }
+            {type == 'MicOffIcon' && 
+                <MicOffIcon style={style} className={className} onClick={onClick} />
             }
         </div>
     )

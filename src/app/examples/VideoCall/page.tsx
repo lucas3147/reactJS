@@ -16,36 +16,36 @@ const VideoCall = () => {
     
     const [messageRequest, setMessageRequest] = useState('');
     const [messageResponse, setMessageResponse] = useState('');
-    const [myWebcamOn, setMyWebcamOn] = useState(false);
+    const [videoOn, setVideoOn] = useState(false);
+    const [audioOn, setAudioOn] = useState(false);
     const [otherWebcamOn, setOtherWebcamOn] = useState(false);
     const [connectionServerOn, setConnectionServerOn] = useState(false);
     const [socketClient, setSocketClient] = useState<WebSocket | undefined>();
-    const [streamSend, setStreamSend] = useState<MediaStream>();
-    
+
+    useEffect(() => {
+        if (videoOn == true || audioOn == true) {
+            handleConnectWebcam();
+        }
+        else 
+        {
+            handleDisconnectWebcam();
+        }
+    }, [videoOn, audioOn])
 
     async function handleConnectWebcam()  {
         try {
+            const stream = await navigator.mediaDevices.getUserMedia({video: videoOn, audio: audioOn});
+            PlayMyWebcam(stream);
+
             if (connectionServerOn) {
-                closeMyWebcam();
-                console.log('Adicionando track')
-                const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
                 const track = stream.getTracks()[0] as MediaStreamTrack;
                 WebRTC.localConnection.addTrack(track, stream);
-                setStreamSend(stream);
-            } else {
-                const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
-                PlayMyWebcam(stream);
             }
+
         } catch (error) {
             console.error('Erro ao enviar mídia:', error);
         }
     }
-
-    useEffect(() => {
-        if (streamSend) {
-            PlayMyWebcam(streamSend);
-        }
-    }, [streamSend]);
 
     const handleConnectServer = () => {
         try
@@ -102,11 +102,7 @@ const VideoCall = () => {
                     }   
                     
                     WebRTC.setRemoteDescription(response.data);
-                    console.log(myWebcamOn);
-                    WebRTC.setContrainsts({video: myWebcamOn, audio: false});
-                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })),
-                    streamSend,
-                    setStreamSend);
+                    WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })));
                 }
                 if (response.type === 'hang-up') {
                     console.log('hang-up')
@@ -160,34 +156,15 @@ const VideoCall = () => {
     }
 
     const PlayOtherWebcam = (stream: MediaStream) => {
-        console.log('Chamando outra webcam', stream);
         otherWebCamRef.current.srcObject = stream;
         setOtherWebcamOn(true);
-
-        /*
-        if (playPromise !== undefined) {
-            playPromise.then(() => setOtherWebcamOn(true))
-            .catch(() => alert('Não foi possível reproduzir outro webcam'));
-        }
-        */
     }
 
     const PlayMyWebcam = (stream: MediaStream) => {
-        console.log('Chamando minha webcam');
-        myWebCamRef.current.load();
         myWebCamRef.current.srcObject = stream;
-        var playPromise = myWebCamRef.current.play();
- 
-        if (playPromise !== undefined) {
-            playPromise.then(() => setMyWebcamOn(true))
-            .catch(() => alert('Não foi possível reproduzir minha webcam'));
-        }
     }
 
     const handleDisconnectWebcam = () => {
-        streamSend?.getTracks().forEach(track => {
-            track.stop();
-        });
         closeMyWebcam();
         sendToServer({type: 'close-other-webcam'});
     }
@@ -213,7 +190,6 @@ const VideoCall = () => {
         }
         myWebCamRef.current.removeAttribute("src");
         myWebCamRef.current.removeAttribute("srcObject");
-        setMyWebcamOn(false);
     }
 
     return (
@@ -255,7 +231,7 @@ const VideoCall = () => {
                 >
                     <div className="uppercase w-16 h-8 absolute top-0 bg-zinc-600 rounded-bl-md rounded-br-md flex items-center justify-center">
                         you
-                        {myWebcamOn && connectionServerOn &&
+                        {videoOn && connectionServerOn &&
                             <div className="w-4 h-4 rounded-[8px] bg-green-600 absolute top-0 right-[-8px]"></div>
                         }
                     </div>
@@ -263,7 +239,8 @@ const VideoCall = () => {
                         ref={myWebCamRef} 
                         width={686} 
                         height={635}
-                        style={{display: myWebcamOn ? 'block' : 'none'}}
+                        autoPlay
+                        style={{display: videoOn ? 'block' : 'none'}}
                     >
                             
                     </video>
@@ -289,63 +266,46 @@ const VideoCall = () => {
                 </div>
                 <div className="flex justify-between items-center px-1 w-44 h-16 rounded-[40px] bg-zinc-800 border-2 absolute bottom-[20px] left-[610px]">
                     <IconTheme
-                        type="MonochromePhotosOutlinedIcon"
+                        type={videoOn == true ? 'NoPhotographyIcon' : 'MonochromePhotosOutlinedIcon'}
                         style={{
                             width: '50px',
                             height: '50px',
-                            backgroundColor: 'blue',
+                            backgroundColor: videoOn == true ? 'red' : 'blue',
                             padding: '5px',
                             borderRadius: '25px',
                             border: '2px solid white',
                             cursor: 'pointer'
                         }}
-                        onClick={handleConnectWebcam}
+                        onClick={() => setVideoOn(!videoOn)}
                     />
 
                     <IconTheme
-                        type="DoDisturbOnIcon"
+                        type={audioOn == true ? 'MicOffIcon' : 'KeyboardVoiceIcon'}
                         style={{
                             width: '50px',
                             height: '50px',
-                            backgroundColor: 'red',
+                            backgroundColor: audioOn == true ? 'red' : 'blue',
                             padding: '5px',
                             borderRadius: '25px',
                             border: '2px solid white',
                             cursor: 'pointer'
                         }}
-                        onClick={handleDisconnectWebcam}
+                        onClick={() => setAudioOn(!audioOn)}
                     />
 
-                    {connectionServerOn &&
-                        <IconTheme
-                            type="LeakRemoveIcon"
-                            style={{
-                                width: '50px',
-                                height: '50px',
-                                backgroundColor: 'red',
-                                padding: '5px',
-                                borderRadius: '25px',
-                                border: '2px solid white',
-                                cursor: 'pointer'
-                            }}
-                            onClick={handlePeerDisconnect}
-                        />
-                    }
-                    {!connectionServerOn && 
-                        <IconTheme
-                            type="LeakAddIcon"
-                            style={{
-                                width: '50px',
-                                height: '50px',
-                                padding: '5px',
-                                borderRadius: '25px',
-                                border: '2px solid white',
-                                cursor: 'pointer'
-                            }}
-                            className="hover:bg-green-600"
-                            onClick={handleConnectServer}
-                        />
-                    }
+                    <IconTheme
+                        type={connectionServerOn == true ? 'LeakRemoveIcon' : 'LeakAddIcon'}
+                        style={{
+                            width: '50px',
+                            height: '50px',
+                            backgroundColor: connectionServerOn == true ? 'red' : 'green',
+                            padding: '5px',
+                            borderRadius: '25px',
+                            border: '2px solid white',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => connectionServerOn == true ? handlePeerDisconnect() : handleConnectServer()}
+                    />
                     
                 </div>
             </div>
