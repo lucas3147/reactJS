@@ -1,5 +1,5 @@
 import ContainerPage from "@/components/ContainerPage";
-import ScrollCards from "@/app/(examples)/SlideCards/resource/ScrollCards";
+import ScrollCards from "@/app/examples/SlideCards/resource/ScrollCards";
 import TitlePage from "@/components/TitlePage";
 
 const SliderCard = () => {
