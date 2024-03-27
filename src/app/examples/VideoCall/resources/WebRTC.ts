@@ -29,7 +29,6 @@ export async function createOffer(callbackSuccess: () => void) {
     .then(offer => localConnection.setLocalDescription(offer))
     .then(() => {
         callbackSuccess();
-        console.log('descrição enviada ao servidor!');
     })
     .catch(handleCreateDescriptionError);
 }
@@ -38,7 +37,6 @@ export async function addRemoteDescriptionAnswer() {
     if (remoteDescription) {
         await localConnection
         .setRemoteDescription(remoteDescription)
-        .then(() => console.log('Conexão WebRTC Offer estabelecida'))
         .catch(handleCreateDescriptionError);
     }
 }
@@ -65,7 +63,6 @@ export async function handleNegotiationNeeded(sendToServer: (localDescription: R
     
             sendToServer(localConnection.localDescription);
     
-            console.log('Enviando negociação')
         } catch (err) {
             console.log("Error na negociação");
         };
@@ -124,12 +121,6 @@ export function setContrainsts(contrains: MediaStreamConstraints | undefined) {
 
 function handleCreateDescriptionError(error: any) {
     console.log("Unable to create an offer: " + error.toString());
-}
-function handleLocalAddCandidateSuccess() {
-  console.log("Success in add Candidate");
-}
-function handleRemoteAddCandidateSuccess() {
-    console.log("Error in add Candidate");
 }
 function handleAddCandidateError() {
   console.log("Oh noes! addICECandidate failed!");

@@ -4,8 +4,7 @@ import ContainerPage from "@/components/ContainerPage";
 import DescriptiveItem from "@/components/DescriptiveItem";
 import IconTheme from "@/components/IconTheme";
 import TitlePage from "@/components/TitlePage";
-import { useCallback, useEffect, useRef, useState } from "react";
-import Webcam from "react-webcam";
+import { useEffect, useRef, useState } from "react";
 import * as WebRTC from "./resources/WebRTC";
 import TestPage from "@/components/TestPage";
 
@@ -69,7 +68,6 @@ const VideoCall = () => {
                 const response = JSON.parse(event.data);
                 
                 if (response.type === 'open') {
-                    console.log('Meu id no servidor:', response.data);
                     setConnectionServerOn(true);
                 }
                 if (response.type === 'message') {
@@ -77,17 +75,13 @@ const VideoCall = () => {
                     console.log(response.data);
                 }
                 if (response.type === 'ice-candidate') {
-                    console.log('candidato remoto', response.data);
                     WebRTC.addIceCandidate(response.data);
                 }
                 if (response.type === 'answer') {
-                    console.log('answer');
                     WebRTC.setRemoteDescription(response.data);
                     WebRTC.addRemoteDescriptionAnswer();
                 }
                 if (response.type === 'offer') {
-                    console.log('offer');
-
                     if (!WebRTC.localConnection) {
                         WebRTC.createLocalConnection();
                         WebRTC.handleNegotiationNeeded((localDescription) => socketClient.send(JSON.stringify({type: 'offer', data: localDescription})));
@@ -105,7 +99,6 @@ const VideoCall = () => {
                     WebRTC.addRemoteDescriptionOffer((localDescription) => socketClient.send(JSON.stringify({ type: 'answer', data: localDescription })));
                 }
                 if (response.type === 'hang-up') {
-                    console.log('hang-up')
                     closeVideoCall();
                 }
                 if (response.type === 'close-other-webcam') {
@@ -134,7 +127,7 @@ const VideoCall = () => {
     }
 
     const sendToServer = (message: any) => {
-        if (socketClient) {
+        if (socketClient && socketClient.readyState == 1) {
             socketClient.send(jsonFromString(message));
         }
     }
